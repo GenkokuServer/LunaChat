@@ -2,6 +2,7 @@
 /.classpath
 /.project
 /target
+/.vscode
 #IntelliJ
 .idea/
 *.iml
