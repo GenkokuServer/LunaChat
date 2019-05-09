@@ -42,7 +42,7 @@ public class DelayedJapanizeChannelChatTask extends DelayedJapanizeConvertTask {
         if ( runSync() ) {
             // チャンネルへ送信
             String name = (player != null) ? player.getDisplayName() : "";
-            channel.sendMessage(player, getResult(), lineFormat, true, name);
+            channel.sendMessage(player, getResult(), lineFormat, true, name, true);
         }
     }
 

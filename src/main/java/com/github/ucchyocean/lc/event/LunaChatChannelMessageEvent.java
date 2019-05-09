@@ -24,8 +24,8 @@ public class LunaChatChannelMessageEvent extends LunaChatBaseEvent {
 
     public LunaChatChannelMessageEvent(String channelName,
             ChannelPlayer player, String message, ArrayList<ChannelPlayer> recipients,
-            String displayName, String originalMessage) {
-        super(channelName);
+            String displayName, String originalMessage, boolean isAsync) {
+        super(channelName, isAsync);
         this.player = player;
         this.message = message;
         this.recipients = recipients;

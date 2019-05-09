@@ -16,7 +16,7 @@ public class LunaChatChannelRemoveEvent extends LunaChatBaseCancellableEvent {
     private CommandSender sender;
 
     public LunaChatChannelRemoveEvent(String channelName, CommandSender sender) {
-        super(channelName);
+        super(channelName, false);
         this.sender = sender;
     }
 

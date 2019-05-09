@@ -20,7 +20,7 @@ public class LunaChatChannelOptionChangedEvent extends LunaChatBaseCancellableEv
 
     public LunaChatChannelOptionChangedEvent(String channelName,
             CommandSender sender, HashMap<String, String> options) {
-        super(channelName);
+        super(channelName, false);
         this.sender = sender;
         this.options = options;
     }

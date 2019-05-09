@@ -238,7 +238,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // イベントコール
         LunaChatChannelMemberChangedEvent event =
-                new LunaChatChannelMemberChangedEvent(this.name, this.members, after);
+                new LunaChatChannelMemberChangedEvent(this.name, this.members, after, false);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {
             return;
@@ -250,7 +250,7 @@ public abstract class Channel implements ConfigurationSerializable {
         }
         members = after;
 
-        sendSystemMessage("joinMessage", player);
+        sendSystemMessage("joinMessage", player, false);
 
         save();
     }
@@ -259,7 +259,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * メンバーを削除する
      * @param name 削除するプレイヤー
      */
-    public void removeMember(ChannelPlayer player) {
+    public void removeMember(ChannelPlayer player, boolean isAsync) {
 
         // 既に削除しているなら、何もしない
         if ( !members.contains(player) ) {
@@ -272,7 +272,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // イベントコール
         LunaChatChannelMemberChangedEvent event =
-                new LunaChatChannelMemberChangedEvent(this.name, this.members, after);
+                new LunaChatChannelMemberChangedEvent(this.name, this.members, after, isAsync);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {
             return;
@@ -289,7 +289,7 @@ public abstract class Channel implements ConfigurationSerializable {
         // 実際にメンバーから削除する
         members.remove(player);
 
-        sendSystemMessage("quitMessage", player);
+        sendSystemMessage("quitMessage", player, isAsync);
 
         // 0人で削除する設定がオンで、0人になったなら、チャンネルを削除する
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
@@ -326,7 +326,7 @@ public abstract class Channel implements ConfigurationSerializable {
         moderator.add(player);
 
         // メッセージ
-        sendSystemMessage("addModeratorMessage", player);
+        sendSystemMessage("addModeratorMessage", player, false);
 
         save();
     }
@@ -346,7 +346,7 @@ public abstract class Channel implements ConfigurationSerializable {
         moderator.remove(player);
 
         // メッセージ
-        sendSystemMessage("removeModeratorMessage", player);
+        sendSystemMessage("removeModeratorMessage", player, false);
 
         save();
     }
@@ -355,8 +355,9 @@ public abstract class Channel implements ConfigurationSerializable {
      * プレイヤーに関連する、システムメッセージをチャンネルに流す
      * @param key リソースキー
      * @param player プレイヤー
+     * @param isAsync 非同期で実行されたか
      */
-    protected abstract void sendSystemMessage(String key, ChannelPlayer player);
+    protected abstract void sendSystemMessage(String key, ChannelPlayer player, boolean isAsync);
 
     /**
      * メッセージを表示します。指定したプレイヤーの発言として処理されます。
@@ -365,9 +366,10 @@ public abstract class Channel implements ConfigurationSerializable {
      * @param format フォーマット
      * @param sendDynmap dynmapへ送信するかどうか
      * @param displayName 発言者の表示名（APIに使用されます）
+     * @param isAsync 非同期で送信するかどうか
      */
     public abstract void sendMessage(
-            ChannelPlayer player, String message, String format, boolean sendDynmap, String displayName);
+            ChannelPlayer player, String message, String format, boolean sendDynmap, String displayName, boolean isAsync);
 
     /**
      * チャンネル情報を返す

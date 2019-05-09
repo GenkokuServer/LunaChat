@@ -25,8 +25,8 @@ public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEv
      * @param after 変更後のメンバー
      */
     public LunaChatChannelMemberChangedEvent(
-            String channelName, List<ChannelPlayer> before, List<ChannelPlayer> after) {
-        super(channelName);
+            String channelName, List<ChannelPlayer> before, List<ChannelPlayer> after, boolean isAsync) {
+        super(channelName, isAsync);
         this.before = before;
         this.after = after;
     }

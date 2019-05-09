@@ -24,7 +24,8 @@ public abstract class LunaChatBaseEvent extends Event {
      * コンストラクタ
      * @param channelName チャンネル名
      */
-    public LunaChatBaseEvent(String channelName) {
+    public LunaChatBaseEvent(String channelName, boolean isAsync) {
+        super(isAsync);
         this.channelName = channelName;
     }
 

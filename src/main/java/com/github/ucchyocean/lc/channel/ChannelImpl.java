@@ -191,7 +191,7 @@ public class ChannelImpl extends Channel {
 
         if ( isIncludeSyncChat ) {
             // メッセージの送信
-            sendMessage(player, maskedMessage, msgFormat, true, player.getDisplayName());
+            sendMessage(player, maskedMessage, msgFormat, true, player.getDisplayName(), true);
         }
 
         // 非同期実行タスクがある場合、追加で実行する
@@ -206,12 +206,12 @@ public class ChannelImpl extends Channel {
 
                 if ( !isGlobalChannel() ) {
                     getBanned().add(player);
-                    removeMember(player);
+                    removeMember(player, true);
                     if ( !MSG_BAN_NGWORD.equals("") ) {
                         String m = replaceKeywordsForSystemMessages(
                                 MSG_BAN_NGWORD, player.getName());
                         player.sendMessage(m);
-                        sendMessage(null, m, null, true, "system");
+                        sendMessage(null, m, null, true, "system", true);
                     }
                 }
 
@@ -219,12 +219,12 @@ public class ChannelImpl extends Channel {
                 // キックする
 
                 if ( !isGlobalChannel() ) {
-                    removeMember(player);
+                    removeMember(player, true);
                     if ( !MSG_KICK_NGWORD.equals("") ) {
                         String m = replaceKeywordsForSystemMessages(
                                 MSG_KICK_NGWORD, player.getName());
                         player.sendMessage(m);
-                        sendMessage(null, m, null, true, "system");
+                        sendMessage(null, m, null, true, "system", true);
                     }
                 }
 
@@ -237,7 +237,7 @@ public class ChannelImpl extends Channel {
                     String m = replaceKeywordsForSystemMessages(
                             MSG_MUTE_NGWORD, player.getName());
                     player.sendMessage(m);
-                    sendMessage(null, m, null, true, "system");
+                    sendMessage(null, m, null, true, "system", true);
                 }
             }
         }
@@ -279,7 +279,7 @@ public class ChannelImpl extends Channel {
 
         // メッセージの送信
         boolean sendDynmap = source == null || !source.equals("web");
-        sendMessage(null, maskedMessage, msgFormat, sendDynmap, name);
+        sendMessage(null, maskedMessage, msgFormat, sendDynmap, name, true);
     }
 
     /**
@@ -288,7 +288,7 @@ public class ChannelImpl extends Channel {
      * @param player プレイヤー
      */
     @Override
-    protected void sendSystemMessage(String key, ChannelPlayer player) {
+    protected void sendSystemMessage(String key, ChannelPlayer player, boolean isAsync) {
 
         // プライベートチャットならシステムメッセージを流さない
         if ( isPersonalChat() ) {
@@ -300,7 +300,7 @@ public class ChannelImpl extends Channel {
             return;
         }
         msg = replaceKeywordsForSystemMessages(msg, player.getName());
-        sendMessage(null, msg, null, false, "system");
+        sendMessage(null, msg, null, false, "system", isAsync);
     }
 
     /**
@@ -310,10 +310,11 @@ public class ChannelImpl extends Channel {
      * @param format フォーマット
      * @param sendDynmap dynmapへ送信するかどうか
      * @param name 発言者名
+     * @param isAsync 非同期イベントで実行されたかどうか
      */
     @Override
     public void sendMessage(ChannelPlayer player, String message,
-            String format, boolean sendDynmap, String name) {
+            String format, boolean sendDynmap, String name, boolean isAsync) {
 
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
 
@@ -413,7 +414,7 @@ public class ChannelImpl extends Channel {
         // イベントコール
         LunaChatChannelMessageEvent event =
                 new LunaChatChannelMessageEvent(
-                        getName(), player, message, recipients, name, originalMessage);
+                        getName(), player, message, recipients, name, originalMessage, isAsync);
         Bukkit.getPluginManager().callEvent(event);
         message = event.getMessage();
         recipients = event.getRecipients();
@@ -623,7 +624,7 @@ public class ChannelImpl extends Channel {
                     // メッセージ通知を流す
                     if ( !MSG_BAN_EXPIRED.equals("") ) {
                         String msg = replaceKeywords(MSG_BAN_EXPIRED, cp);
-                        sendMessage(null, msg, null, false, "system");
+                        sendMessage(null, msg, null, false, "system", true);
                     }
 
                     if ( cp.isOnline() && !MSG_BAN_EXPIRED_PLAYER.equals("") ) {
@@ -647,7 +648,7 @@ public class ChannelImpl extends Channel {
                     // メッセージ通知を流す
                     if ( !MSG_MUTE_EXPIRED.equals("") ) {
                         String msg = replaceKeywords(MSG_MUTE_EXPIRED, cp);
-                        sendMessage(null, msg, null, false, "system");
+                        sendMessage(null, msg, null, false, "system", true);
                     }
 
                     if ( cp.isOnline() && !MSG_MUTE_EXPIRED_PLAYER.equals("") ) {
@@ -757,19 +758,6 @@ public class ChannelImpl extends Channel {
             logger.log(message, name);
         }
 
-        // Hawkeye Reloaded のチャットログへ記録
-        if ( config.isLoggingChatToHawkEye() && LunaChat.getInstance().getHawkEye() != null
-                && player != null && player.getLocation() != null ) {
-            LunaChat.getInstance().getHawkEye().writeLog(name, player.getLocation(),
-                    "channel(" + getName() + ")-" + Utility.stripColor(message));
-        }
-
-        // Prism のチャットログへ記録
-        if ( config.isLoggingChatToPrism() && LunaChat.getInstance().getPrism() != null
-                && player != null && player.getPlayer() != null ) {
-            LunaChat.getInstance().getPrism().writeLog(player.getPlayer(),
-                    "channel(" + getName() + ")-" + Utility.stripColor(message));
-        }
     }
 
     /**

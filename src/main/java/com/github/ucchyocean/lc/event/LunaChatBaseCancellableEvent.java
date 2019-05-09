@@ -19,8 +19,8 @@ public class LunaChatBaseCancellableEvent extends LunaChatBaseEvent implements C
      * コンストラクタ
      * @param channelName チャンネル名
      */
-    public LunaChatBaseCancellableEvent(String channelName) {
-        super(channelName);
+    public LunaChatBaseCancellableEvent(String channelName, boolean isAsync) {
+        super(channelName, isAsync);
     }
 
     /**

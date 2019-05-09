@@ -18,7 +18,7 @@ public class LunaChatChannelCreateEvent extends LunaChatBaseCancellableEvent {
     private CommandSender sender;
 
     public LunaChatChannelCreateEvent(String channelName, CommandSender sender) {
-        super(channelName);
+        super(channelName, false);
         this.sender = sender;
     }
 

@@ -21,7 +21,7 @@ public class LunaChatChannelChatEvent extends LunaChatBaseCancellableEvent {
     public LunaChatChannelChatEvent(String channelName, ChannelPlayer player,
             String originalMessage, String ngMaskedMessage,
             String messageFormat) {
-        super(channelName);
+        super(channelName, true);
         this.player = player;
         this.originalMessage = originalMessage;
         this.ngMaskedMessage = ngMaskedMessage;

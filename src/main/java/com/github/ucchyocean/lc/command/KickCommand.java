@@ -119,7 +119,7 @@ public class KickCommand extends SubCommandAbst {
         }
 
         // キック実行
-        channel.removeMember(kicked);
+        channel.removeMember(kicked, false);
         channel.save();
 
         // senderに通知メッセージを出す

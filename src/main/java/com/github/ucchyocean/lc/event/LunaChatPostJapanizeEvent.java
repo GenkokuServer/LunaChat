@@ -26,7 +26,7 @@ public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
      */
     public LunaChatPostJapanizeEvent(String channelName, ChannelPlayer player,
             String original, String japanized) {
-        super(channelName);
+        super(channelName, true);
         this.player = player;
         this.original = original;
         this.japanized = japanized;

@@ -75,7 +75,7 @@ public abstract class SubCommandAbst {
             msg = msg.replace("%player", "");
         }
         msg = Utility.replaceColorCode(msg);
-        channel.sendMessage(null, msg, null, true, "system");
+        channel.sendMessage(null, msg, null, true, "system", false);
     }
 
     /**
@@ -104,7 +104,7 @@ public abstract class SubCommandAbst {
             msg = msg.replace("%player", "");
         }
         msg = Utility.replaceColorCode(msg);
-        channel.sendMessage(null, msg, null, true, "system");
+        channel.sendMessage(null, msg, null, true, "system", false);
     }
 
     /**
