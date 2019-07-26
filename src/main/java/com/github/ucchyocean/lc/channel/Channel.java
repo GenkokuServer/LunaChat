@@ -47,6 +47,7 @@ public abstract class Channel implements ConfigurationSerializable {
     private static final String KEY_MODERATOR = "moderator";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_VISIBLE = "visible";
+    private static final String KEY_BUNGEE = "bungee";
     private static final String KEY_COLOR = "color";
     private static final String KEY_BROADCAST = "broadcast";
     private static final String KEY_WORLD = "world";
@@ -85,6 +86,9 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /** チャンネルリストに表示されるかどうか */
     private boolean visible;
+
+    /** 他鯖のLunachatの同名チャンネルに発言を送信するかどうか */
+    private boolean bungee;
 
     /** チャンネルのカラー */
     private String colorCode;
@@ -140,6 +144,7 @@ public abstract class Channel implements ConfigurationSerializable {
         this.moderator = new ArrayList<ChannelPlayer>();
         this.password = "";
         this.visible = true;
+        this.bungee = false;
         this.colorCode = "";
         this.broadcastChannel = false;
         this.isWorldRange = false;
@@ -211,15 +216,16 @@ public abstract class Channel implements ConfigurationSerializable {
      * @param player 発言をするプレイヤー
      * @param message 発言をするメッセージ
      */
-    public abstract void chat(ChannelPlayer player, String message);
+    public abstract void chat(ChannelPlayer player, String message, boolean isAsync);
 
     /**
      * ほかの連携先などから、このチャットに発言する
      * @param player プレイヤー名
      * @param source 連携元を判別する文字列
      * @param message メッセージ
+     * @param isAsync 非同期イベントで呼び出されたかどうか
      */
-    public abstract void chatFromOtherSource(String player, String source, String message);
+    public abstract void chatFromOtherSource(String player, String source, String message, boolean isAsync);
 
     /**
      * メンバーを追加する
@@ -372,6 +378,18 @@ public abstract class Channel implements ConfigurationSerializable {
             ChannelPlayer player, String message, String format, boolean sendDynmap, String displayName, boolean isAsync);
 
     /**
+     * メッセージを表示します。指定したプレイヤーの発言として処理されます。
+     * @param player プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
+     * @param message メッセージ
+     * @param format フォーマット
+     * @param sendDynmap dynmapへ送信するかどうか
+     * @param displayName 発言者の表示名（APIに使用されます）
+     * @param isAsync 非同期で送信するかどうか
+     */
+    public abstract void sendMessage(
+            ChannelPlayer player, String message, String format, boolean sendDynmap, String displayName);
+
+    /**
      * チャンネル情報を返す
      * @param forModerator モデレータ向けの情報を含めるかどうか
      * @return チャンネル情報
@@ -449,6 +467,7 @@ public abstract class Channel implements ConfigurationSerializable {
         map.put(KEY_MODERATOR, getStringList(moderator));
         map.put(KEY_PASSWORD, password);
         map.put(KEY_VISIBLE, visible);
+        map.put(KEY_BUNGEE, bungee);
         map.put(KEY_COLOR, colorCode);
         map.put(KEY_BROADCAST, broadcastChannel);
         map.put(KEY_WORLD, isWorldRange);
@@ -484,6 +503,7 @@ public abstract class Channel implements ConfigurationSerializable {
         channel.moderator = castToChannelPlayerList(data.get(KEY_MODERATOR));
         channel.password = castWithDefault(data.get(KEY_PASSWORD), "");
         channel.visible = castWithDefault(data.get(KEY_VISIBLE), true);
+        channel.bungee = castWithDefault(data.get(KEY_BUNGEE), false);
         channel.colorCode = castWithDefault(data.get(KEY_COLOR), "");
         channel.broadcastChannel = castWithDefault(data.get(KEY_BROADCAST), false);
         channel.isWorldRange = castWithDefault(data.get(KEY_WORLD), false);
@@ -693,6 +713,22 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    /**
+     * バンジーコードに送信するかどうか
+     * @return バンジーコードに送信するならtrue、しないならfalse
+     */
+    public boolean isBungee() {
+        return bungee;
+    }
+
+    /**
+     * バンジーコードに送信するかどうかを設定する
+     * @param bungee バンジーコードに送信するならtrue、しないならfalse
+     */
+    public void setBungee(boolean bungee) {
+        this.bungee = bungee;
     }
 
     /**

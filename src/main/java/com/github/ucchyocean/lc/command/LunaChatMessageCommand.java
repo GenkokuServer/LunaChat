@@ -98,7 +98,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
 
         // メッセージがあるなら送信する
         if ( message.trim().length() > 0 ) {
-            channel.chat(inviter, message);
+            channel.chat(inviter, message, false);
         }
 
         // 送信履歴を残す

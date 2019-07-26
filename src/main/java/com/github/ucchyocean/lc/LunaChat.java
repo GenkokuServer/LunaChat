@@ -46,6 +46,8 @@ public class LunaChat extends JavaPlugin {
     private LunaChatReplyCommand replyCommand;
     private LunaChatJapanizeCommand lcjapanizeCommand;
 
+    private PluginMessageChannelManager pluginMessageChannelManager;
+
     /**
      * プラグインが有効化されたときに呼び出されるメソッド
      * @see org.bukkit.plugin.java.JavaPlugin#onEnable()
@@ -57,6 +59,7 @@ public class LunaChat extends JavaPlugin {
         config = new LunaChatConfig();
         manager = new ChannelManager();
         normalChatLogger = new LunaChatLogger("==normalchat");
+        pluginMessageChannelManager = new PluginMessageChannelManager();
 
         // チャンネルチャット無効なら、デフォルト発言先をクリアする(see issue #59)
         if ( !config.isEnableChannelChat() ) {
@@ -86,6 +89,10 @@ public class LunaChat extends JavaPlugin {
 
         // リスナーの登録
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        
+        // プラグインメッセージチャンネルに登録
+        getServer().getMessenger().registerIncomingPluginChannel(this, "lunachat:out", new PluginMessageChannelManager());
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "lunachat:in");
 
         // コマンドの登録
         lunachatCommand = new LunaChatCommand();
@@ -223,5 +230,13 @@ public class LunaChat extends JavaPlugin {
      */
     protected void setNormalChatLogger(LunaChatLogger normalChatLogger) {
         this.normalChatLogger = normalChatLogger;
+    }
+
+    /**
+     * プラグインメッセージチャンネルマネージャを返す
+     * @return pluginMessageChannelManager
+     */
+    public PluginMessageChannelManager getPluginMessageChannelManager(){
+        return pluginMessageChannelManager;
     }
 }

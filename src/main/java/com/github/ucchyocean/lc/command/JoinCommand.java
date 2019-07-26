@@ -190,7 +190,7 @@ public class JoinCommand extends SubCommandAbst {
 
             // 何かメッセージがあるなら、そのままチャット送信する
             if (message.length() > 0 && hasSpeakPermission(sender, channelName)) {
-                channel.chat(player, message.toString());
+                channel.chat(player, message.toString(), false);
                 return true;
             }
 
@@ -203,7 +203,7 @@ public class JoinCommand extends SubCommandAbst {
             // グローバルチャンネルで、何かメッセージがあるなら、そのままチャット送信する
             if (channel.getName().equals(config.getGlobalChannel()) &&
                     message.length() > 0 && hasSpeakPermission(sender, channelName)) {
-                channel.chat(player, message.toString());
+                channel.chat(player, message.toString(), false);
                 return true;
             }
 

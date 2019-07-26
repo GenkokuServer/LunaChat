@@ -215,7 +215,7 @@ public class PlayerListener implements Listener {
                     }
 
                     // 指定されたチャンネルに発言して終了する。
-                    chatToChannelWithEvent(player, channel, value);
+                    chatToChannelWithEvent(player, channel, value, event.isAsynchronous());
                     event.setCancelled(true);
                     return;
                 }
@@ -240,7 +240,7 @@ public class PlayerListener implements Listener {
             }
         }
 
-        chatToChannelWithEvent(player, channel, event.getMessage());
+        chatToChannelWithEvent(player, channel, event.getMessage(), event.isAsynchronous());
 
         // もとのイベントをキャンセル
         event.setCancelled(true);
@@ -268,7 +268,7 @@ public class PlayerListener implements Listener {
 
             // LunaChatPreChatEvent イベントコール
             LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
-                    global.getName(), player, event.getMessage());
+                    global.getName(), player, event.getMessage(), event.isAsynchronous());
             Bukkit.getPluginManager().callEvent(preChatEvent);
             if ( preChatEvent.isCancelled() ) {
                 event.setCancelled(true);
@@ -287,7 +287,7 @@ public class PlayerListener implements Listener {
             }
 
             // チャンネルチャット発言
-            chatToChannelWithEvent(player, global, message);
+            chatToChannelWithEvent(player, global, message, event.isAsynchronous());
 
             // もとのイベントをキャンセル
             event.setCancelled(true);
@@ -551,11 +551,11 @@ public class PlayerListener implements Listener {
      * @param message 発言内容
      * @return イベントでキャンセルされたかどうか
      */
-    private boolean chatToChannelWithEvent(ChannelPlayer player, Channel channel, String message) {
+    private boolean chatToChannelWithEvent(ChannelPlayer player, Channel channel, String message, boolean async) {
 
         // LunaChatPreChatEvent イベントコール
         LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
-                channel.getName(), player, message);
+                channel.getName(), player, message, async);
         Bukkit.getPluginManager().callEvent(preChatEvent);
         if ( preChatEvent.isCancelled() ) {
             return true;
@@ -567,7 +567,7 @@ public class PlayerListener implements Listener {
         message = preChatEvent.getMessage();
 
         // チャンネルチャット発言
-        channel.chat(player, message);
+        channel.chat(player, message, async);
 
         return false;
     }

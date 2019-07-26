@@ -94,7 +94,7 @@ public class ChannelImpl extends Channel {
      * @param message 発言をするメッセージ
      */
     @Override
-    public void chat(ChannelPlayer player, String message) {
+    public void chat(ChannelPlayer player, String message, boolean isAsync) {
 
         // 発言権限を確認する
         String node = PERMISSION_SPEAK_PREFIX + "." + getName();
@@ -147,7 +147,7 @@ public class ChannelImpl extends Channel {
         // イベントコール
         LunaChatChannelChatEvent event =
                 new LunaChatChannelChatEvent(getName(), player,
-                        preReplaceMessage, maskedMessage, msgFormat);
+                        preReplaceMessage, maskedMessage, msgFormat, isAsync);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {
             return;
@@ -166,6 +166,7 @@ public class ChannelImpl extends Channel {
         // Japanize変換タスクを作成する
         boolean isIncludeSyncChat = true;
         DelayedJapanizeConvertTask delayedTask = null;
+        DelayedJapanizeConvertTask delayedToBungeeTask = null;
         JapanizeType japanizeType = (getJapanizeType() == null)
                 ? config.getJapanizeType() : getJapanizeType();
 
@@ -187,6 +188,9 @@ public class ChannelImpl extends Channel {
             // タスクを作成しておく
             delayedTask = new DelayedJapanizeChannelChatTask(maskedMessage,
                     japanizeType, this, player, jpFormat, messageFormat);
+            delayedToBungeeTask = new DelayedJapanizeChannelChatToBungeeTask(maskedMessage,
+                    japanizeType, this, player, jpFormat, messageFormat);
+            
         }
 
         if ( isIncludeSyncChat ) {
@@ -197,6 +201,17 @@ public class ChannelImpl extends Channel {
         // 非同期実行タスクがある場合、追加で実行する
         if ( delayedTask != null ) {
             delayedTask.runTaskAsynchronously(LunaChat.getInstance());
+        }
+
+        if (isBungee()){
+            if (isIncludeSyncChat) {
+                LunaChat.getInstance().getPluginMessageChannelManager()
+                        .sendBungeeMessage(getName(), player.getPlayer(), maskedMessage, msgFormat);
+
+            }
+            if (delayedToBungeeTask != null) {
+                delayedToBungeeTask.runTaskAsynchronously(LunaChat.getInstance());
+            }
         }
 
         // NGワード発言者に、NGワードアクションを実行する
@@ -248,9 +263,10 @@ public class ChannelImpl extends Channel {
      * @param player プレイヤー名
      * @param source 連携元を判別する文字列
      * @param message メッセージ
+     * @param isAsync 非同期イベントで呼び出されたかどうか
      */
     @Override
-    public void chatFromOtherSource(String player, String source, String message) {
+    public void chatFromOtherSource(String player, String source, String message, boolean isAsync) {
 
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
 
@@ -279,7 +295,7 @@ public class ChannelImpl extends Channel {
 
         // メッセージの送信
         boolean sendDynmap = source == null || !source.equals("web");
-        sendMessage(null, maskedMessage, msgFormat, sendDynmap, name, true);
+        sendMessage(null, maskedMessage, msgFormat, sendDynmap, name, isAsync);
     }
 
     /**
@@ -459,6 +475,20 @@ public class ChannelImpl extends Channel {
 
         // ロギング
         log(originalMessage, name, player);
+    }
+
+    /**
+     * メッセージを表示します。指定したプレイヤーの発言として処理されます。
+     * @param player プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
+     * @param message メッセージ
+     * @param format フォーマット
+     * @param sendDynmap dynmapへ送信するかどうか
+     * @param name 発言者名
+     */
+    @Override
+    public void sendMessage(ChannelPlayer player, String message,
+            String format, boolean sendDynmap, String name) {
+        sendMessage(player, message, format, sendDynmap, name, true);
     }
 
     /**

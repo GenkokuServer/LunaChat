@@ -17,8 +17,8 @@ public class LunaChatPreChatEvent extends LunaChatBaseCancellableEvent {
     private ChannelPlayer player;
     private String message;
 
-    public LunaChatPreChatEvent(String channelName, ChannelPlayer player, String message) {
-        super(channelName, true);
+    public LunaChatPreChatEvent(String channelName, ChannelPlayer player, String message, boolean async) {
+        super(channelName, async);
         this.player = player;
         this.message = message;
     }
