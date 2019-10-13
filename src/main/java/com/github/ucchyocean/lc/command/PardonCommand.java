@@ -124,7 +124,7 @@ public class PardonCommand extends SubCommandAbst {
         sendResourceMessageWithKeyword(channel, "pardonMessage", kicked);
 
         // BANされていた人に通知メッセージを出す
-        if ( kicked != null && kicked.isOnline() ) {
+        if (kicked.isOnline()) {
             sendResourceMessage(kicked, PREINFO,
                     "cmdmsgPardoned", channel.getName());
         }
