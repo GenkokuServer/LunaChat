@@ -5,33 +5,32 @@
  */
 package com.github.ucchyocean.lc.channel;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * チャンネル
+ *
  * @author ucchy
  */
 @SerializableAs("Channel")
@@ -60,43 +59,68 @@ public abstract class Channel implements ConfigurationSerializable {
     private static final String KEY_ALLOWCC = "allowcc";
     private static final String KEY_JAPANIZE = "japanize";
 
-    /** 参加者 */
+    /**
+     * 参加者
+     */
     private List<ChannelPlayer> members;
 
-    /** チャンネルモデレータ */
+    /**
+     * チャンネルモデレータ
+     */
     private List<ChannelPlayer> moderator;
 
-    /** BANされたプレイヤー */
+    /**
+     * BANされたプレイヤー
+     */
     private List<ChannelPlayer> banned;
 
-    /** Muteされたプレイヤー */
+    /**
+     * Muteされたプレイヤー
+     */
     private List<ChannelPlayer> muted;
 
-    /** Hideしているプレイヤー */
+    /**
+     * Hideしているプレイヤー
+     */
     private List<ChannelPlayer> hided;
 
-    /** チャンネルの名称 */
+    /**
+     * チャンネルの名称
+     */
     private final String name;
 
-    /** チャンネルの別名 */
+    /**
+     * チャンネルの別名
+     */
     private String alias;
 
-    /** チャンネルの説明文 */
+    /**
+     * チャンネルの説明文
+     */
     private String description;
 
-    /** チャンネルのパスワード */
+    /**
+     * チャンネルのパスワード
+     */
     private String password;
 
-    /** チャンネルリストに表示されるかどうか */
+    /**
+     * チャンネルリストに表示されるかどうか
+     */
     private boolean visible;
 
-    /** 他鯖のLunachatの同名チャンネルに発言を送信するかどうか */
+    /**
+     * 他鯖のLunachatの同名チャンネルに発言を送信するかどうか
+     */
     private boolean bungee;
 
-    /** チャンネルのカラー */
+    /**
+     * チャンネルのカラー
+     */
     private String colorCode;
 
-    /** メッセージフォーマット<br>
+    /**
+     * メッセージフォーマット<br>
      * 指定可能なキーワードは下記のとおり<br>
      * %ch - チャンネル名<br>
      * %username - ユーザー名<br>
@@ -104,35 +128,52 @@ public abstract class Channel implements ConfigurationSerializable {
      * %prefix - PermissionsExに設定するprefix<br>
      * %suffix - PermissionsExに設定するsuffix<br>
      * %color - チャンネルのカラーコード
-     * */
+     */
     private String format;
 
-    /** ブロードキャストチャンネルかどうか */
+    /**
+     * ブロードキャストチャンネルかどうか
+     */
     private boolean broadcastChannel;
 
-    /** ワールドチャットかどうか */
+    /**
+     * ワールドチャットかどうか
+     */
     private boolean isWorldRange;
 
-    /** チャットの可聴範囲 0は無制限 */
+    /**
+     * チャットの可聴範囲 0は無制限
+     */
     private int chatRange;
 
-    /** 期限付きBANの期限（key=プレイヤー名、value=期日（ミリ秒）） */
+    /**
+     * 期限付きBANの期限（key=プレイヤー名、value=期日（ミリ秒））
+     */
     private Map<ChannelPlayer, Long> banExpires;
 
-    /** 期限付きMuteの期限（key=プレイヤー名、value=期日（ミリ秒）） */
+    /**
+     * 期限付きMuteの期限（key=プレイヤー名、value=期日（ミリ秒））
+     */
     private Map<ChannelPlayer, Long> muteExpires;
 
-    /** 1:1チャットの相手名 */
+    /**
+     * 1:1チャットの相手名
+     */
     private String privateMessageTo;
 
-    /** カラーコードの使用可否 */
+    /**
+     * カラーコードの使用可否
+     */
     private boolean allowcc;
 
-    /** チャンネルごとのjapanize変換設定 */
+    /**
+     * チャンネルごとのjapanize変換設定
+     */
     private JapanizeType japanizeType;
 
     /**
      * コンストラクタ
+     *
      * @param name チャンネルの名称
      */
     Channel(String name) {
@@ -159,7 +200,7 @@ public abstract class Channel implements ConfigurationSerializable {
         this.japanizeType = null;
 
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        if ( isPersonalChat() ) {
+        if (isPersonalChat()) {
             this.format = config.getDefaultFormatForPrivateMessage();
         } else {
             this.format = config.getDefaultFormat();
@@ -168,6 +209,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * 1:1チャットかどうか
+     *
      * @return 1:1チャットかどうか
      */
     public boolean isPersonalChat() {
@@ -176,6 +218,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * ブロードキャストチャンネルかどうか
+     *
      * @return ブロードキャストチャンネルかどうか
      */
     public boolean isBroadcastChannel() {
@@ -184,6 +227,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * グローバルチャンネルかどうか
+     *
      * @return グローバルチャンネルかどうか
      */
     public boolean isGlobalChannel() {
@@ -193,6 +237,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * 強制参加チャンネルかどうか
+     *
      * @return 強制参加チャンネルかどうか
      */
     public boolean isForceJoinChannel() {
@@ -202,6 +247,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * このチャンネルのモデレータ権限を持っているかどうかを確認する
+     *
      * @param sender 権限を確認する対象
      * @return チャンネルのモデレータ権限を持っているかどうか
      */
@@ -216,15 +262,17 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * このチャットに発言をする
-     * @param player 発言をするプレイヤー
+     *
+     * @param player  発言をするプレイヤー
      * @param message 発言をするメッセージ
      */
     public abstract void chat(ChannelPlayer player, String message, boolean isAsync);
 
     /**
      * ほかの連携先などから、このチャットに発言する
-     * @param player プレイヤー名
-     * @param source 連携元を判別する文字列
+     *
+     * @param player  プレイヤー名
+     * @param source  連携元を判別する文字列
      * @param message メッセージ
      * @param isAsync 非同期イベントで呼び出されたかどうか
      */
@@ -232,12 +280,13 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * メンバーを追加する
+     *
      * @param player 追加するプレイヤー
      */
     public void addMember(ChannelPlayer player) {
 
         // 既に参加しているなら、何もしない
-        if ( members.contains(player) ) {
+        if (members.contains(player)) {
             return;
         }
 
@@ -249,12 +298,12 @@ public abstract class Channel implements ConfigurationSerializable {
         LunaChatChannelMemberChangedEvent event =
                 new LunaChatChannelMemberChangedEvent(this.name, this.members, after, false);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
+        if (event.isCancelled()) {
             return;
         }
 
         // メンバー更新
-        if ( members.size() == 0 && moderator.size() == 0 ) {
+        if (members.size() == 0 && moderator.size() == 0) {
             moderator.add(player);
         }
         members = after;
@@ -266,12 +315,13 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * メンバーを削除する
+     *
      * @param player 削除するプレイヤー
      */
     public void removeMember(ChannelPlayer player, boolean isAsync) {
 
         // 既に削除しているなら、何もしない
-        if ( !members.contains(player) ) {
+        if (!members.contains(player)) {
             return;
         }
 
@@ -283,7 +333,7 @@ public abstract class Channel implements ConfigurationSerializable {
         LunaChatChannelMemberChangedEvent event =
                 new LunaChatChannelMemberChangedEvent(this.name, this.members, after, isAsync);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
+        if (event.isCancelled()) {
             return;
         }
 
@@ -291,7 +341,7 @@ public abstract class Channel implements ConfigurationSerializable {
         // デフォルト発言先を削除する
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
         Channel def = api.getDefaultChannel(player.getName());
-        if ( def != null && def.getName().equals(getName()) ) {
+        if (def != null && def.getName().equals(getName())) {
             api.removeDefaultChannel(player.getName());
         }
 
@@ -302,7 +352,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // 0人で削除する設定がオンで、0人になったなら、チャンネルを削除する
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        if ( config.isZeroMemberRemove() && members.size() <= 0 ) {
+        if (config.isZeroMemberRemove() && members.size() <= 0) {
             api.removeChannel(this.name);
             return;
         }
@@ -318,12 +368,13 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * モデレータを追加する
+     *
      * @param player 追加するプレイヤー
      */
     public void addModerator(ChannelPlayer player) {
 
         // 既にモデレータなら何もしない
-        if ( moderator.contains(player) ) {
+        if (moderator.contains(player)) {
             return;
         }
 
@@ -338,12 +389,13 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * モデレータを削除する
+     *
      * @param player 削除するプレイヤー
      */
     public void removeModerator(ChannelPlayer player) {
 
         // 既にモデレータでないなら何もしない
-        if ( !moderator.contains(player) ) {
+        if (!moderator.contains(player)) {
             return;
         }
 
@@ -358,30 +410,33 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * プレイヤーに関連する、システムメッセージをチャンネルに流す
-     * @param key リソースキー
-     * @param player プレイヤー
+     *
+     * @param key     リソースキー
+     * @param player  プレイヤー
      * @param isAsync 非同期で実行されたか
      */
     protected abstract void sendSystemMessage(String key, ChannelPlayer player, boolean isAsync);
 
     /**
      * メッセージを表示します。指定したプレイヤーの発言として処理されます。
-     * @param player プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
-     * @param message メッセージ
-     * @param format フォーマット
-     * @param sendDynmap dynmapへ送信するかどうか
+     *
+     * @param player      プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
+     * @param message     メッセージ
+     * @param format      フォーマット
+     * @param sendDynmap  dynmapへ送信するかどうか
      * @param displayName 発言者の表示名（APIに使用されます）
-     * @param isAsync 非同期で送信するかどうか
+     * @param isAsync     非同期で送信するかどうか
      */
     public abstract void sendMessage(
             ChannelPlayer player, String message, String format, boolean sendDynmap, String displayName, boolean isAsync);
 
     /**
      * メッセージを表示します。指定したプレイヤーの発言として処理されます。
-     * @param player プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
-     * @param message メッセージ
-     * @param format フォーマット
-     * @param sendDynmap dynmapへ送信するかどうか
+     *
+     * @param player      プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
+     * @param message     メッセージ
+     * @param format      フォーマット
+     * @param sendDynmap  dynmapへ送信するかどうか
      * @param displayName 発言者の表示名（APIに使用されます）
      */
     public abstract void sendMessage(
@@ -389,6 +444,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネル情報を返す
+     *
      * @param forModerator モデレータ向けの情報を含めるかどうか
      * @return チャンネル情報
      */
@@ -396,9 +452,10 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * ログファイルを読み込んで、ログデータを取得する
-     * @param player プレイヤー名、フィルタしないならnullを指定すること
-     * @param filter フィルタ、フィルタしないならnullを指定すること
-     * @param date 日付、今日のデータを取得するならnullを指定すること
+     *
+     * @param player  プレイヤー名、フィルタしないならnullを指定すること
+     * @param filter  フィルタ、フィルタしないならnullを指定すること
+     * @param date    日付、今日のデータを取得するならnullを指定すること
      * @param reverse 逆順取得
      * @return ログデータ
      */
@@ -407,19 +464,20 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルのオンライン人数を返す
+     *
      * @return オンライン人数
      */
     public int getOnlineNum() {
 
         // ブロードキャストチャンネルならサーバー接続人数を返す
-        if ( isBroadcastChannel() ) {
+        if (isBroadcastChannel()) {
             return Utility.getOnlinePlayersCount();
         }
 
         // メンバーの人数を数える
         int onlineNum = 0;
-        for ( ChannelPlayer player : members ) {
-            if ( player.isOnline() ) {
+        for (ChannelPlayer player : members) {
+            if (player.isOnline()) {
                 onlineNum++;
             }
         }
@@ -428,12 +486,13 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルの総参加人数を返す
+     *
      * @return 総参加人数
      */
     public int getTotalNum() {
 
         // ブロードキャストチャンネルならサーバー接続人数を返す
-        if ( isBroadcastChannel() ) {
+        if (isBroadcastChannel()) {
             return Utility.getOnlinePlayersCount();
         }
 
@@ -448,6 +507,7 @@ public abstract class Channel implements ConfigurationSerializable {
     /**
      * シリアライズ<br>
      * ConfigurationSerializable互換のための実装。
+     *
      * @see org.bukkit.configuration.serialization.ConfigurationSerializable#serialize()
      */
     @NotNull
@@ -481,13 +541,14 @@ public abstract class Channel implements ConfigurationSerializable {
     /**
      * デシリアライズ<br>
      * ConfigurationSerializable互換のための実装。
+     *
      * @param data デシリアライズ元のMapデータ。
      * @return デシリアライズされたクラス
      */
     private static Channel deserialize(Map<String, Object> data) {
 
         String name = castWithDefault(data.get(KEY_NAME), null);
-        if ( name == null ) {
+        if (name == null) {
             return null;
         }
 
@@ -516,13 +577,14 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * List&lt;ChannelPlayer&gt;を、List&lt;String&gt;に変換する。
+     *
      * @param org 変換元
      * @return 変換後
      */
     private static List<String> getStringList(List<ChannelPlayer> org) {
 
         ArrayList<String> result = new ArrayList<>();
-        for ( ChannelPlayer cp : org ) {
+        for (ChannelPlayer cp : org) {
             result.add(cp.toString());
         }
         return result;
@@ -530,13 +592,14 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * Map&lt;ChannelPlayer, Long&gt;を、Map&lt;String, Long&gt;に変換する。
+     *
      * @param org 変換元
      * @return 変換後
      */
     private static Map<String, Long> getStringLongMap(Map<ChannelPlayer, Long> org) {
 
         HashMap<String, Long> result = new HashMap<>();
-        for ( ChannelPlayer cp : org.keySet() ) {
+        for (ChannelPlayer cp : org.keySet()) {
             result.put(cp.toString(), org.get(cp));
         }
         return result;
@@ -544,6 +607,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * Objectを、クラスTに変換する。nullならデフォルトを返す。
+     *
      * @param obj 変換元
      * @param def nullだった場合のデフォルト
      * @return 変換後
@@ -551,14 +615,15 @@ public abstract class Channel implements ConfigurationSerializable {
     @SuppressWarnings("unchecked")
     private static <T> T castWithDefault(Object obj, T def) {
 
-        if ( obj == null ) {
+        if (obj == null) {
             return def;
         }
-        return (T)obj;
+        return (T) obj;
     }
 
     /**
      * Objectを、List&lt;ChannelPlayer&gt;に変換する。nullなら空のリストを返す。
+     *
      * @param obj 変換元
      * @return 変換後
      */
@@ -567,7 +632,7 @@ public abstract class Channel implements ConfigurationSerializable {
         List<String> entries = castToStringList(obj);
         ArrayList<ChannelPlayer> players = new ArrayList<>();
 
-        for ( String entry : entries ) {
+        for (String entry : entries) {
             players.add(ChannelPlayer.getChannelPlayer(entry));
         }
 
@@ -576,23 +641,25 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * Objectを、List&lt;String&gt;に変換する。nullなら空のリストを返す。
+     *
      * @param obj 変換元
      * @return 変換後
      */
     @SuppressWarnings("unchecked")
     private static List<String> castToStringList(Object obj) {
 
-        if ( obj == null ) {
+        if (obj == null) {
             return new ArrayList<>();
         }
-        if ( !(obj instanceof List<?>) ) {
+        if (!(obj instanceof List<?>)) {
             return new ArrayList<>();
         }
-        return (List<String>)obj;
+        return (List<String>) obj;
     }
 
     /**
      * Objectを、Map&lt;ChannelPlayer, Long&gt;に変換する。nullなら空のリストを返す。
+     *
      * @param obj 変換元
      * @return 変換後
      */
@@ -601,7 +668,7 @@ public abstract class Channel implements ConfigurationSerializable {
         Map<String, Long> entries = castToStringLongMap(obj);
         HashMap<ChannelPlayer, Long> map = new HashMap<>();
 
-        for ( String key : entries.keySet() ) {
+        for (String key : entries.keySet()) {
             ChannelPlayer cp = ChannelPlayer.getChannelPlayer(key);
             map.put(cp, entries.get(key));
         }
@@ -611,38 +678,40 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * Objectを、Map&lt;String, Long&gt;に変換する。nullなら空のリストを返す。
+     *
      * @param obj 変換元
      * @return 変換後
      */
     @SuppressWarnings("unchecked")
     private static Map<String, Long> castToStringLongMap(Object obj) {
 
-        if ( obj == null ) {
+        if (obj == null) {
             return new HashMap<>();
         }
-        if ( !(obj instanceof HashMap<?, ?>) ) {
+        if (!(obj instanceof HashMap<?, ?>)) {
             return new HashMap<>();
         }
-        return (Map<String, Long>)obj;
+        return (Map<String, Long>) obj;
     }
 
     /**
      * チャンネルの設定ファイルが、UUID化のために一旦保存が必要かどうかを返す
+     *
      * @param data チャンネルの実コンフィグデータ
      */
     private static boolean isNeedToSaveForUUIDUpdate(Map<String, Object> data) {
 
-        if ( !Utility.isCB178orLater() ) {
+        if (!Utility.isCB178orLater()) {
             return false;
         }
 
         List<String> members = castToStringList(data.get(KEY_MEMBERS));
-        if ( members.size() == 0 ) {
+        if (members.size() == 0) {
             return false;
         }
 
-        for ( String member : members ) {
-            if ( member.startsWith("$") ) {
+        for (String member : members) {
+            if (member.startsWith("$")) {
                 return false;
             }
         }
@@ -652,6 +721,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルの別名を返す
+     *
      * @return チャンネルの別名
      */
     String getAlias() {
@@ -660,6 +730,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルの別名を設定する
+     *
      * @param alias チャンネルの別名
      */
     public void setAlias(String alias) {
@@ -668,6 +739,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルの説明文を返す
+     *
      * @return チャンネルの説明文
      */
     public String getDescription() {
@@ -676,6 +748,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルの説明文を設定する
+     *
      * @param description チャンネルの説明文
      */
     public void setDescription(String description) {
@@ -684,6 +757,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルのパスワードを返す
+     *
      * @return チャンネルのパスワード
      */
     public String getPassword() {
@@ -692,6 +766,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルのパスワードを設定する
+     *
      * @param password チャンネルのパスワード
      */
     public void setPassword(String password) {
@@ -700,6 +775,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルの可視性を返す
+     *
      * @return チャンネルの可視性
      */
     public boolean isVisible() {
@@ -708,6 +784,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルの可視性を設定する
+     *
      * @param visible チャンネルの可視性
      */
     public void setVisible(boolean visible) {
@@ -716,6 +793,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * バンジーコードに送信するかどうか
+     *
      * @return バンジーコードに送信するならtrue、しないならfalse
      */
     public boolean isBungee() {
@@ -724,6 +802,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * バンジーコードに送信するかどうかを設定する
+     *
      * @param bungee バンジーコードに送信するならtrue、しないならfalse
      */
     public void setBungee(boolean bungee) {
@@ -732,6 +811,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルのメッセージフォーマットを返す
+     *
      * @return チャンネルのメッセージフォーマット
      */
     String getFormat() {
@@ -740,6 +820,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルのメッセージフォーマットを設定する
+     *
      * @param format チャンネルのメッセージフォーマット
      */
     public void setFormat(String format) {
@@ -748,15 +829,16 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルのメンバーを返す
+     *
      * @return チャンネルのメンバー
      */
     public List<ChannelPlayer> getMembers() {
 
         // ブロードキャストチャンネルなら、
         // 現在サーバーに接続している全プレイヤーをメンバーとして返す
-        if ( isBroadcastChannel() ) {
+        if (isBroadcastChannel()) {
             List<ChannelPlayer> mem = new ArrayList<>();
-            for ( Player p : Utility.getOnlinePlayers() ) {
+            for (Player p : Utility.getOnlinePlayers()) {
                 mem.add(ChannelPlayer.getChannelPlayer(p));
             }
             return mem;
@@ -767,6 +849,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルのモデレーターを返す
+     *
      * @return チャンネルのモデレーター
      */
     public List<ChannelPlayer> getModerator() {
@@ -775,6 +858,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルのBANリストを返す
+     *
      * @return チャンネルのBANリスト
      */
     public List<ChannelPlayer> getBanned() {
@@ -783,6 +867,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルのMuteリストを返す
+     *
      * @return チャンネルのMuteリスト
      */
     public List<ChannelPlayer> getMuted() {
@@ -791,6 +876,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * 期限付きBANの期限マップを返す（key=プレイヤー名、value=期日（ミリ秒））
+     *
      * @return banExpires
      */
     public Map<ChannelPlayer, Long> getBanExpires() {
@@ -799,6 +885,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * 期限付きMuteの期限マップを返す（key=プレイヤー名、value=期日（ミリ秒））
+     *
      * @return muteExpires
      */
     public Map<ChannelPlayer, Long> getMuteExpires() {
@@ -807,6 +894,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * 非表示プレイヤーの一覧を返す
+     *
      * @return チャンネルの非表示プレイヤーの一覧
      */
     public List<ChannelPlayer> getHided() {
@@ -815,6 +903,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネル名を返す
+     *
      * @return チャンネル名
      */
     public String getName() {
@@ -823,6 +912,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルのカラーコードを返す
+     *
      * @return チャンネルのカラーコード
      */
     public String getColorCode() {
@@ -831,6 +921,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルのカラーコードを設定する
+     *
      * @param colorCode カラーコード
      */
     public void setColorCode(String colorCode) {
@@ -839,6 +930,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * ブロードキャストチャンネルを設定する
+     *
      * @param broadcast ブロードキャストチャンネルにするかどうか
      */
     public void setBroadcast(boolean broadcast) {
@@ -847,6 +939,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャットを同ワールド内に制限するかどうかを設定する
+     *
      * @param isWorldRange 同ワールド制限するかどうか
      */
     public void setWorldRange(boolean isWorldRange) {
@@ -855,6 +948,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャットの可聴範囲を設定する
+     *
      * @param range 可聴範囲
      */
     public void setChatRange(int range) {
@@ -863,6 +957,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * 1:1チャットのときに、会話の相手先を取得する
+     *
      * @return 会話の相手のプレイヤー名
      */
     String getPrivateMessageTo() {
@@ -871,6 +966,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * 1:1チャットのときに、会話の相手先を設定する
+     *
      * @param name 会話の相手のプレイヤー名
      */
     public void setPrivateMessageTo(String name) {
@@ -879,6 +975,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * ワールドチャットかどうか
+     *
      * @return ワールドチャットかどうか
      */
     boolean isWorldRange() {
@@ -887,6 +984,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャットの可聴範囲、0の場合は無制限
+     *
      * @return チャットの可聴範囲
      */
     int getChatRange() {
@@ -895,6 +993,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * カラーコードが使用可能な設定かどうか
+     *
      * @return allowccを返す
      */
     boolean isAllowCC() {
@@ -903,6 +1002,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * カラーコードの使用可否を設定する
+     *
      * @param allowcc 使用可否
      */
     public void setAllowCC(boolean allowcc) {
@@ -911,6 +1011,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * Japanize変換設定を取得する
+     *
      * @return japanize
      */
     JapanizeType getJapanizeType() {
@@ -919,6 +1020,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * Japanize変換設定を再設定する
+     *
      * @param japanize japanize
      */
     public void setJapanizeType(JapanizeType japanize) {
@@ -941,13 +1043,13 @@ public abstract class Channel implements ConfigurationSerializable {
         }
 
         // 1:1チャットチャンネルの場合は、何もしない。
-        if ( isPersonalChat() )            return;
+        if (isPersonalChat()) return;
 
         // ファイルへ保存する
         YamlConfiguration conf = new YamlConfiguration();
         Map<String, Object> data = this.serialize();
 
-        for ( String key : data.keySet() ) {
+        for (String key : data.keySet()) {
             conf.set(key, data.get(key));
         }
 
@@ -972,6 +1074,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルの情報を保存したファイルから全てのチャンネルを復元して返す。
+     *
      * @return 全てのチャンネル
      */
     static HashMap<String, Channel> loadAllChannels() {
@@ -979,7 +1082,7 @@ public abstract class Channel implements ConfigurationSerializable {
         // フォルダーの取得
         Path folder = LunaChat.getInstance().getDataFolder().toPath().resolve(FOLDER_NAME_CHANNELS);
 
-        if (!Files.exists(folder))             return new HashMap<>();
+        if (!Files.exists(folder)) return new HashMap<>();
 
         File[] files = folder.toFile().listFiles((dir, name) -> name.endsWith(".yml"));
 
@@ -987,21 +1090,21 @@ public abstract class Channel implements ConfigurationSerializable {
 
         HashMap<String, Channel> result = new HashMap<>();
 
-        for ( File file : files ) {
-            YamlConfiguration config =                YamlConfiguration.loadConfiguration(file);
+        for (File file : files) {
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
             Map<String, Object> data = new HashMap<>();
-            for ( String key : config.getKeys(false) ) {
+            for (String key : config.getKeys(false)) {
                 data.put(key, config.get(key));
             }
 
             Channel channel = deserialize(data);
 
             // 自動アップデート
-            if (channel != null&& isNeedToSaveForUUIDUpdate(data) ) {
+            if (channel != null && isNeedToSaveForUUIDUpdate(data)) {
                 channel.save();
             }
 
-            if (channel != null ) result.put(channel.name.toLowerCase(), channel);
+            if (channel != null) result.put(channel.name.toLowerCase(), channel);
         }
 
         return result;
