@@ -59,7 +59,6 @@ public class PluginMessageChannelManager implements PluginMessageListener {
 
         } catch (IOException e){
             e.printStackTrace();
-            return;
         }
     }
 
@@ -84,8 +83,7 @@ public class PluginMessageChannelManager implements PluginMessageListener {
 			}
 			catch(Exception e) {
                 e.printStackTrace();
-                return;
-			}
+            }
 
         }
     }

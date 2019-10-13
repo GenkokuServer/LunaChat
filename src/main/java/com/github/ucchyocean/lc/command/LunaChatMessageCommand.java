@@ -107,7 +107,6 @@ public class LunaChatMessageCommand implements CommandExecutor {
         DataMaps.privateMessageMap.put(
                 inviter.getName(), invited.getName());
 
-        return;
     }
 
     /**

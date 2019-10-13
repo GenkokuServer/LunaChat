@@ -292,8 +292,6 @@ class PlayerListener implements Listener {
             // もとのイベントをキャンセル
             event.setCancelled(true);
 
-            return;
-
         } else {
             // グローバルチャンネル設定が無い場合
 
@@ -382,7 +380,6 @@ class PlayerListener implements Listener {
             // ロギング
             logNormalChat(message, player.getName());
 
-            return;
         }
     }
 
