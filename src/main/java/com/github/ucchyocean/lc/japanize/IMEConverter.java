@@ -126,7 +126,7 @@ public class IMEConverter {
                 if ( start == -1 || end == -1 ) {
                     return buf.toString();
                 }
-                buf.append(result.substring(start+1, end));
+                buf.append(result, start+1, end);
                 int next = result.indexOf("]", end);
                 if ( next == -1 ) {
                     return buf.toString();
