@@ -508,11 +508,11 @@ public class ChannelManager implements LunaChatAPI {
             return new ArrayList<>();
         }
         ArrayList<ChannelPlayer> info = new ArrayList<>();
-        for (String key : hidelist.keySet()) {
+        hidelist.keySet().forEach(key -> {
             if (hidelist.get(key).contains(player)) {
                 info.add(ChannelPlayer.getChannelPlayer(key));
             }
-        }
+        });
         return info;
     }
 
@@ -596,9 +596,7 @@ public class ChannelManager implements LunaChatAPI {
      */
     private List<String> getIdList(List<ChannelPlayer> players) {
         List<String> results = new ArrayList<>();
-        for (ChannelPlayer cp : players) {
-            results.add(cp.toString());
-        }
+        players.forEach(cp -> results.add(cp.toString()));
         return results;
     }
 }
