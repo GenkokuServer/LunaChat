@@ -38,13 +38,4 @@ public class LunaChatChannelCreateEvent extends LunaChatBaseCancellableEvent {
         return sender;
     }
 
-    /**
-     * @deprecated チャンネル作成イベントは、チャンネルを作成する前に呼び出されるので、
-     * このメソッドの戻り値は必ずnullになります。
-     * @see com.github.ucchyocean.lc.event.LunaChatBaseEvent#getChannel()
-     */
-    @Override
-    public Channel getChannel() {
-        return super.getChannel();
-    }
 }
