@@ -67,7 +67,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
 
             // 指定されたプレイヤーが存在するかチェック
             ChannelPlayer target = ChannelPlayer.getChannelPlayer(args[0]);
-            if ( target == null || !target.isOnline() ) {
+            if (!target.isOnline()) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotfoundPlayer", args[0]);
                 return true;
@@ -78,8 +78,8 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
             LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
             api.setPlayersJapanize(target.getName(), value);
 
-            sendResourceMessage(target, PREINFO,
-                    "cmdmsgPlayerJapanize", args[1]);
+            sendResourceMessage(target,
+                    args[1]);
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgPlayerJapanizeOther", args[0], args[1]);
             return true;
@@ -92,8 +92,8 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
 
     /**
      * コマンドの使い方を senderに送る
-     * @param sender
-     * @param label
+     * @param sender CommandSender
+     * @param label Label
      */
     private void printUsage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", "usageJapanize", label);
@@ -123,18 +123,16 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
      * @param cp メッセージの送り先
-     * @param pre プレフィックス
-     * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    private void sendResourceMessage(ChannelPlayer cp, String pre,
-                                     String key, Object... args) {
+    private void sendResourceMessage(ChannelPlayer cp,
+                                     Object... args) {
 
-        String org = Resources.get(key);
+        String org = Resources.get("cmdmsgPlayerJapanize");
         if ( org == null || org.equals("") ) {
             return;
         }
-        String msg = String.format(pre + org, args);
+        String msg = String.format(LunaChatJapanizeCommand.PREINFO + org, args);
         cp.sendMessage(msg);
     }
 }
