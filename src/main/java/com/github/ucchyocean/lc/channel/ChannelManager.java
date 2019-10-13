@@ -5,6 +5,16 @@
  */
 package com.github.ucchyocean.lc.channel;
 
+import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.LunaChatAPI;
+import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.event.LunaChatChannelCreateEvent;
+import com.github.ucchyocean.lc.event.LunaChatChannelRemoveEvent;
+import com.github.ucchyocean.lc.japanize.JapanizeType;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,19 +22,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import com.github.ucchyocean.lc.LunaChat;
-import com.github.ucchyocean.lc.LunaChatAPI;
-import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.event.LunaChatChannelCreateEvent;
-import com.github.ucchyocean.lc.event.LunaChatChannelRemoveEvent;
-import com.github.ucchyocean.lc.japanize.JapanizeType;
-
 /**
  * チャンネルマネージャー
+ *
  * @author ucchy
  */
 public class ChannelManager implements LunaChatAPI {
@@ -66,7 +66,7 @@ public class ChannelManager implements LunaChatAPI {
         fileDefaults = new File(
                 LunaChat.getInstance().getDataFolder(), FILE_NAME_DCHANNELS);
 
-        if ( !fileDefaults.exists() ) {
+        if (!fileDefaults.exists()) {
             YamlConfiguration conf = new YamlConfiguration();
             try {
                 conf.save(fileDefaults);
@@ -88,7 +88,7 @@ public class ChannelManager implements LunaChatAPI {
         fileTemplates = new File(
                 LunaChat.getInstance().getDataFolder(), FILE_NAME_TEMPLATES);
 
-        if ( !fileTemplates.exists() ) {
+        if (!fileTemplates.exists()) {
             YamlConfiguration conf = new YamlConfiguration();
             try {
                 conf.save(fileTemplates);
@@ -101,7 +101,7 @@ public class ChannelManager implements LunaChatAPI {
                 YamlConfiguration.loadConfiguration(fileTemplates);
 
         templates = new HashMap<>();
-        for ( String key : configTemplates.getKeys(false) ) {
+        for (String key : configTemplates.getKeys(false)) {
             templates.put(key, configTemplates.getString(key));
         }
 
@@ -109,7 +109,7 @@ public class ChannelManager implements LunaChatAPI {
         fileJapanize = new File(
                 LunaChat.getInstance().getDataFolder(), FILE_NAME_JAPANIZE);
 
-        if ( !fileJapanize.exists() ) {
+        if (!fileJapanize.exists()) {
             YamlConfiguration conf = new YamlConfiguration();
             try {
                 conf.save(fileJapanize);
@@ -122,7 +122,7 @@ public class ChannelManager implements LunaChatAPI {
                 YamlConfiguration.loadConfiguration(fileJapanize);
 
         japanize = new HashMap<>();
-        for ( String key : configJapanize.getKeys(false) ) {
+        for (String key : configJapanize.getKeys(false)) {
             japanize.put(key, configJapanize.getBoolean(key));
         }
 
@@ -130,7 +130,7 @@ public class ChannelManager implements LunaChatAPI {
         fileDictionary = new File(
                 LunaChat.getInstance().getDataFolder(), FILE_NAME_DICTIONARY);
 
-        if ( !fileDictionary.exists() ) {
+        if (!fileDictionary.exists()) {
             YamlConfiguration conf = new YamlConfiguration();
             try {
                 conf.save(fileDictionary);
@@ -143,7 +143,7 @@ public class ChannelManager implements LunaChatAPI {
                 YamlConfiguration.loadConfiguration(fileDictionary);
 
         dictionary = new HashMap<>();
-        for ( String key : configDictionary.getKeys(false) ) {
+        for (String key : configDictionary.getKeys(false)) {
             dictionary.put(key, configDictionary.getString(key));
         }
 
@@ -151,7 +151,7 @@ public class ChannelManager implements LunaChatAPI {
         fileHidelist = new File(
                 LunaChat.getInstance().getDataFolder(), FILE_NAME_HIDELIST);
 
-        if ( !fileHidelist.exists() ) {
+        if (!fileHidelist.exists()) {
             YamlConfiguration conf = new YamlConfiguration();
             try {
                 conf.save(fileHidelist);
@@ -164,9 +164,9 @@ public class ChannelManager implements LunaChatAPI {
                 YamlConfiguration.loadConfiguration(fileHidelist);
 
         hidelist = new HashMap<>();
-        for ( String key : configHidelist.getKeys(false) ) {
+        for (String key : configHidelist.getKeys(false)) {
             hidelist.put(key, new ArrayList<>());
-            for ( String id : configHidelist.getStringList(key) ) {
+            for (String id : configHidelist.getStringList(key)) {
                 hidelist.get(key).add(ChannelPlayer.getChannelPlayer(id));
             }
         }
@@ -182,7 +182,7 @@ public class ChannelManager implements LunaChatAPI {
 
         saveDefaults();
 
-        for ( Channel channel : channels.values() ) {
+        for (Channel channel : channels.values()) {
             channel.save();
         }
     }
@@ -194,7 +194,7 @@ public class ChannelManager implements LunaChatAPI {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
-            for ( String key : defaultChannels.keySet() ) {
+            for (String key : defaultChannels.keySet()) {
                 config.set(key, defaultChannels.get(key));
             }
             config.save(fileDefaults);
@@ -210,7 +210,7 @@ public class ChannelManager implements LunaChatAPI {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
-            for ( String key : templates.keySet() ) {
+            for (String key : templates.keySet()) {
                 config.set(key, templates.get(key));
             }
             config.save(fileTemplates);
@@ -226,7 +226,7 @@ public class ChannelManager implements LunaChatAPI {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
-            for ( String key : japanize.keySet() ) {
+            for (String key : japanize.keySet()) {
                 config.set(key, japanize.get(key));
             }
             config.save(fileJapanize);
@@ -242,7 +242,7 @@ public class ChannelManager implements LunaChatAPI {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
-            for ( String key : dictionary.keySet() ) {
+            for (String key : dictionary.keySet()) {
                 config.set(key, dictionary.get(key));
             }
             config.save(fileDictionary);
@@ -258,7 +258,7 @@ public class ChannelManager implements LunaChatAPI {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
-            for ( String key : hidelist.keySet() ) {
+            for (String key : hidelist.keySet()) {
                 config.set(key, getIdList(hidelist.get(key)));
             }
             config.save(fileHidelist);
@@ -277,12 +277,13 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * プレイヤーのJapanize設定を返す
+     *
      * @param playerName プレイヤー名
      * @return Japanize設定
      */
     @Override
     public boolean isPlayerJapanize(String playerName) {
-        if ( !japanize.containsKey(playerName) ) {
+        if (!japanize.containsKey(playerName)) {
             return true;
         }
         return japanize.get(playerName);
@@ -290,13 +291,14 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * 指定したチャンネル名が存在するかどうかを返す
+     *
      * @param channelName チャンネル名
      * @return 存在するかどうか
      * @see com.github.ucchyocean.lc.LunaChatAPI#isExistChannel(java.lang.String)
      */
     @Override
     public boolean isExistChannel(String channelName) {
-        if ( channelName == null ) {
+        if (channelName == null) {
             return false;
         }
         return channels.containsKey(channelName.toLowerCase());
@@ -304,6 +306,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * 全てのチャンネルを返す
+     *
      * @return 全てのチャンネル
      * @see com.github.ucchyocean.lc.LunaChatAPI#getChannels()
      */
@@ -315,6 +318,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * プレイヤーが参加しているチャンネルを返す
+     *
      * @param playerName プレイヤー名
      * @return チャンネル
      * @see com.github.ucchyocean.lc.LunaChatAPI#getChannelsByPlayer(java.lang.String)
@@ -324,10 +328,10 @@ public class ChannelManager implements LunaChatAPI {
 
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(playerName);
         Collection<Channel> result = new ArrayList<>();
-        for ( String key : channels.keySet() ) {
+        for (String key : channels.keySet()) {
             Channel channel = channels.get(key);
-            if ( channel.getMembers().contains(cp) ||
-                    channel.isGlobalChannel() ) {
+            if (channel.getMembers().contains(cp) ||
+                    channel.isGlobalChannel()) {
                 result.add(channel);
             }
         }
@@ -336,6 +340,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * プレイヤーが参加しているデフォルトのチャンネルを返す
+     *
      * @param playerName プレイヤー
      * @return チャンネル
      * @see com.github.ucchyocean.lc.LunaChatAPI#getDefaultChannel(java.lang.String)
@@ -345,7 +350,7 @@ public class ChannelManager implements LunaChatAPI {
 
         String cname = defaultChannels.get(playerName);
 
-        if ( cname == null || !isExistChannel(cname) ) {
+        if (cname == null || !isExistChannel(cname)) {
             return null;
         }
         return channels.get(cname);
@@ -353,13 +358,14 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * プレイヤーのデフォルトチャンネルを設定する
-     * @param playerName プレイヤー
+     *
+     * @param playerName  プレイヤー
      * @param channelName チャンネル名
      * @see com.github.ucchyocean.lc.LunaChatAPI#setDefaultChannel(java.lang.String, java.lang.String)
      */
     @Override
     public void setDefaultChannel(String playerName, String channelName) {
-        if ( channelName == null ) {
+        if (channelName == null) {
             removeDefaultChannel(playerName);
             return;
         }
@@ -369,6 +375,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * 指定した名前のプレイヤーに設定されている、デフォルトチャンネルを削除する
+     *
      * @param playerName プレイヤー名
      * @see com.github.ucchyocean.lc.LunaChatAPI#removeDefaultChannel(java.lang.String)
      */
@@ -380,19 +387,20 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * チャンネルを取得する
+     *
      * @param channelName チャンネル名、または、チャンネルの別名
      * @return チャンネル
      * @see com.github.ucchyocean.lc.LunaChatAPI#getChannel(java.lang.String)
      */
     @Override
     public Channel getChannel(String channelName) {
-        if ( channelName == null ) return null;
+        if (channelName == null) return null;
         Channel channel = channels.get(channelName.toLowerCase());
-        if ( channel != null ) return channel;
-        for ( Channel ch : channels.values() ) {
+        if (channel != null) return channel;
+        for (Channel ch : channels.values()) {
             String alias = ch.getAlias();
-            if ( alias != null && alias.length() > 0
-                    && channelName.equalsIgnoreCase(ch.getAlias()) ) {
+            if (alias != null && alias.length() > 0
+                    && channelName.equalsIgnoreCase(ch.getAlias())) {
                 return ch;
             }
         }
@@ -401,6 +409,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * 新しいチャンネルを作成する
+     *
      * @param channelName チャンネル名
      * @return 作成されたチャンネル
      * @see com.github.ucchyocean.lc.LunaChatAPI#createChannel(java.lang.String)
@@ -412,6 +421,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * 新しいチャンネルを作成する
+     *
      * @param channelName チャンネル名
      * @return 作成されたチャンネル
      * @see com.github.ucchyocean.lc.LunaChatAPI#createChannel(java.lang.String, org.bukkit.command.CommandSender)
@@ -423,7 +433,7 @@ public class ChannelManager implements LunaChatAPI {
         LunaChatChannelCreateEvent event =
                 new LunaChatChannelCreateEvent(channelName, sender);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
+        if (event.isCancelled()) {
             return null;
         }
         String name = event.getChannelName();
@@ -436,6 +446,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * チャンネルを削除する
+     *
      * @param channelName 削除するチャンネル名
      * @return 削除したかどうか
      * @see com.github.ucchyocean.lc.LunaChatAPI#removeChannel(java.lang.String)
@@ -447,6 +458,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * チャンネルを削除する
+     *
      * @param channelName 削除するチャンネル名
      * @return 削除したかどうか
      * @see com.github.ucchyocean.lc.LunaChatAPI#removeChannel(java.lang.String, org.bukkit.command.CommandSender)
@@ -460,19 +472,19 @@ public class ChannelManager implements LunaChatAPI {
         LunaChatChannelRemoveEvent event =
                 new LunaChatChannelRemoveEvent(channelName, sender);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
+        if (event.isCancelled()) {
             return false;
         }
 
         Channel channel = getChannel(channelName);
-        if ( channel != null ) {
+        if (channel != null) {
 
             // 強制解散のメッセージを、残ったメンバーに流す
-            if ( !channel.isPersonalChat() && !MSG_BREAKUP.equals("") ) {
+            if (!channel.isPersonalChat() && !MSG_BREAKUP.equals("")) {
                 String message = MSG_BREAKUP;
                 message = message.replace("%ch", channel.getName());
                 message = message.replace("%color", channel.getColorCode());
-                for ( ChannelPlayer cp : channel.getMembers() ) {
+                for (ChannelPlayer cp : channel.getMembers()) {
                     cp.sendMessage(message);
                 }
             }
@@ -487,6 +499,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * テンプレートを取得する
+     *
      * @param id テンプレートID
      * @return テンプレート
      * @see com.github.ucchyocean.lc.LunaChatAPI#getTemplate(java.lang.String)
@@ -498,7 +511,8 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * テンプレートを登録する
-     * @param id テンプレートID
+     *
+     * @param id       テンプレートID
      * @param template テンプレート
      * @see com.github.ucchyocean.lc.LunaChatAPI#setTemplate(java.lang.String, java.lang.String)
      */
@@ -510,6 +524,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * テンプレートを削除する
+     *
      * @param id テンプレートID
      * @see com.github.ucchyocean.lc.LunaChatAPI#removeTemplate(java.lang.String)
      */
@@ -521,6 +536,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * 辞書データを全て取得する
+     *
      * @return 辞書データ
      */
     public HashMap<String, String> getAllDictionary() {
@@ -529,7 +545,8 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * 新しい辞書データを追加する
-     * @param key キー
+     *
+     * @param key   キー
      * @param value 値
      */
     public void setDictionary(String key, String value) {
@@ -539,6 +556,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * 指定したキーの辞書データを削除する
+     *
      * @param key キー
      */
     public void removeDictionary(String key) {
@@ -548,14 +566,15 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * 該当のプレイヤーに関連するhidelistを取得する。
+     *
      * @param key プレイヤー
      * @return 指定されたプレイヤーをhideしているプレイヤー(非null)
      */
     public List<ChannelPlayer> getHidelist(ChannelPlayer key) {
-        if ( key == null ) {
+        if (key == null) {
             return new ArrayList<>();
         }
-        if ( hidelist.containsKey(key.toString()) ) {
+        if (hidelist.containsKey(key.toString())) {
             return hidelist.get(key.toString());
         }
         return new ArrayList<>();
@@ -563,16 +582,17 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * 該当のプレイヤーがhideしているプレイヤーのリストを返す。
+     *
      * @param player プレイヤー
      * @return 指定したプレイヤーがhideしているプレイヤーのリスト(非null)
      */
     public ArrayList<ChannelPlayer> getHideinfo(ChannelPlayer player) {
-        if ( player == null ) {
+        if (player == null) {
             return new ArrayList<>();
         }
         ArrayList<ChannelPlayer> info = new ArrayList<>();
-        for ( String key : hidelist.keySet() ) {
-            if ( hidelist.get(key).contains(player) ) {
+        for (String key : hidelist.keySet()) {
+            if (hidelist.get(key).contains(player)) {
                 info.add(ChannelPlayer.getChannelPlayer(key));
             }
         }
@@ -581,15 +601,16 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * 指定されたプレイヤーが、指定されたプレイヤーをhideするように設定する。
+     *
      * @param player hideする側のプレイヤー
-     * @param hided hideされる側のプレイヤー
+     * @param hided  hideされる側のプレイヤー
      */
     public void addHidelist(ChannelPlayer player, ChannelPlayer hided) {
         String hidedId = hided.toString();
-        if ( !hidelist.containsKey(hidedId) ) {
+        if (!hidelist.containsKey(hidedId)) {
             hidelist.put(hidedId, new ArrayList<>());
         }
-        if ( !hidelist.get(hidedId).contains(player) ) {
+        if (!hidelist.get(hidedId).contains(player)) {
             hidelist.get(hidedId).add(player);
             saveHidelist();
         }
@@ -597,17 +618,18 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * 指定されたプレイヤーが、指定されたプレイヤーのhideを解除するように設定する。
+     *
      * @param player hideしていた側のプレイヤー
-     * @param hided hideされていた側のプレイヤー
+     * @param hided  hideされていた側のプレイヤー
      */
     public void removeHidelist(ChannelPlayer player, ChannelPlayer hided) {
         String hidedId = hided.toString();
-        if ( !hidelist.containsKey(hidedId) ) {
+        if (!hidelist.containsKey(hidedId)) {
             return;
         }
-        if ( hidelist.get(hidedId).contains(player) ) {
+        if (hidelist.get(hidedId).contains(player)) {
             hidelist.get(hidedId).remove(player);
-            if ( hidelist.get(hidedId).size() <= 0 ) {
+            if (hidelist.get(hidedId).size() <= 0) {
                 hidelist.remove(hidedId);
             }
             saveHidelist();
@@ -616,21 +638,22 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * Japanize変換を行う
+     *
      * @param message 変換するメッセージ
-     * @param type 変換タイプ
+     * @param type    変換タイプ
      * @return 変換後のメッセージ、ただしイベントでキャンセルされた場合はnullが返されるので注意
      */
     @Override
     public String japanize(String message, JapanizeType type) {
 
-        if ( type == JapanizeType.NONE ) {
+        if (type == JapanizeType.NONE) {
             return message;
         }
 
         // Japanize変換タスクを作成して、同期で実行する。
         DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(
                 message, type, null, null, "%japanize");
-        if ( task.runSync() ) {
+        if (task.runSync()) {
             return task.getResult();
         }
         return null;
@@ -638,6 +661,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * 該当プレイヤーのJapanize変換をオン/オフする
+     *
      * @param playerName 設定するプレイヤー名
      * @param doJapanize Japanize変換するかどうか
      */
@@ -649,12 +673,13 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * ChannelPlayerのリストを、IDのStringリストに変換して返す
-     * @param players
-     * @return
+     *
+     * @param players ChannelPlayer の List
+     * @return ID の String List
      */
     private List<String> getIdList(List<ChannelPlayer> players) {
         List<String> results = new ArrayList<>();
-        for ( ChannelPlayer cp : players ) {
+        for (ChannelPlayer cp : players) {
             results.add(cp.toString());
         }
         return results;
