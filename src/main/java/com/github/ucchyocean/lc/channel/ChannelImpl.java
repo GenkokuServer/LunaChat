@@ -99,7 +99,7 @@ public class ChannelImpl extends Channel {
         // 発言権限を確認する
         String node = PERMISSION_SPEAK_PREFIX + "." + getName();
         if ( player.isPermissionSet(node) && !player.hasPermission(node) ) {
-            sendResourceMessage(player, PREERR, "errmsgPermission",
+            sendResourceMessage(player,
                     PERMISSION_SPEAK_PREFIX + "." + getName());
             return;
         }
@@ -790,18 +790,16 @@ public class ChannelImpl extends Channel {
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
      * @param player メッセージの送り先
-     * @param pre プレフィックス
-     * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
     private void sendResourceMessage(
-            ChannelPlayer player, String pre, String key, Object... args) {
+            ChannelPlayer player, Object... args) {
 
-        String org = Resources.get(key);
+        String org = Resources.get("errmsgPermission");
         if ( org == null || org.equals("") ) {
             return;
         }
-        String msg = String.format(pre + org, args);
+        String msg = String.format(ChannelImpl.PREERR + org, args);
         player.sendMessage(msg);
     }
 }
