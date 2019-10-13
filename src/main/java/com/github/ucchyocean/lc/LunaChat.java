@@ -63,7 +63,7 @@ public class LunaChat extends JavaPlugin {
         pluginMessageChannelManager = new PluginMessageChannelManager();
 
         // チャンネルチャット無効なら、デフォルト発言先をクリアする(see issue #59)
-        if ( !config.isEnableChannelChat() ) {
+        if (config.isDisableChannelChat()) {
             manager.removeAllDefaultChannels();
         }
 

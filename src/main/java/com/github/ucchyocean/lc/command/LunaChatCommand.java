@@ -99,7 +99,7 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // チャンネルチャット機能が無効になっている場合は、メッセージを表示して終了
-        if (!LunaChat.getInstance().getLunaChatConfig().isEnableChannelChat()
+        if (LunaChat.getInstance().getLunaChatConfig().isDisableChannelChat()
                 && !sender.isOp()) {
             sendResourceMessage(sender, PREERR, "errmsgChannelChatDisabled");
             return true;

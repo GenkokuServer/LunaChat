@@ -264,15 +264,15 @@ public class LunaChatConfig {
      * チャンネルチャット機能を利用可能にするかどうか
      * @return enableChannelChatを返す
      */
-    public boolean isEnableChannelChat() {
-        return enableChannelChat;
+    public boolean isDisableChannelChat() {
+        return !enableChannelChat;
     }
 
     /**
      * チャットイベントの処理優先度
      * @return playerChatEventListenerPriorityを返す
      */
-    public EventPriority getPlayerChatEventListenerPriority() {
+    EventPriority getPlayerChatEventListenerPriority() {
         return playerChatEventListenerPriority;
     }
 
@@ -280,7 +280,7 @@ public class LunaChatConfig {
      * チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか
      * @return noJoinAsGlobalを返す
      */
-    public boolean isNoJoinAsGlobal() {
+    boolean isNoJoinAsGlobal() {
         return noJoinAsGlobal;
     }
 
@@ -336,7 +336,7 @@ public class LunaChatConfig {
      * ログイン時に、参加中チャンネルを表示するかどうか
      * @return showListOnJoinを返す
      */
-    public boolean isShowListOnJoin() {
+    boolean isShowListOnJoin() {
         return showListOnJoin;
     }
 
@@ -418,7 +418,7 @@ public class LunaChatConfig {
      * クイックチャンネルチャット機能を有効化するかどうかを取得する
      * @return enableQuickChannelChat
      */
-    public boolean isEnableQuickChannelChat() {
+    boolean isEnableQuickChannelChat() {
         return enableQuickChannelChat;
     }
 
@@ -426,7 +426,7 @@ public class LunaChatConfig {
      * クイックチャンネルチャット機能に使用する記号
      * @return quickChannelChatSeparator
      */
-    public String getQuickChannelChatSeparator() {
+    String getQuickChannelChatSeparator() {
         return quickChannelChatSeparator;
     }
 
@@ -488,7 +488,7 @@ public class LunaChatConfig {
      * 通常チャット（非チャンネルチャット）の装飾を、LunaChatから行うかどうか
      * @return enableNormalChatMessageFormatを返す
      */
-    public boolean isEnableNormalChatMessageFormat() {
+    boolean isEnableNormalChatMessageFormat() {
         return enableNormalChatMessageFormat;
     }
 
@@ -496,7 +496,7 @@ public class LunaChatConfig {
      * 通常チャットの装飾フォーマット
      * @return normalChatMessageFormatを返す
      */
-    public String getNormalChatMessageFormat() {
+    String getNormalChatMessageFormat() {
         return normalChatMessageFormat;
     }
 
@@ -557,7 +557,7 @@ public class LunaChatConfig {
      * 通常チャットで、JapanizeDisplayLine=2のとき、Japanize変換したあと表示するまでのウェイト(tick)
      * @return japanizeWaitを返す
      */
-    public int getJapanizeWait() {
+    int getJapanizeWait() {
         return japanizeWait;
     }
 
@@ -565,7 +565,7 @@ public class LunaChatConfig {
      * 通常チャットで、カラーコードを使用可能にするかどうか
      * @return enableNormalChatColorCodeを返す
      */
-    public boolean isEnableNormalChatColorCode() {
+    boolean isEnableNormalChatColorCode() {
         return enableNormalChatColorCode;
     }
 
