@@ -95,81 +95,103 @@ public class KanaConverter {
         for ( int i=0; i<org.length(); i++ ) {
             String tmp = org.substring(i,i+1);
 
-            if ( tmp.equals("a") ) {
-                line.append( getKanaFromTable(last, 0) );
-                last = "";
-            } else if ( tmp.equals("i") ) {
-                line.append( getKanaFromTable(last, 1) );
-                last = "";
-            } else if ( tmp.equals("u") ) {
-                line.append( getKanaFromTable(last, 2) );
-                last = "";
-            } else if ( tmp.equals("e") ) {
-                line.append( getKanaFromTable(last, 3) );
-                last = "";
-            } else if ( tmp.equals("o") ) {
-                line.append( getKanaFromTable(last, 4) );
-                last = "";
-            } else {
-                if ( last.equals("n") && !(tmp.equals("y")) ) {
-                    line.append("ん");
+            switch (tmp) {
+                case "a":
+                    line.append(getKanaFromTable(last, 0));
                     last = "";
-                    if ( tmp.equals("n") ) {
-                        continue;
-                    }
-                }
-                if ( Character.isLetter(tmp.charAt(0)) ) {
-                    if ( Character.isUpperCase(tmp.charAt(0)) ) {
-                        line.append(last + tmp);
+                    break;
+                case "i":
+                    line.append(getKanaFromTable(last, 1));
+                    last = "";
+                    break;
+                case "u":
+                    line.append(getKanaFromTable(last, 2));
+                    last = "";
+                    break;
+                case "e":
+                    line.append(getKanaFromTable(last, 3));
+                    last = "";
+                    break;
+                case "o":
+                    line.append(getKanaFromTable(last, 4));
+                    last = "";
+                    break;
+                default:
+                    if (last.equals("n") && !(tmp.equals("y"))) {
+                        line.append("ん");
                         last = "";
-                    } else if ( last.equals(tmp) ) {
-                        line.append("っ");
-                        last = tmp;
+                        if (tmp.equals("n")) {
+                            continue;
+                        }
+                    }
+                    if (Character.isLetter(tmp.charAt(0))) {
+                        if (Character.isUpperCase(tmp.charAt(0))) {
+                            line.append(last + tmp);
+                            last = "";
+                        } else if (last.equals(tmp)) {
+                            line.append("っ");
+                            last = tmp;
+                        } else {
+                            last = last + tmp;
+                        }
                     } else {
-                        last = last + tmp;
+                        switch (tmp) {
+                            case "-":
+                                line.append(last + "ー");
+                                last = "";
+                                break;
+                            case ".":
+                                line.append(last + "。");
+                                last = "";
+                                break;
+                            case ",":
+                                line.append(last + "、");
+                                last = "";
+                                break;
+                            case "?":
+                                line.append(last + "？");
+                                last = "";
+                                break;
+                            case "!":
+                                line.append(last + "！");
+                                last = "";
+                                break;
+                            case "[":
+                                line.append(last + "「");
+                                last = "";
+                                break;
+                            case "]":
+                                line.append(last + "」");
+                                last = "";
+                                break;
+                            case "<":
+                                line.append(last + "＜");
+                                last = "";
+                                break;
+                            case ">":
+                                line.append(last + "＞");
+                                last = "";
+                                break;
+                            case "&":
+                                line.append(last + "＆");
+                                last = "";
+                                break;
+                            case "\"":
+                                line.append(last + "”");
+                                last = "";
+                                break;
+                            case "(":
+                            case ")":
+                                line.append(last);
+                                last = "";
+                                break;
+                            default:
+                                line.append(last + tmp);
+                                last = "";
+                                break;
+                        }
                     }
-                } else {
-                    if ( tmp.equals("-") ) {
-                        line.append(last + "ー");
-                        last = "";
-                    } else if ( tmp.equals(".") ) {
-                        line.append(last + "。");
-                        last = "";
-                    } else if ( tmp.equals(",") ) {
-                        line.append(last + "、");
-                        last = "";
-                    } else if ( tmp.equals("?") ) {
-                        line.append(last + "？");
-                        last = "";
-                    } else if ( tmp.equals("!") ) {
-                        line.append(last + "！");
-                        last = "";
-                    } else if ( tmp.equals("[") ) {
-                        line.append(last + "「");
-                        last = "";
-                    } else if ( tmp.equals("]") ) {
-                        line.append(last + "」");
-                        last = "";
-                    } else if ( tmp.equals("<") ) {
-                        line.append(last + "＜");
-                        last = "";
-                    } else if ( tmp.equals(">") ) {
-                        line.append(last + "＞");
-                        last = "";
-                    } else if ( tmp.equals("&") ) {
-                        line.append(last + "＆");
-                        last = "";
-                    } else if ( tmp.equals("\"") ) {
-                        line.append(last + "”");
-                        last = "";
-                    } else if ( tmp.equals("(") || tmp.equals(")") ) {
-                        line.append(last);
-                        last = "";
-                    } else {
-                        line.append(last + tmp);
-                        last = "";
-                    }
-                }
+                    break;
             }
         }
         line.append(last);
