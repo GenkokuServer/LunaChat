@@ -43,17 +43,11 @@ public class LunaChatMessageCommand implements CommandExecutor {
         // 実行引数から1:1チャットの相手を取得する
         String invitedName;
         StringBuilder message = new StringBuilder();
-        if (args.length >= 1) {
-            invitedName = args[0];
-            if ( args.length >= 2 ) {
-                for ( int i=1; i<args.length; i++ ) {
-                    message.append(args[i]).append(" ");
-                }
+        invitedName = args[0];
+        if ( args.length >= 2 ) {
+            for ( int i=1; i<args.length; i++ ) {
+                message.append(args[i]).append(" ");
             }
-        } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
-            printUsage(sender, label);
-            return true;
         }
 
         // メッセージを送信する
@@ -63,23 +57,23 @@ public class LunaChatMessageCommand implements CommandExecutor {
 
     /**
      * Tellコマンドの実行処理を行う
-     * @param inviter
-     * @param invitedName
-     * @param message
+     * @param inviter ChannelPlayer
+     * @param invitedName 相手
+     * @param message メッセージ
      */
     void sendTellMessage(ChannelPlayer inviter, String invitedName, String message) {
 
         // 招待相手が存在するかどうかを確認する
         ChannelPlayer invited = ChannelPlayer.getChannelPlayer(invitedName);
-        if ( invited == null || !invited.isOnline() ) {
-            sendResourceMessage(inviter, PREERR,
+        if (!invited.isOnline()) {
+            sendResourceMessage(inviter,
                     "errmsgNotfoundPlayer", invitedName);
             return;
         }
 
         // 招待相手が自分自身でないか確認する
         if (inviter.getName().equals(invited.getName())) {
-            sendResourceMessage(inviter, PREERR,
+            sendResourceMessage(inviter,
                     "errmsgCannotSendPMSelf");
             return;
         }
@@ -112,8 +106,8 @@ public class LunaChatMessageCommand implements CommandExecutor {
 
     /**
      * コマンドの使い方を senderに送る
-     * @param sender
-     * @param label
+     * @param sender CommandSender
+     * @param label Label
      */
     private void printUsage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", "usageMessage", label);
@@ -139,19 +133,17 @@ public class LunaChatMessageCommand implements CommandExecutor {
 
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
-     * @param sender メッセージの送り先
-     * @param pre プレフィックス
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    private void sendResourceMessage(ChannelPlayer cp, String pre,
+    private void sendResourceMessage(ChannelPlayer cp,
                                      String key, Object... args) {
 
         String org = Resources.get(key);
         if ( org == null || org.equals("") ) {
             return;
         }
-        String msg = String.format(pre + org, args);
+        String msg = String.format(LunaChatMessageCommand.PREERR + org, args);
         cp.sendMessage(msg);
     }
 }
