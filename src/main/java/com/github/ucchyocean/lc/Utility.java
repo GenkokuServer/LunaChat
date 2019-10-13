@@ -16,6 +16,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -295,11 +296,7 @@ public class Utility {
                 Player[] temp =
                         ((Player[]) Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0])
                                 .invoke(null, new Object[0]));
-                ArrayList<Player> players = new ArrayList<>();
-                for (Player t : temp) {
-                    players.add(t);
-                }
-                return players;
+                return new ArrayList<>(Arrays.asList(temp));
             }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {} // never happen
         // never happen
