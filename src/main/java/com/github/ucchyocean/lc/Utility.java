@@ -283,14 +283,14 @@ public class Utility {
         // CB179以前と、CB1710以降で戻り値が異なるため、
         // リフレクションを使って互換性を（無理やり）保つ。
         try {
-            if (Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0]).getReturnType() == Collection.class) {
+            if (Bukkit.class.getMethod("getOnlinePlayers").getReturnType() == Collection.class) {
                 Collection<?> temp =
-                        ((Collection<?>) Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0])
+                        ((Collection<?>) Bukkit.class.getMethod("getOnlinePlayers")
                                 .invoke(null, new Object[0]));
                 return new ArrayList<>((Collection<? extends Player>) temp);
             } else {
                 Player[] temp =
-                        ((Player[]) Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0])
+                        ((Player[]) Bukkit.class.getMethod("getOnlinePlayers")
                                 .invoke(null, new Object[0]));
                 return new ArrayList<>(Arrays.asList(temp));
             }
