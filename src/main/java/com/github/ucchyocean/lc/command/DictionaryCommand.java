@@ -57,7 +57,7 @@ public class DictionaryCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage()
      */
     @Override
-    public void sendUsageMessage(
+    protected void sendUsageMessage(
             CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
