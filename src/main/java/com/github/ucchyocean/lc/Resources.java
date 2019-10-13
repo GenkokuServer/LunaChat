@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -69,7 +70,7 @@ public class Resources {
             ZipEntry zipEntry = jarFile.getEntry(FILE_NAME);
             InputStream inputStream = jarFile.getInputStream(zipEntry);
             BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                    new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.contains(":") && !line.startsWith("#")) {
