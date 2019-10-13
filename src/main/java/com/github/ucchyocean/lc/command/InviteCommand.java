@@ -78,20 +78,19 @@ public class InviteCommand extends SubCommandAbst {
     public boolean runCommand(CommandSender sender, String label, String[] args) {
 
         if ( args.length >= 3 && args[2].equalsIgnoreCase("force") ) {
-            return runForceInviteCommand(sender, label, args);
+            return runForceInviteCommand(sender, args);
         }
 
-        return runNormalInviteCommand(sender, label, args);
+        return runNormalInviteCommand(sender, args);
     }
 
     /**
      * 通常のinviteコマンドを処理する
-     * @param sender
-     * @param label
-     * @param args
-     * @return
+     * @param sender CommandSender
+     * @param args args
+     * @return コマンドが成功したかどうか
      */
-    private boolean runNormalInviteCommand(CommandSender sender, String label, String[] args) {
+    private boolean runNormalInviteCommand(CommandSender sender, String[] args) {
 
         // プレイヤーでなければ終了する
         if (!(sender instanceof Player)) {
@@ -124,7 +123,7 @@ public class InviteCommand extends SubCommandAbst {
 
         // 招待相手が存在するかどうかを確認する
         ChannelPlayer invited = ChannelPlayer.getChannelPlayer(invitedName);
-        if ( invited == null || !invited.isOnline() ) {
+        if (!invited.isOnline()) {
             sendResourceMessage(sender, PREERR,
                     "errmsgNotfoundPlayer", invitedName);
             return true;
@@ -151,12 +150,11 @@ public class InviteCommand extends SubCommandAbst {
 
     /**
      * 強制入室コマンドを処理する
-     * @param sender
-     * @param label
-     * @param args
-     * @return
+     * @param sender CommandSender
+     * @param args args
+     * @return コマンドが成功したかどうか
      */
-    private boolean runForceInviteCommand(CommandSender sender, String label, String[] args) {
+    private boolean runForceInviteCommand(CommandSender sender, String[] args) {
 
         // パーミッションチェック
         if ( !sender.hasPermission(PERMISSION_NODE_FORCE_INVITE) ) {
@@ -195,7 +193,7 @@ public class InviteCommand extends SubCommandAbst {
         // 招待相手が存在するかどうかを確認する
         String invitedName = args[1];
         ChannelPlayer invited = ChannelPlayer.getChannelPlayer(invitedName);
-        if ( invited == null || !invited.isOnline() ) {
+        if (!invited.isOnline()) {
             sendResourceMessage(sender, PREERR,
                     "errmsgNotfoundPlayer", invitedName);
             return true;
