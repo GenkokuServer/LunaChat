@@ -292,12 +292,12 @@ public class Utility {
                 Collection<?> temp =
                         ((Collection<?>) Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0])
                                 .invoke(null, new Object[0]));
-                return new ArrayList<Player>((Collection<? extends Player>) temp);
+                return new ArrayList<>((Collection<? extends Player>) temp);
             } else {
                 Player[] temp =
                         ((Player[]) Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0])
                                 .invoke(null, new Object[0]));
-                ArrayList<Player> players = new ArrayList<Player>();
+                ArrayList<Player> players = new ArrayList<>();
                 for (Player t : temp) {
                     players.add(t);
                 }
@@ -306,7 +306,7 @@ public class Utility {
         } catch (NoSuchMethodException ex) {} // never happen
         catch (InvocationTargetException ex) {} // never happen
         catch (IllegalAccessException ex) {} // never happen
-        return new ArrayList<Player>();
+        return new ArrayList<>();
     }
 
     /**

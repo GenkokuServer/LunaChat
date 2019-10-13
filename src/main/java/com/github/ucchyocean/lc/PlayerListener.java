@@ -147,7 +147,7 @@ public class PlayerListener implements Listener {
 
         // お互いがオフラインになるPMチャンネルがある場合は
         // チャンネルをクリアする
-        ArrayList<Channel> deleteList = new ArrayList<Channel>();
+        ArrayList<Channel> deleteList = new ArrayList<>();
 
         for ( Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
             String cname = channel.getName();
@@ -508,7 +508,7 @@ public class PlayerListener implements Listener {
             dchannel = dc.getName().toLowerCase();
         }
 
-        ArrayList<String> items = new ArrayList<String>();
+        ArrayList<String> items = new ArrayList<>();
         items.add(MOTD_FIRSTLINE);
         for ( Channel channel : api.getChannels() ) {
 

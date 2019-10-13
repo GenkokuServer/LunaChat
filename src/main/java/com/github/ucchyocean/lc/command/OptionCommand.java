@@ -92,7 +92,7 @@ public class OptionCommand extends SubCommandAbst {
 
         // 引数チェック
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
-        ArrayList<String> optionsTemp = new ArrayList<String>();
+        ArrayList<String> optionsTemp = new ArrayList<>();
         String cname = null;
         if ( player != null && args.length >= 2 ) {
             Channel def = api.getDefaultChannel(player.getName());
@@ -129,7 +129,7 @@ public class OptionCommand extends SubCommandAbst {
         }
 
         // 指定内容を解析する
-        HashMap<String, String> options = new HashMap<String, String>();
+        HashMap<String, String> options = new HashMap<>();
         for ( String t : optionsTemp ) {
             int index = t.indexOf("=");
             if ( index == -1 ) {

@@ -85,7 +85,7 @@ public class ModeratorCommand extends SubCommandAbst {
         // 引数チェック
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
         String cname = null;
-        ArrayList<String> moderator = new ArrayList<String>();
+        ArrayList<String> moderator = new ArrayList<>();
         if ( player != null && args.length >= 2 ) {
             Channel def = api.getDefaultChannel(player.getName());
             if ( def != null ) {

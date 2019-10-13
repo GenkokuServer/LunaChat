@@ -337,7 +337,7 @@ public class ChannelImpl extends Channel {
         String originalMessage = new String(message);
 
         // 受信者を設定する
-        ArrayList<ChannelPlayer> recipients = new ArrayList<ChannelPlayer>();
+        ArrayList<ChannelPlayer> recipients = new ArrayList<>();
         boolean sendNoRecipientMessage = false;
 
         if ( isBroadcastChannel() ) {
@@ -499,7 +499,7 @@ public class ChannelImpl extends Channel {
     @Override
     public ArrayList<String> getInfo(boolean forModerator) {
 
-        ArrayList<String> info = new ArrayList<String>();
+        ArrayList<String> info = new ArrayList<>();
         info.add(INFO_FIRSTLINE);
 
         // チャンネル名、参加人数、総人数、チャンネル説明文

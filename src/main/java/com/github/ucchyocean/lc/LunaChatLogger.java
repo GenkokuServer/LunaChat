@@ -103,7 +103,7 @@ public class LunaChatLogger {
         // 指定された日付のログを取得する
         File f = getLogFile(date);
         if ( f == null ) {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
 
         // ログファイルの読み込み
@@ -111,8 +111,8 @@ public class LunaChatLogger {
 
         // プレイヤー指定なら、一致するプレイヤー名が含まれているログに絞る
         if ( player != null ) {
-            ArrayList<String> temp = new ArrayList<String>(data);
-            data = new ArrayList<String>();
+            ArrayList<String> temp = new ArrayList<>(data);
+            data = new ArrayList<>();
             for ( String t : temp ) {
                 String[] line = t.split(",");
                 if ( line.length >= 3 && line[2].contains(player) ) {
@@ -123,8 +123,8 @@ public class LunaChatLogger {
 
         // フィルタ指定なら、指定のキーワードが含まれているログに絞る
         if ( filter != null ) {
-            ArrayList<String> temp = new ArrayList<String>(data);
-            data = new ArrayList<String>();
+            ArrayList<String> temp = new ArrayList<>(data);
+            data = new ArrayList<>();
             for ( String t : temp ) {
                 String[] line = t.split(",");
                 if ( line.length >= 2 && line[1].contains(filter) ) {
@@ -148,7 +148,7 @@ public class LunaChatLogger {
      */
     private ArrayList<String> readAllLines(File file) {
 
-        ArrayList<String> data = new ArrayList<String>();
+        ArrayList<String> data = new ArrayList<>();
 
         BufferedReader reader = null;
 

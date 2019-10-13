@@ -103,7 +103,7 @@ public class ListCommand extends SubCommandAbst {
      */
     private ArrayList<String> getList(Player player) {
 
-        ArrayList<String> items = new ArrayList<String>();
+        ArrayList<String> items = new ArrayList<>();
         String dchannel = "";
         String playerName = "";
         if ( player != null ) {

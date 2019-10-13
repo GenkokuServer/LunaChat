@@ -37,7 +37,7 @@ public class LunaChatCommand implements CommandExecutor {
      */
     public LunaChatCommand() {
 
-        commands = new ArrayList<SubCommandAbst>();
+        commands = new ArrayList<>();
         joinCommand = new JoinCommand();
         commands.add(joinCommand);
         commands.add(new LeaveCommand());
@@ -63,7 +63,7 @@ public class LunaChatCommand implements CommandExecutor {
         helpCommand = new HelpCommand(commands);
         commands.add(helpCommand);
 
-        commonCommands = new ArrayList<SubCommandAbst>();
+        commonCommands = new ArrayList<>();
         commonCommands.add(new HideCommand());
         commonCommands.add(new UnhideCommand());
         commonCommands.add(new DictionaryCommand());
@@ -150,7 +150,7 @@ public class LunaChatCommand implements CommandExecutor {
         if ( args.length == 1 ) {
             // コマンド名で補完する
             String arg = args[0].toLowerCase();
-            ArrayList<String> coms = new ArrayList<String>();
+            ArrayList<String> coms = new ArrayList<>();
             for ( SubCommandAbst c : commands ) {
                 if ( c.getCommandName().startsWith(arg) &&
                         sender.hasPermission(c.getPermissionNode()) ) {
@@ -164,7 +164,7 @@ public class LunaChatCommand implements CommandExecutor {
                 args[0].equalsIgnoreCase("info") ) ) {
             // 参加可能チャンネル名で補完する
             String arg = args[1].toLowerCase();
-            ArrayList<String> items = new ArrayList<String>();
+            ArrayList<String> items = new ArrayList<>();
             for ( String name : getListCanJoin(sender) ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
                     items.add(name);
@@ -177,7 +177,7 @@ public class LunaChatCommand implements CommandExecutor {
                 args[0].equalsIgnoreCase("unhide") ) ) {
             // 参加可能チャンネル名とプレイヤー名で補完する
             String arg = args[1].toLowerCase();
-            ArrayList<String> items = new ArrayList<String>();
+            ArrayList<String> items = new ArrayList<>();
             for ( String name : getListCanJoin(sender) ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
                     items.add(name);
@@ -193,7 +193,7 @@ public class LunaChatCommand implements CommandExecutor {
         } else if ( args.length == 2 && args[0].equalsIgnoreCase("remove") ) {
             // 削除可能チャンネル名で補完する
             String arg = args[1].toLowerCase();
-            ArrayList<String> items = new ArrayList<String>();
+            ArrayList<String> items = new ArrayList<>();
             for ( String name : getListCanRemove(sender) ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
                     items.add(name);
@@ -205,7 +205,7 @@ public class LunaChatCommand implements CommandExecutor {
                 (args[0].equalsIgnoreCase("dic") || args[0].equalsIgnoreCase("dictionary")) ) {
             // add、remove、viewで補完する
             String arg = args[1].toLowerCase();
-            ArrayList<String> items = new ArrayList<String>();
+            ArrayList<String> items = new ArrayList<>();
             for ( String name : new String[]{"add", "remove", "view"} ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
                     items.add(name);
@@ -218,7 +218,7 @@ public class LunaChatCommand implements CommandExecutor {
                 args[1].equalsIgnoreCase("remove") ) {
             // 辞書に登録されているワードで補完する
             String arg = args[2].toLowerCase();
-            ArrayList<String> items = new ArrayList<String>();
+            ArrayList<String> items = new ArrayList<>();
             for ( String name :
                     LunaChat.getInstance().getLunaChatAPI().getAllDictionary().keySet() ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
@@ -257,7 +257,7 @@ public class LunaChatCommand implements CommandExecutor {
      */
     private ArrayList<String> getListCanJoin(CommandSender sender) {
 
-        ArrayList<String> items = new ArrayList<String>();
+        ArrayList<String> items = new ArrayList<>();
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(sender);
 
         for ( Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
@@ -293,7 +293,7 @@ public class LunaChatCommand implements CommandExecutor {
      */
     private ArrayList<String> getListCanRemove(CommandSender sender) {
 
-        ArrayList<String> items = new ArrayList<String>();
+        ArrayList<String> items = new ArrayList<>();
 
         for ( Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
 

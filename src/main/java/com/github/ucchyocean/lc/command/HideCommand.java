@@ -180,7 +180,7 @@ public class HideCommand extends SubCommandAbst {
      */
     private ArrayList<String> getHideInfoList(ChannelPlayer player) {
 
-        ArrayList<String> items = new ArrayList<String>();
+        ArrayList<String> items = new ArrayList<>();
         items.add(HIDE_CHANNEL_FIRSTLINE);
         for ( String channel : getHideChannelNameList(player) ) {
             items.add(LIST_PREFIX + channel);
@@ -201,7 +201,7 @@ public class HideCommand extends SubCommandAbst {
      */
     private ArrayList<String> getHideChannelNameList(ChannelPlayer player) {
 
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<>();
         for ( Channel channel : api.getChannels() ) {
             if ( channel.getHided().contains(player) ) {
                 names.add(channel.getName());

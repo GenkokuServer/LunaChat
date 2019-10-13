@@ -15,7 +15,7 @@ public class KanaConverter {
 
     private static final HashMap<String, String[]> TABLE;
     static {
-        TABLE = new HashMap<String, String[]>();
+        TABLE = new HashMap<>();
         TABLE.put(  "", new String[]{"あ","い","う","え","お"});
         TABLE.put( "k", new String[]{"か","き","く","け","こ"});
         TABLE.put( "s", new String[]{"さ","し","す","せ","そ"});

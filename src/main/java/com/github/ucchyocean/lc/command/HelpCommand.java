@@ -133,7 +133,7 @@ public class HelpCommand extends SubCommandAbst {
         }
 
         // 種別に該当するコマンドを取得
-        ArrayList<SubCommandAbst> com = new ArrayList<SubCommandAbst>();
+        ArrayList<SubCommandAbst> com = new ArrayList<>();
         for ( SubCommandAbst c : commands ) {
             if ( c.getCommandType() == type
                     && sender.hasPermission(c.getPermissionNode()) ) {

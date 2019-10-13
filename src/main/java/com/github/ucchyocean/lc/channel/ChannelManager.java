@@ -78,7 +78,7 @@ public class ChannelManager implements LunaChatAPI {
         YamlConfiguration config =
                 YamlConfiguration.loadConfiguration(fileDefaults);
 
-        defaultChannels = new HashMap<String, String>();
+        defaultChannels = new HashMap<>();
         for ( String key : config.getKeys(false) ) {
             defaultChannels.put(key, config.getString(key).toLowerCase());
         }
@@ -99,7 +99,7 @@ public class ChannelManager implements LunaChatAPI {
         YamlConfiguration configTemplates =
                 YamlConfiguration.loadConfiguration(fileTemplates);
 
-        templates = new HashMap<String, String>();
+        templates = new HashMap<>();
         for ( String key : configTemplates.getKeys(false) ) {
             templates.put(key, configTemplates.getString(key));
         }
@@ -120,7 +120,7 @@ public class ChannelManager implements LunaChatAPI {
         YamlConfiguration configJapanize =
                 YamlConfiguration.loadConfiguration(fileJapanize);
 
-        japanize = new HashMap<String, Boolean>();
+        japanize = new HashMap<>();
         for ( String key : configJapanize.getKeys(false) ) {
             japanize.put(key, configJapanize.getBoolean(key));
         }
@@ -141,7 +141,7 @@ public class ChannelManager implements LunaChatAPI {
         YamlConfiguration configDictionary =
                 YamlConfiguration.loadConfiguration(fileDictionary);
 
-        dictionary = new HashMap<String, String>();
+        dictionary = new HashMap<>();
         for ( String key : configDictionary.getKeys(false) ) {
             dictionary.put(key, configDictionary.getString(key));
         }
@@ -162,9 +162,9 @@ public class ChannelManager implements LunaChatAPI {
         YamlConfiguration configHidelist =
                 YamlConfiguration.loadConfiguration(fileHidelist);
 
-        hidelist = new HashMap<String, List<ChannelPlayer>>();
+        hidelist = new HashMap<>();
         for ( String key : configHidelist.getKeys(false) ) {
-            hidelist.put(key, new ArrayList<ChannelPlayer>());
+            hidelist.put(key, new ArrayList<>());
             for ( String id : configHidelist.getStringList(key) ) {
                 hidelist.get(key).add(ChannelPlayer.getChannelPlayer(id));
             }
@@ -337,7 +337,7 @@ public class ChannelManager implements LunaChatAPI {
     public Collection<Channel> getChannelsByPlayer(String playerName) {
 
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(playerName);
-        Collection<Channel> result = new ArrayList<Channel>();
+        Collection<Channel> result = new ArrayList<>();
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
             if ( channel.getMembers().contains(cp) ||
@@ -569,12 +569,12 @@ public class ChannelManager implements LunaChatAPI {
      */
     public List<ChannelPlayer> getHidelist(ChannelPlayer key) {
         if ( key == null ) {
-            return new ArrayList<ChannelPlayer>();
+            return new ArrayList<>();
         }
         if ( hidelist.containsKey(key.toString()) ) {
             return hidelist.get(key.toString());
         }
-        return new ArrayList<ChannelPlayer>();
+        return new ArrayList<>();
     }
 
     /**
@@ -584,9 +584,9 @@ public class ChannelManager implements LunaChatAPI {
      */
     public ArrayList<ChannelPlayer> getHideinfo(ChannelPlayer player) {
         if ( player == null ) {
-            return new ArrayList<ChannelPlayer>();
+            return new ArrayList<>();
         }
-        ArrayList<ChannelPlayer> info = new ArrayList<ChannelPlayer>();
+        ArrayList<ChannelPlayer> info = new ArrayList<>();
         for ( String key : hidelist.keySet() ) {
             if ( hidelist.get(key).contains(player) ) {
                 info.add(ChannelPlayer.getChannelPlayer(key));
@@ -603,7 +603,7 @@ public class ChannelManager implements LunaChatAPI {
     public void addHidelist(ChannelPlayer player, ChannelPlayer hided) {
         String hidedId = hided.toString();
         if ( !hidelist.containsKey(hidedId) ) {
-            hidelist.put(hidedId, new ArrayList<ChannelPlayer>());
+            hidelist.put(hidedId, new ArrayList<>());
         }
         if ( !hidelist.get(hidedId).contains(player) ) {
             hidelist.get(hidedId).add(player);
@@ -669,7 +669,7 @@ public class ChannelManager implements LunaChatAPI {
      * @return
      */
     private List<String> getIdList(List<ChannelPlayer> players) {
-        List<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
         for ( ChannelPlayer cp : players ) {
             results.add(cp.toString());
         }

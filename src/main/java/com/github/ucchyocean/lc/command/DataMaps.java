@@ -23,8 +23,8 @@ public class DataMaps {
     protected static HashMap<String, String> privateMessageMap;
 
     static {
-        inviteMap = new HashMap<String, String>();
-        inviterMap = new HashMap<String, String>();
-        privateMessageMap = new HashMap<String, String>();
+        inviteMap = new HashMap<>();
+        inviterMap = new HashMap<>();
+        privateMessageMap = new HashMap<>();
     }
 }

@@ -157,7 +157,7 @@ public class CheckCommand extends SubCommandAbst {
      */
     private ArrayList<Channel> getCheckList() {
 
-        ArrayList<Channel> list = new ArrayList<Channel>();
+        ArrayList<Channel> list = new ArrayList<>();
         for ( Channel channel : api.getChannels() ) {
             if ( channel.getModerator().size() == 0 &&
                     !channel.isBroadcastChannel() && !channel.isPersonalChat() ) {
@@ -179,7 +179,7 @@ public class CheckCommand extends SubCommandAbst {
             player = (Player)sender;
         }
 
-        ArrayList<String> items = new ArrayList<String>();
+        ArrayList<String> items = new ArrayList<>();
         String dchannel = "";
         String playerName = "";
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);

@@ -137,11 +137,11 @@ public abstract class Channel implements ConfigurationSerializable {
         this.name = name;
         this.alias = "";
         this.description = "";
-        this.members = new ArrayList<ChannelPlayer>();
-        this.banned = new ArrayList<ChannelPlayer>();
-        this.muted = new ArrayList<ChannelPlayer>();
-        this.hided = new ArrayList<ChannelPlayer>();
-        this.moderator = new ArrayList<ChannelPlayer>();
+        this.members = new ArrayList<>();
+        this.banned = new ArrayList<>();
+        this.muted = new ArrayList<>();
+        this.hided = new ArrayList<>();
+        this.moderator = new ArrayList<>();
         this.password = "";
         this.visible = true;
         this.bungee = false;
@@ -149,8 +149,8 @@ public abstract class Channel implements ConfigurationSerializable {
         this.broadcastChannel = false;
         this.isWorldRange = false;
         this.chatRange = 0;
-        this.banExpires = new HashMap<ChannelPlayer, Long>();
-        this.muteExpires = new HashMap<ChannelPlayer, Long>();
+        this.banExpires = new HashMap<>();
+        this.muteExpires = new HashMap<>();
         this.privateMessageTo = "";
         this.allowcc = true;
         this.japanizeType = null;
@@ -239,7 +239,7 @@ public abstract class Channel implements ConfigurationSerializable {
         }
 
         // 変更後のメンバーリストを作成
-        ArrayList<ChannelPlayer> after = new ArrayList<ChannelPlayer>(members);
+        ArrayList<ChannelPlayer> after = new ArrayList<>(members);
         after.add(player);
 
         // イベントコール
@@ -273,7 +273,7 @@ public abstract class Channel implements ConfigurationSerializable {
         }
 
         // 変更後のメンバーリストを作成
-        ArrayList<ChannelPlayer> after = new ArrayList<ChannelPlayer>(members);
+        ArrayList<ChannelPlayer> after = new ArrayList<>(members);
         after.remove(player);
 
         // イベントコール
@@ -455,7 +455,7 @@ public abstract class Channel implements ConfigurationSerializable {
     @Override
     public Map<String, Object> serialize() {
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put(KEY_NAME, name);
         map.put(KEY_ALIAS, alias);
         map.put(KEY_DESC, description);
@@ -522,7 +522,7 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     private static List<String> getStringList(List<ChannelPlayer> org) {
 
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         for ( ChannelPlayer cp : org ) {
             result.add(cp.toString());
         }
@@ -536,7 +536,7 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     private static Map<String, Long> getStringLongMap(Map<ChannelPlayer, Long> org) {
 
-        HashMap<String, Long> result = new HashMap<String, Long>();
+        HashMap<String, Long> result = new HashMap<>();
         for ( ChannelPlayer cp : org.keySet() ) {
             result.put(cp.toString(), org.get(cp));
         }
@@ -566,7 +566,7 @@ public abstract class Channel implements ConfigurationSerializable {
     private static List<ChannelPlayer> castToChannelPlayerList(Object obj) {
 
         List<String> entries = castToStringList(obj);
-        ArrayList<ChannelPlayer> players = new ArrayList<ChannelPlayer>();
+        ArrayList<ChannelPlayer> players = new ArrayList<>();
 
         for ( String entry : entries ) {
             players.add(ChannelPlayer.getChannelPlayer(entry));
@@ -584,10 +584,10 @@ public abstract class Channel implements ConfigurationSerializable {
     private static List<String> castToStringList(Object obj) {
 
         if ( obj == null ) {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
         if ( !(obj instanceof List<?>) ) {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
         return (List<String>)obj;
     }
@@ -600,7 +600,7 @@ public abstract class Channel implements ConfigurationSerializable {
     private static Map<ChannelPlayer, Long> castToChannelPlayerLongMap(Object obj) {
 
         Map<String, Long> entries = castToStringLongMap(obj);
-        HashMap<ChannelPlayer, Long> map = new HashMap<ChannelPlayer, Long>();
+        HashMap<ChannelPlayer, Long> map = new HashMap<>();
 
         for ( String key : entries.keySet() ) {
             ChannelPlayer cp = ChannelPlayer.getChannelPlayer(key);
@@ -619,10 +619,10 @@ public abstract class Channel implements ConfigurationSerializable {
     private static Map<String, Long> castToStringLongMap(Object obj) {
 
         if ( obj == null ) {
-            return new HashMap<String, Long>();
+            return new HashMap<>();
         }
         if ( !(obj instanceof HashMap<?, ?>) ) {
-            return new HashMap<String, Long>();
+            return new HashMap<>();
         }
         return (Map<String, Long>)obj;
     }
@@ -756,7 +756,7 @@ public abstract class Channel implements ConfigurationSerializable {
         // ブロードキャストチャンネルなら、
         // 現在サーバーに接続している全プレイヤーをメンバーとして返す
         if ( isBroadcastChannel() ) {
-            List<ChannelPlayer> mem = new ArrayList<ChannelPlayer>();
+            List<ChannelPlayer> mem = new ArrayList<>();
             for ( Player p : Utility.getOnlinePlayers() ) {
                 mem.add(ChannelPlayer.getChannelPlayer(p));
             }
@@ -992,7 +992,7 @@ public abstract class Channel implements ConfigurationSerializable {
         File folder = new File(
                 LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
         if ( !folder.exists() ) {
-            return new HashMap<String, Channel>();
+            return new HashMap<>();
         }
 
         File[] files = folder.listFiles(new FilenameFilter() {
@@ -1002,11 +1002,11 @@ public abstract class Channel implements ConfigurationSerializable {
             }
         });
 
-        HashMap<String, Channel> result = new HashMap<String, Channel>();
+        HashMap<String, Channel> result = new HashMap<>();
         for ( File file : files ) {
             YamlConfiguration config =
                 YamlConfiguration.loadConfiguration(file);
-            Map<String, Object> data = new HashMap<String, Object>();
+            Map<String, Object> data = new HashMap<>();
             for ( String key : config.getKeys(false) ) {
                 data.put(key, config.get(key));
             }
