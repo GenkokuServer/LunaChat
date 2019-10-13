@@ -7,8 +7,6 @@ package com.github.ucchyocean.lc.event;
 
 import org.bukkit.command.CommandSender;
 
-import com.github.ucchyocean.lc.channel.Channel;
-
 /**
  * チャンネル作成イベント
  * @author ucchy
