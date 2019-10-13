@@ -27,54 +27,54 @@ public interface LunaChatAPI {
      * @param channelName チャンネル名
      * @return 存在するかどうか
      */
-    public boolean isExistChannel(String channelName);
+    boolean isExistChannel(String channelName);
 
     /**
      * 全てのチャンネルを返す
      * @return 全てのチャンネル
      */
-    public Collection<Channel> getChannels();
+    Collection<Channel> getChannels();
 
     /**
      * プレイヤーが参加しているチャンネルを返す
      * @param playerName プレイヤー名
      * @return チャンネル
      */
-    public Collection<Channel> getChannelsByPlayer(String playerName);
+    Collection<Channel> getChannelsByPlayer(String playerName);
 
     /**
      * プレイヤーが参加しているデフォルトのチャンネルを返す
      * @param playerName プレイヤー
      * @return チャンネル
      */
-    public Channel getDefaultChannel(String playerName);
+    Channel getDefaultChannel(String playerName);
 
     /**
      * プレイヤーのデフォルトチャンネルを設定する
      * @param playerName プレイヤー
      * @param channelName チャンネル名
      */
-    public void setDefaultChannel(String playerName, String channelName);
+    void setDefaultChannel(String playerName, String channelName);
 
     /**
      * 指定した名前のプレイヤーに設定されている、デフォルトチャンネルを削除する
      * @param playerName プレイヤー名
      */
-    public void removeDefaultChannel(String playerName);
+    void removeDefaultChannel(String playerName);
 
     /**
      * チャンネルを取得する
      * @param channelName チャンネル名
      * @return チャンネル
      */
-    public Channel getChannel(String channelName);
+    Channel getChannel(String channelName);
 
     /**
      * 新しいチャンネルを作成する
      * @param channelName チャンネル名
      * @return 作成されたチャンネル
      */
-    public Channel createChannel(String channelName);
+    Channel createChannel(String channelName);
 
     /**
      * 新しいチャンネルを作成する
@@ -82,14 +82,14 @@ public interface LunaChatAPI {
      * @param sender チャンネルを作成した人
      * @return 作成されたチャンネル
      */
-    public Channel createChannel(String channelName, CommandSender sender);
+    Channel createChannel(String channelName, CommandSender sender);
 
     /**
      * チャンネルを削除する
      * @param channelName 削除するチャンネル名
      * @return 削除したかどうか
      */
-    public boolean removeChannel(String channelName);
+    boolean removeChannel(String channelName);
 
     /**
      * チャンネルを削除する
@@ -97,74 +97,74 @@ public interface LunaChatAPI {
      * @param sender チャンネルを削除した人
      * @return 削除したかどうか
      */
-    public boolean removeChannel(String channelName, CommandSender sender);
+    boolean removeChannel(String channelName, CommandSender sender);
 
     /**
      * テンプレートを取得する
      * @param id テンプレートID
      * @return テンプレート
      */
-    public String getTemplate(String id);
+    String getTemplate(String id);
 
     /**
      * テンプレートを登録する
      * @param id テンプレートID
      * @param template テンプレート
      */
-    public void setTemplate(String id, String template);
+    void setTemplate(String id, String template);
 
     /**
      * テンプレートを削除する
      * @param id テンプレートID
      */
-    public void removeTemplate(String id);
+    void removeTemplate(String id);
 
     /**
      * 辞書データを全て取得する
      * @return 辞書データ
      */
-    public HashMap<String, String> getAllDictionary();
+    HashMap<String, String> getAllDictionary();
 
     /**
      * 新しい辞書データを追加する
      * @param key キー
      * @param value 値
      */
-    public void setDictionary(String key, String value);
+    void setDictionary(String key, String value);
 
     /**
      * 指定したキーの辞書データを削除する
      * @param key キー
      */
-    public void removeDictionary(String key);
+    void removeDictionary(String key);
 
     /**
      * 該当のプレイヤーに関連するhidelistを取得する。
      * @param key プレイヤー
      * @return 指定されたプレイヤーをhideしているプレイヤー(非null)
      */
-    public List<ChannelPlayer> getHidelist(ChannelPlayer key);
+    List<ChannelPlayer> getHidelist(ChannelPlayer key);
 
     /**
      * 該当のプレイヤーがhideしているプレイヤーのリストを返す。
      * @param player プレイヤー
      * @return 指定したプレイヤーがhideしているプレイヤーのリスト
      */
-    public ArrayList<ChannelPlayer> getHideinfo(ChannelPlayer player);
+    ArrayList<ChannelPlayer> getHideinfo(ChannelPlayer player);
 
     /**
      * 指定されたプレイヤーが、指定されたプレイヤーをhideするように設定する。
      * @param player hideする側のプレイヤー
      * @param hided hideされる側のプレイヤー
      */
-    public void addHidelist(ChannelPlayer player, ChannelPlayer hided);
+    void addHidelist(ChannelPlayer player, ChannelPlayer hided);
 
     /**
      * 指定されたプレイヤーが、指定されたプレイヤーのhideを解除するように設定する。
      * @param player hideしていた側のプレイヤー
      * @param hided hideされていた側のプレイヤー
      */
-    public void removeHidelist(ChannelPlayer player, ChannelPlayer hided);
+    void removeHidelist(ChannelPlayer player, ChannelPlayer hided);
 
     /**
      * Japanize変換を行う
@@ -172,24 +172,24 @@ public interface LunaChatAPI {
      * @param type 変換タイプ
      * @return 変換後のメッセージ、ただしイベントでキャンセルされた場合はnullが返されるので注意
      */
-    public String japanize(String message, JapanizeType type);
+    String japanize(String message, JapanizeType type);
 
     /**
      * 該当プレイヤーのJapanize変換をオン/オフする
      * @param playerName 設定するプレイヤー名
      * @param doJapanize Japanize変換するかどうか
      */
-    public void setPlayersJapanize(String playerName, boolean doJapanize);
+    void setPlayersJapanize(String playerName, boolean doJapanize);
 
     /**
      * プレイヤーのJapanize設定を返す
      * @param playerName プレイヤー名
      * @return Japanize設定
      */
-    public boolean isPlayerJapanize(String playerName);
+    boolean isPlayerJapanize(String playerName);
 
     /**
      * LunaChatの全データを再読み込みする
      */
-    public void reloadAllData();
+    void reloadAllData();
 }
