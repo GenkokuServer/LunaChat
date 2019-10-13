@@ -79,9 +79,10 @@ public class ChannelManager implements LunaChatAPI {
                 YamlConfiguration.loadConfiguration(fileDefaults);
 
         defaultChannels = new HashMap<>();
-        for ( String key : config.getKeys(false) ) {
-            defaultChannels.put(key, config.getString(key).toLowerCase());
-        }
+        config.getKeys(false).forEach(key -> {
+            String value = config.getString(key);
+            if (value != null) defaultChannels.put(key, value.toLowerCase());
+        });
 
         // テンプレート設定のロード
         fileTemplates = new File(
