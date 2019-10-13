@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 
 /**
  * チャンネル作成イベント
+ *
  * @author ucchy
  */
 public class LunaChatChannelCreateEvent extends LunaChatBaseCancellableEvent {
@@ -22,6 +23,7 @@ public class LunaChatChannelCreateEvent extends LunaChatBaseCancellableEvent {
 
     /**
      * 作成するチャンネルのチャンネル名を上書き設定する
+     *
      * @param channelName 設定するチャンネル名
      */
     public void setChannelName(String channelName) {
@@ -30,6 +32,7 @@ public class LunaChatChannelCreateEvent extends LunaChatBaseCancellableEvent {
 
     /**
      * チャンネルを作成した人を取得する。
+     *
      * @return チャンネルを作成したCommandSender
      */
     public CommandSender getSender() {

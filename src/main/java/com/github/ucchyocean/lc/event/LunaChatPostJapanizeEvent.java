@@ -9,6 +9,7 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * Japanize変換が行われた後に呼び出されるイベント
+ *
  * @author ucchy
  */
 public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
@@ -19,13 +20,14 @@ public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
 
     /**
      * コンストラクタ
+     *
      * @param channelName チャンネル名
-     * @param player 発言したプレイヤー
-     * @param original 変換前の文字列
-     * @param japanized 変換後の文字列
+     * @param player      発言したプレイヤー
+     * @param original    変換前の文字列
+     * @param japanized   変換後の文字列
      */
     public LunaChatPostJapanizeEvent(String channelName, ChannelPlayer player,
-            String original, String japanized) {
+                                     String original, String japanized) {
         super(channelName, true);
         this.player = player;
         this.original = original;
@@ -34,6 +36,7 @@ public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
 
     /**
      * 発言を行ったプレイヤーを取得します。
+     *
      * @return 発言したプレイヤー
      */
     public ChannelPlayer getPlayer() {
@@ -42,6 +45,7 @@ public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
 
     /**
      * Japanize変換後の文字列を返す
+     *
      * @return 変換後の文字列
      */
     public String getJapanized() {
@@ -50,6 +54,7 @@ public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
 
     /**
      * Japanize変換後の文字列を差し替える
+     *
      * @param japanized 変換後の文字列
      */
     public void setJapanized(String japanized) {
@@ -58,6 +63,7 @@ public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
 
     /**
      * Japanize変換前の文字列を返す
+     *
      * @return 変換前の文字列
      */
     public String getOriginal() {
