@@ -170,7 +170,7 @@ public class LunaChatConfig {
 
         enableChannelChat = config.getBoolean("enableChannelChat", true);
         playerChatEventListenerPriority
-            = getEventPriority(config.getString("playerChatEventListenerPriority"), EventPriority.HIGH);
+            = getEventPriority(config.getString("playerChatEventListenerPriority"));
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
         loggingChatToHawkEye = config.getBoolean("loggingChatToHawkEye", true);
@@ -572,12 +572,11 @@ public class LunaChatConfig {
     /**
      * 指定された文字列から、対応するEventPriorityを返す。
      * @param value 文字列
-     * @param def デフォルト
      * @return EventPriority
      */
-    private static EventPriority getEventPriority(String value, EventPriority def) {
+    private static EventPriority getEventPriority(String value) {
 
-        if ( value == null ) return def;
+        if ( value == null ) return EventPriority.HIGH;
 
         if ( value.equalsIgnoreCase("LOWEST") ) {
             return EventPriority.LOWEST;
@@ -591,6 +590,6 @@ public class LunaChatConfig {
             return EventPriority.HIGHEST;
         }
 
-        return def;
+        return EventPriority.HIGH;
     }
 }
