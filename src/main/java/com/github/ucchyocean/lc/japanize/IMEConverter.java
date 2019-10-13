@@ -35,17 +35,6 @@ public class IMEConverter {
         return conv(org, true);
     }
 
-    /**
-     * SocialIMEを使って変換する
-     * @param org 変換元
-     * @return 変換後
-     * @deprecated SocialIMEが2016年9月1日にサービス終了するため、このAPIは今後呼び出してはならない。
-     */
-    @Deprecated
-    public static String convBySocialIME(String org) {
-        return conv(org, false);
-    }
-
     // 変換の実行
     private static String conv(String org, boolean isGoogleIME) {
 
@@ -156,6 +145,5 @@ public class IMEConverter {
         System.out.println("original : " + testee);
         System.out.println("kana : " + KanaConverter.conv(testee));
         System.out.println("GoogleIME : " + convByGoogleIME(KanaConverter.conv(testee)));
-        System.out.println("SocialIME : " + convBySocialIME(KanaConverter.conv(testee)));
     }
 }
