@@ -150,23 +150,26 @@ public class HideCommand extends SubCommandAbst {
             // プレイヤーが対象の場合の処理
 
             // 既に非表示になっていないかどうかをチェックする
-            ChannelPlayer hided = ChannelPlayer.getChannelPlayer(cname);
-            if ( api.getHidelist(hided).contains(player) ) {
-                sendResourceMessage(sender, PREERR, "errmsgAlreadyHidedPlayer");
+            if (cname != null) {
+                ChannelPlayer hided = ChannelPlayer.getChannelPlayer(cname);
+                if (api.getHidelist(hided).contains(player)) {
+                    sendResourceMessage(sender, PREERR, "errmsgAlreadyHidedPlayer");
+                    return true;
+                }
+
+                // 自分自身を指定していないかどうかチェックする
+                if (hided.equals(player)) {
+                    sendResourceMessage(sender, PREERR, "errmsgCannotHideSelf");
+                    return true;
+                }
+
+                // 設定する
+                api.addHidelist(player, hided);
+                sendResourceMessage(sender, PREINFO, "cmdmsgHidedPlayer", hided.getDisplayName());
+
                 return true;
             }
-
-            // 自分自身を指定していないかどうかチェックする
-            if ( hided.equals(player) ) {
-                sendResourceMessage(sender, PREERR, "errmsgCannotHideSelf");
-                return true;
-            }
-
-            // 設定する
-            api.addHidelist(player, hided);
-            sendResourceMessage(sender, PREINFO, "cmdmsgHidedPlayer", hided.getDisplayName());
-
-            return true;
+            return  true;
         }
     }
 
