@@ -471,7 +471,7 @@ public class ChannelImpl extends Channel {
         }
 
         // ロギング
-        log(originalMessage, name, player);
+        log(originalMessage, name);
     }
 
     /**
@@ -775,9 +775,8 @@ public class ChannelImpl extends Channel {
      * ログを記録する
      * @param name 発言者
      * @param message 記録するメッセージ
-     * @param player プレイヤー
      */
-    private void log(String message, String name, ChannelPlayer player) {
+    private void log(String message, String name) {
 
         // LunaChatのチャットログへ記録
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
