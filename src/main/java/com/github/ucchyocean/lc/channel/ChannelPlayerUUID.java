@@ -28,7 +28,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      * コンストラクタ
      * @param id プレイヤーID
      */
-    public ChannelPlayerUUID(String id) {
+    ChannelPlayerUUID(String id) {
         this.id = UUID.fromString(id);
     }
 
@@ -45,7 +45,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      * @param name プレイヤー名
      * @return ChannelPlayerUUID
      */
-    public static ChannelPlayerUUID getChannelPlayerUUIDFromName(String name) {
+    static ChannelPlayerUUID getChannelPlayerUUIDFromName(String name) {
         Player player = Bukkit.getPlayerExact(name);
         if ( player != null ) {
             return new ChannelPlayerUUID(player.getUniqueId());
