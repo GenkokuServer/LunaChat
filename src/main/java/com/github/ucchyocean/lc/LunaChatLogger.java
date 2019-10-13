@@ -149,8 +149,6 @@ public class LunaChatLogger {
                     data.add(line);
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
