@@ -5,14 +5,14 @@
  */
 package com.github.ucchyocean.lc.command;
 
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
-
 /**
  * banコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class BanCommand extends SubCommandAbst {
@@ -24,6 +24,7 @@ public class BanCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -34,6 +35,7 @@ public class BanCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -44,6 +46,7 @@ public class BanCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -54,9 +57,10 @@ public class BanCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage()
+     * @param label  実行ラベル
+     * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String) )
      */
     @Override
     public void sendUsageMessage(
@@ -67,11 +71,12 @@ public class BanCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
-     * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(java.lang.String[])
+     * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
     public boolean runCommand(
@@ -101,13 +106,13 @@ public class BanCommand extends SubCommandAbst {
         }
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(sender) ) {
+        if (!channel.hasModeratorPermission(sender)) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
 
         // グローバルチャンネルならBANできない
-        if ( channel.isGlobalChannel() ) {
+        if (channel.isGlobalChannel()) {
             sendResourceMessage(sender, PREERR, "errmsgCannotBANGlobal", channel.getName());
             return true;
         }
@@ -128,12 +133,12 @@ public class BanCommand extends SubCommandAbst {
         // 期限付きBANの場合、期限の指定が正しいかどうかをチェックする
         int expireMinutes = -1;
         if (args.length >= 3) {
-            if ( !args[2].matches("[0-9]+") ) {
+            if (!args[2].matches("[0-9]+")) {
                 sendResourceMessage(sender, PREERR, "errmsgInvalidBanExpireParameter");
                 return true;
             }
             expireMinutes = Integer.parseInt(args[2]);
-            if ( expireMinutes < 1 || 43200 < expireMinutes ) {
+            if (expireMinutes < 1 || 43200 < expireMinutes) {
                 sendResourceMessage(sender, PREERR, "errmsgInvalidBanExpireParameter");
                 return true;
             }
@@ -141,14 +146,14 @@ public class BanCommand extends SubCommandAbst {
 
         // BAN実行
         channel.getBanned().add(kicked);
-        if ( expireMinutes != -1 ) {
+        if (expireMinutes != -1) {
             long expire = System.currentTimeMillis() + expireMinutes * 60 * 1000;
             channel.getBanExpires().put(kicked, expire);
         }
         channel.removeMember(kicked, false);
 
         // senderに通知メッセージを出す
-        if ( expireMinutes != -1 ) {
+        if (expireMinutes != -1) {
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgBanWithExpire", kickedName, channel.getName(), expireMinutes);
         } else {
@@ -157,7 +162,7 @@ public class BanCommand extends SubCommandAbst {
         }
 
         // チャンネルに通知メッセージを出す
-        if ( expireMinutes != -1 ) {
+        if (expireMinutes != -1) {
             sendResourceMessageWithKeyword(channel,
                     "banWithExpireMessage", kicked, expireMinutes);
         } else {
@@ -165,7 +170,7 @@ public class BanCommand extends SubCommandAbst {
         }
 
         // BANされた人に通知メッセージを出す
-        if ( kicked != null && kicked.isOnline() ) {
+        if (kicked.isOnline()) {
             sendResourceMessage(kicked, PREINFO,
                     "cmdmsgBanned", channel.getName());
         }
