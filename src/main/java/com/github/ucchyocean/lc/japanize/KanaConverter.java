@@ -72,7 +72,7 @@ public class KanaConverter {
         TABLE.put("xk", new String[]{"ヵ","き","く","ヶ","こ"});
         TABLE.put("wy", new String[]{"わ","ゐ","う","ゑ","を"});
         TABLE.put("wh", new String[]{"うぁ","うぃ","う","うぇ","うぉ"});
-    };
+    }
 
     private static String getKanaFromTable(String s, int n) {
 
