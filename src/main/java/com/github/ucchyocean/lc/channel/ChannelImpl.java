@@ -113,8 +113,8 @@ public class ChannelImpl extends Channel {
             return;
         }
 
-        String preReplaceMessage = new String(message);
-        String maskedMessage = new String(message);
+        String preReplaceMessage = message;
+        String maskedMessage = message;
 
         // 一時的にJapanizeスキップ設定かどうかを確認する
         boolean skipJapanize = false;
@@ -274,7 +274,7 @@ public class ChannelImpl extends Channel {
         String name = player + "@" + source;
 
         // NGワード発言のマスク
-        String maskedMessage = new String(message);
+        String maskedMessage = message;
         for ( Pattern pattern : config.getNgwordCompiled() ) {
             Matcher matcher = pattern.matcher(maskedMessage);
             if ( matcher.find() ) {
@@ -334,7 +334,7 @@ public class ChannelImpl extends Channel {
 
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
 
-        String originalMessage = new String(message);
+        String originalMessage = message;
 
         // 受信者を設定する
         ArrayList<ChannelPlayer> recipients = new ArrayList<>();

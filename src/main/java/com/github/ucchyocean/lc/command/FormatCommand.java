@@ -119,7 +119,7 @@ public class FormatCommand extends SubCommandAbst {
 
         // 制約キーワードを確認する
         List<String> constraints = config.getFormatConstraint();
-        String tempFormat = new String(format.toString());
+        String tempFormat = format.toString();
         for ( int i=0; i<=9; i++ ) {
             String key = "%" + i;
             if ( tempFormat.contains(key) && api.getTemplate(i + "") != null ) {

@@ -468,7 +468,7 @@ public class ChannelManager implements LunaChatAPI {
 
             // 強制解散のメッセージを、残ったメンバーに流す
             if ( !channel.isPersonalChat() && !MSG_BREAKUP.equals("") ) {
-                String message = new String(MSG_BREAKUP);
+                String message = MSG_BREAKUP;
                 message = message.replace("%ch", channel.getName());
                 message = message.replace("%color", channel.getColorCode());
                 for ( ChannelPlayer cp : channel.getMembers() ) {
