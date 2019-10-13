@@ -22,7 +22,7 @@ public class ChannelPlayerBlock extends ChannelPlayer {
      * コンストラクタ
      * @param sender コマンドブロック
      */
-    public ChannelPlayerBlock(BlockCommandSender sender) {
+    ChannelPlayerBlock(BlockCommandSender sender) {
         this.sender = sender;
     }
 
