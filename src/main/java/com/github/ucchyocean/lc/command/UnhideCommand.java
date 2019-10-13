@@ -92,11 +92,8 @@ public class UnhideCommand extends SubCommandAbst {
             if ( def != null ) {
                 cname = def.getName();
             }
-        } else if ( args.length >= 2 ) {
-            cname = args[1];
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
-            return true;
+            cname = args[1];
         }
 
         // チャンネルかプレイヤーが存在するかどうかをチェックする
@@ -129,17 +126,20 @@ public class UnhideCommand extends SubCommandAbst {
             // プレイヤーが対象の場合の処理
 
             // 既に表示になっていないかどうかをチェックする
-            ChannelPlayer hided = ChannelPlayer.getChannelPlayer(cname);
-            if ( !api.getHidelist(hided).contains(player) ) {
-                sendResourceMessage(sender, PREERR, "errmsgAlreadyUnhidedPlayer");
+            if (cname != null) {
+                ChannelPlayer hided = ChannelPlayer.getChannelPlayer(cname);
+                if (!api.getHidelist(hided).contains(player)) {
+                    sendResourceMessage(sender, PREERR, "errmsgAlreadyUnhidedPlayer");
+                    return true;
+                }
+
+                // 設定する
+                api.removeHidelist(player, hided);
+                sendResourceMessage(sender, PREINFO, "cmdmsgUnhidedPlayer", hided.getDisplayName());
+
                 return true;
             }
-
-            // 設定する
-            api.removeHidelist(player, hided);
-            sendResourceMessage(sender, PREINFO, "cmdmsgUnhidedPlayer", hided.getDisplayName());
-
-            return true;
         }
+        return true;
     }
 }
