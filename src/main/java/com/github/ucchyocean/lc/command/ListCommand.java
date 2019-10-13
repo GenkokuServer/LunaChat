@@ -105,7 +105,7 @@ public class ListCommand extends SubCommandAbst {
 
         ArrayList<String> items = new ArrayList<>();
         String dchannel = "";
-        String playerName = "";
+        String playerName;
         if ( player != null ) {
             playerName = player.getName();
             Channel def = api.getDefaultChannel(playerName);

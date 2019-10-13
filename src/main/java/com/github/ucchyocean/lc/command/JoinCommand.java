@@ -84,7 +84,7 @@ public class JoinCommand extends SubCommandAbst {
         ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
 
         // 実行引数から、参加するチャンネルを取得する
-        String channelName = "";
+        String channelName;
         StringBuilder message = new StringBuilder();
         if (!args[0].equalsIgnoreCase("join")) {
             channelName = args[0];

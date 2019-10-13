@@ -40,7 +40,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
         }
 
         // 実行引数から1:1チャットの相手を取得する
-        String invitedName = "";
+        String invitedName;
         StringBuilder message = new StringBuilder();
         if (args.length >= 1) {
             invitedName = args[0];

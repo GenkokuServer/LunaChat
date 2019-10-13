@@ -84,7 +84,7 @@ public class MuteCommand extends SubCommandAbst {
         }
 
         // 実行引数から、Muteするユーザーを取得する
-        String kickedName = "";
+        String kickedName;
         if (args.length >= 2) {
             kickedName = args[1];
         } else {

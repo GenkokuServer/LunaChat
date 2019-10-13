@@ -108,7 +108,7 @@ public class InviteCommand extends SubCommandAbst {
         }
 
         // 実行引数から招待する人を取得する
-        String invitedName = "";
+        String invitedName;
         if (args.length >= 2) {
             invitedName = args[1];
         } else {

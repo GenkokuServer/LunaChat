@@ -181,7 +181,7 @@ public class CheckCommand extends SubCommandAbst {
 
         ArrayList<String> items = new ArrayList<>();
         String dchannel = "";
-        String playerName = "";
+        String playerName;
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
         if ( player != null ) {
             playerName = player.getName();

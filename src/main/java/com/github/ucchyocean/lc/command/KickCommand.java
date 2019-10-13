@@ -82,7 +82,7 @@ public class KickCommand extends SubCommandAbst {
         }
 
         // 実行引数から、キックするユーザーを取得する
-        String kickedName = "";
+        String kickedName;
         if (args.length >= 2) {
             kickedName = args[1];
         } else {

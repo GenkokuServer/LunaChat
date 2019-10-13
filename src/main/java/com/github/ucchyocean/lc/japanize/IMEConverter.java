@@ -75,7 +75,7 @@ public class IMEConverter {
 
             reader = new BufferedReader(
                     new InputStreamReader(urlconn.getInputStream(), encode));
-            String line = "";
+            String line;
             StringBuilder result = new StringBuilder();
             while ( (line = reader.readLine()) != null ) {
                 if ( isGoogleIME ) {

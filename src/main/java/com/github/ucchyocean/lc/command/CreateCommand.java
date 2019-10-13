@@ -74,7 +74,7 @@ public class CreateCommand extends SubCommandAbst {
             CommandSender sender, String label, String[] args) {
 
         // 実行引数から、作成するチャンネルを取得する
-        String name = "";
+        String name;
         String desc = "";
         if (args.length >= 2) {
             name = args[1];
