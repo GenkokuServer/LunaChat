@@ -15,8 +15,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,17 +32,12 @@ public class ChannelManager implements LunaChatAPI {
 
     private static final String MSG_BREAKUP = Resources.get("breakupMessage");
 
-    private static final String FILE_NAME_DCHANNELS = "defaults.yml";
-    private static final String FILE_NAME_TEMPLATES = "templates.yml";
-    private static final String FILE_NAME_JAPANIZE = "japanize.yml";
-    private static final String FILE_NAME_DICTIONARY = "dictionary.yml";
-    private static final String FILE_NAME_HIDELIST = "hidelist.yml";
+    private static final Path FILE_NAME_DCHANNELS = LunaChat.getInstance().getDataFolder().toPath().resolve("defaults.yml");
+    private static final Path FILE_NAME_TEMPLATES = LunaChat.getInstance().getDataFolder().toPath().resolve("templates.yml");
+    private static final Path FILE_NAME_JAPANIZE = LunaChat.getInstance().getDataFolder().toPath().resolve("japanize.yml");
+    private static final Path FILE_NAME_DICTIONARY = LunaChat.getInstance().getDataFolder().toPath().resolve("dictionary.yml");
+    private static final Path FILE_NAME_HIDELIST = LunaChat.getInstance().getDataFolder().toPath().resolve("hidelist.yml");
 
-    private File fileDefaults;
-    private File fileTemplates;
-    private File fileJapanize;
-    private File fileDictionary;
-    private File fileHidelist;
     private HashMap<String, Channel> channels;
     private HashMap<String, String> defaultChannels;
     private HashMap<String, String> templates;
@@ -63,141 +59,74 @@ public class ChannelManager implements LunaChatAPI {
     public void reloadAllData() {
 
         // デフォルトチャンネル設定のロード
-        fileDefaults = new File(
-                LunaChat.getInstance().getDataFolder(), FILE_NAME_DCHANNELS);
-
-        if (!fileDefaults.exists()) {
-            YamlConfiguration conf = new YamlConfiguration();
-            try {
-                conf.save(fileDefaults);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        YamlConfiguration config =
-                YamlConfiguration.loadConfiguration(fileDefaults);
-
-        defaultChannels = new HashMap<>();
-        config.getKeys(false).forEach(key -> {
-            String value = config.getString(key);
-            if (value != null) defaultChannels.put(key, value.toLowerCase());
-        });
+        defaultChannels = getSetting(FILE_NAME_DCHANNELS);
 
         // テンプレート設定のロード
-        fileTemplates = new File(
-                LunaChat.getInstance().getDataFolder(), FILE_NAME_TEMPLATES);
-
-        if (!fileTemplates.exists()) {
-            YamlConfiguration conf = new YamlConfiguration();
-            try {
-                conf.save(fileTemplates);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        YamlConfiguration configTemplates =
-                YamlConfiguration.loadConfiguration(fileTemplates);
-
-        templates = new HashMap<>();
-        for (String key : configTemplates.getKeys(false)) {
-            templates.put(key, configTemplates.getString(key));
-        }
-
-        // Japanize設定のロード
-        fileJapanize = new File(
-                LunaChat.getInstance().getDataFolder(), FILE_NAME_JAPANIZE);
-
-        if (!fileJapanize.exists()) {
-            YamlConfiguration conf = new YamlConfiguration();
-            try {
-                conf.save(fileJapanize);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        YamlConfiguration configJapanize =
-                YamlConfiguration.loadConfiguration(fileJapanize);
-
-        japanize = new HashMap<>();
-        for (String key : configJapanize.getKeys(false)) {
-            japanize.put(key, configJapanize.getBoolean(key));
-        }
+        templates = getSetting(FILE_NAME_TEMPLATES);
 
         // dictionaryのロード
-        fileDictionary = new File(
-                LunaChat.getInstance().getDataFolder(), FILE_NAME_DICTIONARY);
+        dictionary = getSetting(FILE_NAME_DICTIONARY);
 
-        if (!fileDictionary.exists()) {
-            YamlConfiguration conf = new YamlConfiguration();
+        // Japanize設定のロード
+        if (!Files.exists(FILE_NAME_JAPANIZE)) {
             try {
-                conf.save(fileDictionary);
+                new YamlConfiguration().save(FILE_NAME_JAPANIZE.toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        YamlConfiguration configDictionary =
-                YamlConfiguration.loadConfiguration(fileDictionary);
-
-        dictionary = new HashMap<>();
-        for (String key : configDictionary.getKeys(false)) {
-            dictionary.put(key, configDictionary.getString(key));
-        }
+        YamlConfiguration configJapanize = YamlConfiguration.loadConfiguration(FILE_NAME_JAPANIZE.toFile());
+        japanize = new HashMap<>();
+        configJapanize.getKeys(false).forEach(key -> japanize.put(key, configJapanize.getBoolean(key)));
 
         // hideリストのロード
-        fileHidelist = new File(
-                LunaChat.getInstance().getDataFolder(), FILE_NAME_HIDELIST);
-
-        if (!fileHidelist.exists()) {
-            YamlConfiguration conf = new YamlConfiguration();
+        if (!Files.exists(FILE_NAME_HIDELIST)) {
             try {
-                conf.save(fileHidelist);
+                new YamlConfiguration().save(FILE_NAME_HIDELIST.toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        YamlConfiguration configHidelist =
-                YamlConfiguration.loadConfiguration(fileHidelist);
-
+        YamlConfiguration configHidelist = YamlConfiguration.loadConfiguration(FILE_NAME_HIDELIST.toFile());
         hidelist = new HashMap<>();
-        for (String key : configHidelist.getKeys(false)) {
+
+        configHidelist.getKeys(false).forEach(key -> {
             hidelist.put(key, new ArrayList<>());
-            for (String id : configHidelist.getStringList(key)) {
-                hidelist.get(key).add(ChannelPlayer.getChannelPlayer(id));
-            }
-        }
+            configHidelist.getStringList(key).forEach(id -> hidelist.get(key).add(ChannelPlayer.getChannelPlayer(id)));
+        });
 
         // チャンネル設定のロード
         channels = Channel.loadAllChannels();
     }
 
-    /**
-     * すべて保存する
-     */
-    protected void saveAllChannels() {
-
-        saveDefaults();
-
-        for (Channel channel : channels.values()) {
-            channel.save();
+    private HashMap<String, String> getSetting(Path file) {
+        if (!Files.exists(file)) {
+            try {
+                new YamlConfiguration().save(file.toFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file.toFile());
+
+        HashMap<String, String> map = new HashMap<>();
+
+        config.getKeys(false).forEach(key -> map.put(key, config.getString(key)));
+
+        return map;
     }
 
     /**
      * デフォルトチャンネル設定を保存する
      */
     private void saveDefaults() {
-
         try {
             YamlConfiguration config = new YamlConfiguration();
-            for (String key : defaultChannels.keySet()) {
-                config.set(key, defaultChannels.get(key));
-            }
-            config.save(fileDefaults);
+            defaultChannels.keySet().forEach(key -> config.set(key, defaultChannels.get(key)));
+            config.save(FILE_NAME_DCHANNELS.toFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -207,13 +136,10 @@ public class ChannelManager implements LunaChatAPI {
      * テンプレート設定を保存する
      */
     private void saveTemplates() {
-
         try {
             YamlConfiguration config = new YamlConfiguration();
-            for (String key : templates.keySet()) {
-                config.set(key, templates.get(key));
-            }
-            config.save(fileTemplates);
+            templates.keySet().forEach(key -> config.set(key, templates.get(key)));
+            config.save(FILE_NAME_TEMPLATES.toFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -223,13 +149,10 @@ public class ChannelManager implements LunaChatAPI {
      * Japanize設定を保存する
      */
     private void saveJapanize() {
-
         try {
             YamlConfiguration config = new YamlConfiguration();
-            for (String key : japanize.keySet()) {
-                config.set(key, japanize.get(key));
-            }
-            config.save(fileJapanize);
+            japanize.keySet().forEach(key -> config.set(key, japanize.get(key)));
+            config.save(FILE_NAME_JAPANIZE.toFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -239,13 +162,10 @@ public class ChannelManager implements LunaChatAPI {
      * Dictionary設定を保存する
      */
     private void saveDictionary() {
-
         try {
             YamlConfiguration config = new YamlConfiguration();
-            for (String key : dictionary.keySet()) {
-                config.set(key, dictionary.get(key));
-            }
-            config.save(fileDictionary);
+            dictionary.keySet().forEach(key -> config.set(key, dictionary.get(key)));
+            config.save(FILE_NAME_DICTIONARY.toFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -255,13 +175,10 @@ public class ChannelManager implements LunaChatAPI {
      * Hidelist設定を保存する
      */
     private void saveHidelist() {
-
         try {
             YamlConfiguration config = new YamlConfiguration();
-            for (String key : hidelist.keySet()) {
-                config.set(key, getIdList(hidelist.get(key)));
-            }
-            config.save(fileHidelist);
+            hidelist.keySet().forEach(key -> config.set(key, getIdList(hidelist.get(key))));
+            config.save(FILE_NAME_HIDELIST.toFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
