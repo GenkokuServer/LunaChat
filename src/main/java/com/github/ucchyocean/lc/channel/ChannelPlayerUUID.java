@@ -52,10 +52,8 @@ public class ChannelPlayerUUID extends ChannelPlayer {
         }
         @SuppressWarnings("deprecation")
         OfflinePlayer offline = Bukkit.getOfflinePlayer(name);
-        if ( offline != null && offline.getUniqueId() != null ) {
-            return new ChannelPlayerUUID(offline.getUniqueId());
-        }
-        return null;
+        offline.getUniqueId();
+        return new ChannelPlayerUUID(offline.getUniqueId());
     }
 
     /**
@@ -92,10 +90,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
             return player.getName();
         }
         OfflinePlayer offlineplayer = Bukkit.getOfflinePlayer(id);
-        if ( offlineplayer != null ) {
-            return offlineplayer.getName();
-        }
-        return id.toString();
+        return offlineplayer.getName();
     }
 
     /**
