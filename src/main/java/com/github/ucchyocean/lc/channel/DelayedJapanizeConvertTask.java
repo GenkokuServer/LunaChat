@@ -5,24 +5,24 @@
  */
 package com.github.ucchyocean.lc.channel;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatPostJapanizeEvent;
 import com.github.ucchyocean.lc.japanize.IMEConverter;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 import com.github.ucchyocean.lc.japanize.KanaConverter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Japanize変換を実行して、実行後に発言を行うタスク
+ *
  * @author ucchy
  */
 class DelayedJapanizeConvertTask extends BukkitRunnable {
@@ -38,10 +38,11 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
 
     /**
      * コンストラクタ
-     * @param org 変換前の文字列
-     * @param type 変換タイプ
-     * @param channel 変換後に発言する、発言先チャンネル
-     * @param player 発言したプレイヤー
+     *
+     * @param org            変換前の文字列
+     * @param type           変換タイプ
+     * @param channel        変換後に発言する、発言先チャンネル
+     * @param player         発言したプレイヤー
      * @param japanizeFormat 変換後に発言するときの、発言フォーマット
      */
     DelayedJapanizeConvertTask(String org, JapanizeType type, Channel channel,
@@ -60,6 +61,7 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
 
     /**
      * 同期処理で変換を行います。結果は getResult() で取得してください。
+     *
      * @return 処理を実行したかどうか（イベントでキャンセルされた場合はfalseになります）
      */
     boolean runSync() {
@@ -67,8 +69,8 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
         // 変換対象外のキーワード
         HashMap<String, String> keywordMap = new HashMap<>();
         ArrayList<String> keywords = new ArrayList<>();
-        if ( LunaChat.getInstance().getLunaChatConfig().isJapanizeIgnorePlayerName() ) {
-            for ( Player player : Utility.getOnlinePlayers() ) {
+        if (LunaChat.getInstance().getLunaChatConfig().isJapanizeIgnorePlayerName()) {
+            for (Player player : Utility.getOnlinePlayers()) {
                 keywords.add(player.getName());
             }
         }
@@ -81,16 +83,16 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
         // キーワードをロック
         int index = 0;
         String keywordLocked = deletedURL;
-        for ( String keyword : keywords ) {
-            if ( keywordLocked.contains(keyword) ) {
+        for (String keyword : keywords) {
+            if (keywordLocked.contains(keyword)) {
                 index++;
                 String key = "＜" + makeMultibytesDigit(index) + "＞";
                 keywordLocked = keywordLocked.replace(keyword, key);
                 keywordMap.put(key, keyword);
             }
         }
-        for ( String dickey : dictionary.keySet() ) {
-            if ( keywordLocked.contains(dickey) ) {
+        for (String dickey : dictionary.keySet()) {
+            if (keywordLocked.contains(dickey)) {
                 index++;
                 String key = "＜" + makeMultibytesDigit(index) + "＞";
                 keywordLocked = keywordLocked.replace(dickey, key);
@@ -102,20 +104,20 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
         String japanized = KanaConverter.conv(keywordLocked);
 
         // IME変換
-        if ( type == JapanizeType.GOOGLE_IME ) {
+        if (type == JapanizeType.GOOGLE_IME) {
             japanized = IMEConverter.convByGoogleIME(japanized);
         }
 
         // キーワードのアンロック
-        for ( String key : keywordMap.keySet() ) {
+        for (String key : keywordMap.keySet()) {
             japanized = japanized.replace(key, keywordMap.get(key));
         }
 
         // 変換後の文字列にNGワードが含まれている場合は、マスクする
-        for ( Pattern pattern :
-                LunaChat.getInstance().getLunaChatConfig().getNgwordCompiled() ) {
+        for (Pattern pattern :
+                LunaChat.getInstance().getLunaChatConfig().getNgwordCompiled()) {
             Matcher matcher = pattern.matcher(japanized);
-            if ( matcher.find() ) {
+            if (matcher.find()) {
                 japanized = matcher.replaceAll(
                         Utility.getAstariskString(matcher.group(0).length()));
             }
@@ -126,7 +128,7 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
         LunaChatPostJapanizeEvent event =
                 new LunaChatPostJapanizeEvent(channelName, player, org, japanized);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
+        if (event.isCancelled()) {
             return false;
         }
         japanized = event.getJapanized();
@@ -140,6 +142,7 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
 
     /**
      * Japanize変換の結果を返します。
+     *
      * @return 変換結果
      */
     String getResult() {
@@ -148,6 +151,7 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
 
     /**
      * 数値を、全角文字の文字列に変換して返す
+     *
      * @param digit 数字
      * @return 全角文字にした数字
      */
@@ -155,18 +159,38 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
 
         String half = Integer.toString(digit);
         StringBuilder result = new StringBuilder();
-        for ( int index=0; index < half.length(); index++ ) {
-            switch ( half.charAt(index) ) {
-            case '0' : result.append("０"); break;
-            case '1' : result.append("１"); break;
-            case '2' : result.append("２"); break;
-            case '3' : result.append("３"); break;
-            case '4' : result.append("４"); break;
-            case '5' : result.append("５"); break;
-            case '6' : result.append("６"); break;
-            case '7' : result.append("７"); break;
-            case '8' : result.append("８"); break;
-            case '9' : result.append("９"); break;
+        for (int index = 0; index < half.length(); index++) {
+            switch (half.charAt(index)) {
+                case '0':
+                    result.append("０");
+                    break;
+                case '1':
+                    result.append("１");
+                    break;
+                case '2':
+                    result.append("２");
+                    break;
+                case '3':
+                    result.append("３");
+                    break;
+                case '4':
+                    result.append("４");
+                    break;
+                case '5':
+                    result.append("５");
+                    break;
+                case '6':
+                    result.append("６");
+                    break;
+                case '7':
+                    result.append("７");
+                    break;
+                case '8':
+                    result.append("８");
+                    break;
+                case '9':
+                    result.append("９");
+                    break;
             }
         }
         return result.toString();
