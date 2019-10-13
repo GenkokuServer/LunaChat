@@ -11,16 +11,16 @@ import java.util.HashMap;
  * データマップ
  * @author ucchy
  */
-public class DataMaps {
+class DataMaps {
 
     /** 招待された人→招待されたチャンネル名 のマップ */
-    protected static HashMap<String, String> inviteMap;
+    static HashMap<String, String> inviteMap;
 
     /** 招待された人→招待した人 のマップ */
-    protected static HashMap<String, String> inviterMap;
+    static HashMap<String, String> inviterMap;
 
     /** tell/rコマンドの送信者→受信者 のマップ */
-    protected static HashMap<String, String> privateMessageMap;
+    static HashMap<String, String> privateMessageMap;
 
     static {
         inviteMap = new HashMap<>();

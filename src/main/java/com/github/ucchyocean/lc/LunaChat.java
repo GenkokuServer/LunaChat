@@ -172,7 +172,7 @@ public class LunaChat extends JavaPlugin {
      * このプラグインのJarファイル自身を示すFileクラスを返す。
      * @return Jarファイル
      */
-    protected static File getPluginJarFile() {
+    static File getPluginJarFile() {
         return getInstance().getFile();
     }
 

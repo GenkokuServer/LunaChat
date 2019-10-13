@@ -18,13 +18,13 @@ import com.github.ucchyocean.lc.channel.Channel;
 public abstract class LunaChatBaseEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
-    protected String channelName;
+    String channelName;
 
     /**
      * コンストラクタ
      * @param channelName チャンネル名
      */
-    public LunaChatBaseEvent(String channelName, boolean isAsync) {
+    LunaChatBaseEvent(String channelName, boolean isAsync) {
         super(isAsync);
         this.channelName = channelName;
     }

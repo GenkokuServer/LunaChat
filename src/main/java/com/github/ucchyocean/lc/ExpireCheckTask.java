@@ -13,7 +13,7 @@ import com.github.ucchyocean.lc.channel.Channel;
  * 各チャンネルの期限付きBANや期限付きMuteを、1分間隔で確認しに行くタスク
  * @author ucchy
  */
-public class ExpireCheckTask extends BukkitRunnable {
+class ExpireCheckTask extends BukkitRunnable {
 
     /**
      * 1分ごとに呼び出されるメソッド

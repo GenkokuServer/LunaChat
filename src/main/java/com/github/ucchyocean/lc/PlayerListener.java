@@ -36,7 +36,7 @@ import com.github.ucchyocean.lc.japanize.JapanizeType;
  * プレイヤーの行動を監視するリスナ
  * @author ucchy
  */
-public class PlayerListener implements Listener {
+class PlayerListener implements Listener {
 
     private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
     private static final String LIST_ENDLINE = Resources.get("listEndLine");

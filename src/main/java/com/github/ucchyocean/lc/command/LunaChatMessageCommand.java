@@ -66,7 +66,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @param invitedName
      * @param message
      */
-    protected void sendTellMessage(ChannelPlayer inviter, String invitedName, String message) {
+    void sendTellMessage(ChannelPlayer inviter, String invitedName, String message) {
 
         // 招待相手が存在するかどうかを確認する
         ChannelPlayer invited = ChannelPlayer.getChannelPlayer(invitedName);
@@ -126,8 +126,8 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    protected void sendResourceMessage(CommandSender sender, String pre,
-            String key, Object... args) {
+    void sendResourceMessage(CommandSender sender, String pre,
+                             String key, Object... args) {
 
         String org = Resources.get(key);
         if ( org == null || org.equals("") ) {
@@ -144,8 +144,8 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    protected void sendResourceMessage(ChannelPlayer cp, String pre,
-            String key, Object... args) {
+    private void sendResourceMessage(ChannelPlayer cp, String pre,
+                                     String key, Object... args) {
 
         String org = Resources.get(key);
         if ( org == null || org.equals("") ) {

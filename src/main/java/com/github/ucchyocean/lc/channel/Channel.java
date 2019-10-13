@@ -132,7 +132,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * コンストラクタ
      * @param name チャンネルの名称
      */
-    protected Channel(String name) {
+    Channel(String name) {
 
         this.name = name;
         this.alias = "";
@@ -485,7 +485,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * @param data デシリアライズ元のMapデータ。
      * @return デシリアライズされたクラス
      */
-    public static Channel deserialize(Map<String, Object> data) {
+    private static Channel deserialize(Map<String, Object> data) {
 
         String name = castWithDefault(data.get(KEY_NAME), (String)null);
         if ( name == null ) {
@@ -735,7 +735,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * チャンネルのメッセージフォーマットを返す
      * @return チャンネルのメッセージフォーマット
      */
-    public String getFormat() {
+    String getFormat() {
         return format;
     }
 
@@ -866,7 +866,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * 1:1チャットのときに、会話の相手先を取得する
      * @return 会話の相手のプレイヤー名
      */
-    public String getPrivateMessageTo() {
+    String getPrivateMessageTo() {
         return privateMessageTo;
     }
 
@@ -882,7 +882,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * ワールドチャットかどうか
      * @return ワールドチャットかどうか
      */
-    public boolean isWorldRange() {
+    boolean isWorldRange() {
         return isWorldRange;
     }
 
@@ -890,7 +890,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * チャットの可聴範囲、0の場合は無制限
      * @return チャットの可聴範囲
      */
-    public int getChatRange() {
+    int getChatRange() {
         return chatRange;
     }
 
@@ -898,7 +898,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * カラーコードが使用可能な設定かどうか
      * @return allowccを返す
      */
-    public boolean isAllowCC() {
+    boolean isAllowCC() {
         return allowcc;
     }
 
@@ -914,7 +914,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * Japanize変換設定を取得する
      * @return japanize
      */
-    public JapanizeType getJapanizeType() {
+    JapanizeType getJapanizeType() {
         return japanizeType;
     }
 
@@ -965,7 +965,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * チャンネルの情報を保存したファイルを、削除する。
      * @return 削除したかどうか。
      */
-    protected boolean remove() {
+    boolean remove() {
 
         // フォルダーの取得
         File folder = new File(
@@ -986,7 +986,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * チャンネルの情報を保存したファイルから全てのチャンネルを復元して返す。
      * @return 全てのチャンネル
      */
-    protected static HashMap<String, Channel> loadAllChannels() {
+    static HashMap<String, Channel> loadAllChannels() {
 
         // フォルダーの取得
         File folder = new File(

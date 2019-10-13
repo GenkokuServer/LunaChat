@@ -108,8 +108,8 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    protected void sendResourceMessage(CommandSender sender, String pre,
-            String key, Object... args) {
+    private void sendResourceMessage(CommandSender sender, String pre,
+                                     String key, Object... args) {
 
         String org = Resources.get(key);
         if ( org == null || org.equals("") ) {
@@ -126,8 +126,8 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    protected void sendResourceMessage(ChannelPlayer cp, String pre,
-            String key, Object... args) {
+    private void sendResourceMessage(ChannelPlayer cp, String pre,
+                                     String key, Object... args) {
 
         String org = Resources.get(key);
         if ( org == null || org.equals("") ) {

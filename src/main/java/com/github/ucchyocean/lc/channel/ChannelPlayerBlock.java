@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
  */
 public class ChannelPlayerBlock extends ChannelPlayer {
 
-    BlockCommandSender sender;
+    private BlockCommandSender sender;
 
     /**
      * コンストラクタ

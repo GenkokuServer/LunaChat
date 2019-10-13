@@ -148,7 +148,7 @@ public class LunaChatConfig {
     /**
      * コンストラクタ
      */
-    protected LunaChatConfig() {
+    LunaChatConfig() {
         reloadConfig();
     }
 

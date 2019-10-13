@@ -29,7 +29,7 @@ public class Resources {
     /**
      * 初期化する
      */
-    protected static void initialize() {
+    private static void initialize() {
 
         File file = new File(
                 LunaChat.getInstance().getDataFolder() +

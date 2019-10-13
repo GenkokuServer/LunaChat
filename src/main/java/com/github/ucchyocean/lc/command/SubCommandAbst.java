@@ -37,16 +37,16 @@ public abstract class SubCommandAbst {
         ADMIN
     }
 
-    protected static final String PREINFO = Resources.get("infoPrefix");
-    protected static final String PREERR = Resources.get("errorPrefix");
+    static final String PREINFO = Resources.get("infoPrefix");
+    static final String PREERR = Resources.get("errorPrefix");
 
-    protected LunaChatAPI api;
-    protected LunaChatConfig config;
+    LunaChatAPI api;
+    LunaChatConfig config;
 
     /**
      * コンストラクタ
      */
-    public SubCommandAbst() {
+    SubCommandAbst() {
         api = LunaChat.getInstance().getLunaChatAPI();
         config = LunaChat.getInstance().getLunaChatConfig();
     }
@@ -58,7 +58,7 @@ public abstract class SubCommandAbst {
      * @param key リソースキー
      * @param player キーワード置き換えに使用するプレイヤー
      */
-    protected void sendResourceMessageWithKeyword(
+    void sendResourceMessageWithKeyword(
             Channel channel, String key, ChannelPlayer player) {
 
         String msg = Resources.get(key);
@@ -86,7 +86,7 @@ public abstract class SubCommandAbst {
      * @param player キーワード置き換えに使用するプレイヤー
      * @param minutes キーワード置き換えに使用する数値
      */
-    protected void sendResourceMessageWithKeyword(
+    void sendResourceMessageWithKeyword(
             Channel channel, String key, ChannelPlayer player, int minutes) {
 
         String msg = Resources.get(key);
@@ -114,7 +114,7 @@ public abstract class SubCommandAbst {
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    protected void sendResourceMessage(
+    void sendResourceMessage(
             CommandSender sender, String pre, String key, Object... args) {
 
         String org = Resources.get(key);
@@ -132,7 +132,7 @@ public abstract class SubCommandAbst {
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    protected void sendResourceMessage(
+    void sendResourceMessage(
             ChannelPlayer cp, String pre, String key, Object... args) {
 
         String org = Resources.get(key);
@@ -159,14 +159,14 @@ public abstract class SubCommandAbst {
      * コマンドの種別を取得します。
      * @return コマンド種別
      */
-    public abstract CommandType getCommandType();
+    protected abstract CommandType getCommandType();
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
      * @param sender コマンド実行者
      * @param label 実行ラベル
      */
-    public abstract void sendUsageMessage(
+    protected abstract void sendUsageMessage(
             CommandSender sender, String label);
 
     /**

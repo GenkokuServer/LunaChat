@@ -163,7 +163,7 @@ public class Utility {
      * @param color カラー表記の文字列
      * @return ChatColorクラス
      */
-    public static ChatColor changeToChatColor(String color) {
+    private static ChatColor changeToChatColor(String color) {
 
         if (isValidColor(color)) {
             return ChatColor.valueOf(color.toUpperCase());
@@ -224,7 +224,7 @@ public class Utility {
      * 現在動作中のCraftBukkitが、v1.9 以上かどうかを確認する
      * @return v1.9以上ならtrue、そうでないならfalse
      */
-    public static boolean isCB19orLater() {
+    private static boolean isCB19orLater() {
         if ( isCB19orLaterCache == null ) {
             isCB19orLaterCache = isUpperVersion(Bukkit.getBukkitVersion(), "1.9");
         }
@@ -239,7 +239,7 @@ public class Utility {
      * ただし、無効なバージョン番号（数値でないなど）が指定された場合はfalseに、
      * 2つのバージョンが完全一致した場合はtrueになる。
      */
-    public static boolean isUpperVersion(String version, String border) {
+    private static boolean isUpperVersion(String version, String border) {
 
         int hyphen = version.indexOf("-");
         if ( hyphen > 0 ) {

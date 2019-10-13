@@ -36,7 +36,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      * コンストラクタ
      * @param id UUID
      */
-    public ChannelPlayerUUID(UUID id) {
+    private ChannelPlayerUUID(UUID id) {
         this.id = id;
     }
 

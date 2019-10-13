@@ -79,7 +79,7 @@ public class ChannelImpl extends Channel {
      * コンストラクタ
      * @param name チャンネル名
      */
-    protected ChannelImpl(String name) {
+    ChannelImpl(String name) {
 
         super(name);
 
