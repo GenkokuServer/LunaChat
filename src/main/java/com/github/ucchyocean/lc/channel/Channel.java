@@ -229,7 +229,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * メンバーを追加する
-     * @param name 追加するプレイヤー
+     * @param player 追加するプレイヤー
      */
     public void addMember(ChannelPlayer player) {
 
@@ -263,7 +263,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * メンバーを削除する
-     * @param name 削除するプレイヤー
+     * @param player 削除するプレイヤー
      */
     public void removeMember(ChannelPlayer player, boolean isAsync) {
 
@@ -380,7 +380,6 @@ public abstract class Channel implements ConfigurationSerializable {
      * @param format フォーマット
      * @param sendDynmap dynmapへ送信するかどうか
      * @param displayName 発言者の表示名（APIに使用されます）
-     * @param isAsync 非同期で送信するかどうか
      */
     public abstract void sendMessage(
             ChannelPlayer player, String message, String format, boolean sendDynmap, String displayName);
