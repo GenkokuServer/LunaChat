@@ -10,6 +10,7 @@ import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
  * Japanize2行表示のときに、変換結果を遅延してチャンネルに表示するためのタスク
+ *
  * @author ucchy
  */
 public class DelayedJapanizeChannelChatToBungeeTask extends DelayedJapanizeConvertTask {
@@ -20,16 +21,16 @@ public class DelayedJapanizeChannelChatToBungeeTask extends DelayedJapanizeConve
 
     /**
      * コンストラクタ
-     * 
+     *
      * @param org            変換前の文字列
      * @param type           変換タイプ
      * @param channel        変換後に発言する、発言先チャンネル
      * @param player         発言したプレイヤー
      * @param japanizeFormat 変換後に発言するときの、発言フォーマット
-     * @param lineFormat
+     * @param lineFormat     lineFormat
      */
-    public DelayedJapanizeChannelChatToBungeeTask(String org, JapanizeType type, Channel channel,
-            ChannelPlayer player, String japanizeFormat, String lineFormat) {
+    DelayedJapanizeChannelChatToBungeeTask(String org, JapanizeType type, Channel channel,
+                                           ChannelPlayer player, String japanizeFormat, String lineFormat) {
         super(org, type, channel, player, japanizeFormat);
         this.channel = channel;
         this.player = player;
@@ -41,7 +42,7 @@ public class DelayedJapanizeChannelChatToBungeeTask extends DelayedJapanizeConve
      */
     @Override
     public void run() {
-        if ( runSync() ) {
+        if (runSync()) {
             String message = getResult();
             LunaChat.getInstance().getPluginMessageChannelManager()
                     .sendBungeeMessage(channel.getName(), player.getPlayer(), message, lineFormat);
