@@ -544,7 +544,7 @@ public class ChannelImpl extends Channel {
                 } else {
                     disp = ChatColor.GRAY + name;
                 }
-                buf.append(disp + ",");
+                buf.append(disp).append(",");
             }
 
             info.add(buf.toString());
@@ -582,14 +582,14 @@ public class ChannelImpl extends Channel {
                 info.add(INFO_MUTED);
 
                 StringBuffer buf = new StringBuffer();
-                buf.append(INFO_PREFIX + ChatColor.WHITE);
+                buf.append(INFO_PREFIX).append(ChatColor.WHITE);
                 for ( int i=0; i<getMuted().size(); i++ ) {
                     if ( i%5 == 0 && i != 0 ) {
                         info.add(buf.toString());
                         buf = new StringBuffer();
-                        buf.append(INFO_PREFIX + ChatColor.WHITE);
+                        buf.append(INFO_PREFIX).append(ChatColor.WHITE);
                     }
-                    buf.append(getMuted().get(i).getName() + ",");
+                    buf.append(getMuted().get(i).getName()).append(",");
                 }
 
                 info.add(buf.toString());
@@ -600,14 +600,14 @@ public class ChannelImpl extends Channel {
                 info.add(INFO_BANNED);
 
                 StringBuffer buf = new StringBuffer();
-                buf.append(INFO_PREFIX + ChatColor.WHITE);
+                buf.append(INFO_PREFIX).append(ChatColor.WHITE);
                 for ( int i=0; i<getBanned().size(); i++ ) {
                     if ( i%5 == 0 && i != 0 ) {
                         info.add(buf.toString());
                         buf = new StringBuffer();
-                        buf.append(INFO_PREFIX + ChatColor.WHITE);
+                        buf.append(INFO_PREFIX).append(ChatColor.WHITE);
                     }
-                    buf.append(getBanned().get(i).getName() + ",");
+                    buf.append(getBanned().get(i).getName()).append(",");
                 }
 
                 info.add(buf.toString());

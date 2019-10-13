@@ -88,7 +88,7 @@ public class TemplateCommand extends SubCommandAbst {
         StringBuilder buf = new StringBuilder();
         if ( args.length >= 3 ) {
             for (int i = 2; i < args.length; i++) {
-                buf.append(args[i] + " ");
+                buf.append(args[i]).append(" ");
             }
         }
         String format = buf.toString().trim();

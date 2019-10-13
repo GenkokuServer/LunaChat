@@ -126,7 +126,7 @@ public class KanaConverter {
                     }
                     if (Character.isLetter(tmp.charAt(0))) {
                         if (Character.isUpperCase(tmp.charAt(0))) {
-                            line.append(last + tmp);
+                            line.append(last).append(tmp);
                             last = "";
                         } else if (last.equals(tmp)) {
                             line.append("っ");
@@ -137,47 +137,47 @@ public class KanaConverter {
                     } else {
                         switch (tmp) {
                             case "-":
-                                line.append(last + "ー");
+                                line.append(last).append("ー");
                                 last = "";
                                 break;
                             case ".":
-                                line.append(last + "。");
+                                line.append(last).append("。");
                                 last = "";
                                 break;
                             case ",":
-                                line.append(last + "、");
+                                line.append(last).append("、");
                                 last = "";
                                 break;
                             case "?":
-                                line.append(last + "？");
+                                line.append(last).append("？");
                                 last = "";
                                 break;
                             case "!":
-                                line.append(last + "！");
+                                line.append(last).append("！");
                                 last = "";
                                 break;
                             case "[":
-                                line.append(last + "「");
+                                line.append(last).append("「");
                                 last = "";
                                 break;
                             case "]":
-                                line.append(last + "」");
+                                line.append(last).append("」");
                                 last = "";
                                 break;
                             case "<":
-                                line.append(last + "＜");
+                                line.append(last).append("＜");
                                 last = "";
                                 break;
                             case ">":
-                                line.append(last + "＞");
+                                line.append(last).append("＞");
                                 last = "";
                                 break;
                             case "&":
-                                line.append(last + "＆");
+                                line.append(last).append("＆");
                                 last = "";
                                 break;
                             case "\"":
-                                line.append(last + "”");
+                                line.append(last).append("”");
                                 last = "";
                                 break;
                             case "(":
@@ -186,7 +186,7 @@ public class KanaConverter {
                                 last = "";
                                 break;
                             default:
-                                line.append(last + tmp);
+                                line.append(last).append(tmp);
                                 last = "";
                                 break;
                         }

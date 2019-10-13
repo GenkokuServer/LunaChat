@@ -46,7 +46,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
             invitedName = args[0];
             if ( args.length >= 2 ) {
                 for ( int i=1; i<args.length; i++ ) {
-                    message.append(args[i] + " ");
+                    message.append(args[i]).append(" ");
                 }
             }
         } else {

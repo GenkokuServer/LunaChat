@@ -90,14 +90,14 @@ public class JoinCommand extends SubCommandAbst {
             channelName = args[0];
             if (args.length >= 2) {
                 for (int i = 1; i < args.length; i++) {
-                    message.append(args[i] + " ");
+                    message.append(args[i]).append(" ");
                 }
             }
         } else if (args.length >= 2) {
             channelName = args[1];
             if (args.length >= 3) {
                 for (int i = 2; i < args.length; i++) {
-                    message.append(args[i] + " ");
+                    message.append(args[i]).append(" ");
                 }
             }
         } else {
