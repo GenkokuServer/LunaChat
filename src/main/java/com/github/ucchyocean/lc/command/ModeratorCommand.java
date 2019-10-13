@@ -6,6 +6,7 @@
 package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -91,14 +92,10 @@ public class ModeratorCommand extends SubCommandAbst {
             if ( def != null ) {
                 cname = def.getName();
             }
-            for (int i = 1; i < args.length; i++) {
-                moderator.add(args[i]);
-            }
+            moderator.addAll(Arrays.asList(args).subList(1, args.length));
         } else if ( args.length >= 3 ) {
             cname = args[1];
-            for (int i = 2; i < args.length; i++) {
-                moderator.add(args[i]);
-            }
+            moderator.addAll(Arrays.asList(args).subList(2, args.length));
         } else {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             return true;

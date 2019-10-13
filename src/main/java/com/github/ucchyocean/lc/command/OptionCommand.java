@@ -6,6 +6,7 @@
 package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -99,14 +100,10 @@ public class OptionCommand extends SubCommandAbst {
             if ( def != null ) {
                 cname = def.getName();
             }
-            for (int i = 1; i < args.length; i++) {
-                optionsTemp.add(args[i]);
-            }
+            optionsTemp.addAll(Arrays.asList(args).subList(1, args.length));
         } else if ( args.length >= 3 ) {
             cname = args[1];
-            for (int i = 2; i < args.length; i++) {
-                optionsTemp.add(args[i]);
-            }
+            optionsTemp.addAll(Arrays.asList(args).subList(2, args.length));
         } else {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             return true;
