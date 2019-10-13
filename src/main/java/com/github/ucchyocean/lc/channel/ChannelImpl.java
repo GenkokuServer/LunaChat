@@ -113,7 +113,6 @@ public class ChannelImpl extends Channel {
             return;
         }
 
-        String preReplaceMessage = message;
         String maskedMessage = message;
 
         // 一時的にJapanizeスキップ設定かどうかを確認する
@@ -147,7 +146,7 @@ public class ChannelImpl extends Channel {
         // イベントコール
         LunaChatChannelChatEvent event =
                 new LunaChatChannelChatEvent(getName(), player,
-                        preReplaceMessage, maskedMessage, msgFormat, isAsync);
+                        message, maskedMessage, msgFormat, isAsync);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {
             return;
