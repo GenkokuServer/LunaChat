@@ -26,9 +26,9 @@ public class HelpCommand extends SubCommandAbst {
 
     /**
      * コンストラクタ
-     * @param commands
+     * @param commands サブコマンドのリスト
      */
-    public HelpCommand(ArrayList<SubCommandAbst> commands) {
+    HelpCommand(ArrayList<SubCommandAbst> commands) {
         this.commands = commands;
     }
 
@@ -109,8 +109,8 @@ public class HelpCommand extends SubCommandAbst {
 
     /**
      * コマンドの使い方を senderに送る
-     * @param sender
-     * @param label
+     * @param sender CommandSender
+     * @param label Label
      * @param type コマンド種別
      * @param page ページ
      */
