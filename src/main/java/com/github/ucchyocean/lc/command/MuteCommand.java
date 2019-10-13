@@ -159,7 +159,7 @@ public class MuteCommand extends SubCommandAbst {
         }
 
         // BANされた人に通知メッセージを出す
-        sendResourceMessage(kicked, PREINFO,
+        sendResourceMessage(kicked,
                 "cmdmsgMuted", channel.getName());
 
         return true;

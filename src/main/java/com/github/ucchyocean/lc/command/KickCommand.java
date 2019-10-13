@@ -131,7 +131,7 @@ public class KickCommand extends SubCommandAbst {
 
         // キックされた人に通知メッセージを出す
         if (kicked.isOnline()) {
-            sendResourceMessage(kicked, PREINFO,
+            sendResourceMessage(kicked,
                     "cmdmsgKicked", channel.getName());
         }
 

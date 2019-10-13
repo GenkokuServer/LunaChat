@@ -142,9 +142,9 @@ public class InviteCommand extends SubCommandAbst {
 
         sendResourceMessage(sender, PREINFO,
                 "cmdmsgInvite", invitedName, channel.getName());
-        sendResourceMessage(invited, PREINFO,
+        sendResourceMessage(invited,
                 "cmdmsgInvited1", inviter.getName(), channel.getName());
-        sendResourceMessage(invited, PREINFO, "cmdmsgInvited2");
+        sendResourceMessage(invited, "cmdmsgInvited2");
         return true;
     }
 
@@ -211,7 +211,7 @@ public class InviteCommand extends SubCommandAbst {
         api.setDefaultChannel(invitedName, cname);
         sendResourceMessage(sender, PREINFO,
                 "cmdmsgInvite", invitedName, channel.getName());
-        sendResourceMessage(invited, PREINFO,
+        sendResourceMessage(invited,
                 "cmdmsgJoin", channel.getName());
 
         return true;

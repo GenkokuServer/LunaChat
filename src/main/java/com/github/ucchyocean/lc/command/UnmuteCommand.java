@@ -125,7 +125,7 @@ public class UnmuteCommand extends SubCommandAbst {
 
         // BANされていた人に通知メッセージを出す
         if ( kicked != null && kicked.isOnline() ) {
-            sendResourceMessage(kicked, PREINFO,
+            sendResourceMessage(kicked,
                     "cmdmsgUnmuted", channel.getName());
         }
 

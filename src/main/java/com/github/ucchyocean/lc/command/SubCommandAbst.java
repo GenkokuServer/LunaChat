@@ -54,7 +54,6 @@ public abstract class SubCommandAbst {
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、Channelに送信する
      * @param channel メッセージの送り先
-     * @param pre プレフィックス
      * @param key リソースキー
      * @param player キーワード置き換えに使用するプレイヤー
      */
@@ -81,7 +80,6 @@ public abstract class SubCommandAbst {
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、Channelに送信する
      * @param channel メッセージの送り先
-     * @param pre プレフィックス
      * @param key リソースキー
      * @param player キーワード置き換えに使用するプレイヤー
      * @param minutes キーワード置き換えに使用する数値
@@ -127,19 +125,17 @@ public abstract class SubCommandAbst {
 
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、ChannelPlayerに送信する
-     * @param sender メッセージの送り先
-     * @param pre プレフィックス
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
     void sendResourceMessage(
-            ChannelPlayer cp, String pre, String key, Object... args) {
+            ChannelPlayer cp, String key, Object... args) {
 
         String org = Resources.get(key);
         if ( org == null || org.equals("") ) {
             return;
         }
-        String msg = String.format(pre + org, args);
+        String msg = String.format(SubCommandAbst.PREINFO + org, args);
         cp.sendMessage(msg);
     }
 

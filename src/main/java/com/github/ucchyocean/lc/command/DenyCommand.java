@@ -94,7 +94,7 @@ public class DenyCommand extends SubCommandAbst {
         // メッセージ送信
         sendResourceMessage(sender, PREINFO, "cmdmsgDeny");
         ChannelPlayer inviter = ChannelPlayer.getChannelPlayer(inviterName);
-        sendResourceMessage(inviter, PREINFO, "cmdmsgDenyed");
+        sendResourceMessage(inviter, "cmdmsgDenyed");
         return true;
     }
 

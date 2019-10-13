@@ -171,7 +171,7 @@ public class BanCommand extends SubCommandAbst {
 
         // BANされた人に通知メッセージを出す
         if (kicked.isOnline()) {
-            sendResourceMessage(kicked, PREINFO,
+            sendResourceMessage(kicked,
                     "cmdmsgBanned", channel.getName());
         }
 
