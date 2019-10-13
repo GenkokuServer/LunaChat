@@ -119,10 +119,7 @@ public class HelpCommand extends SubCommandAbst {
 
         String typeDesc;
         switch (type) {
-        case USER:
-            typeDesc = "user";
-            break;
-        case MODERATOR:
+            case MODERATOR:
             typeDesc = "moderator";
             break;
         case ADMIN:
