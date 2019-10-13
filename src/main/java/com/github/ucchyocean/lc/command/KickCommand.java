@@ -130,7 +130,7 @@ public class KickCommand extends SubCommandAbst {
         sendResourceMessageWithKeyword(channel, "kickMessage", kicked);
 
         // キックされた人に通知メッセージを出す
-        if ( kicked != null && kicked.isOnline() ) {
+        if (kicked.isOnline()) {
             sendResourceMessage(kicked, PREINFO,
                     "cmdmsgKicked", channel.getName());
         }
