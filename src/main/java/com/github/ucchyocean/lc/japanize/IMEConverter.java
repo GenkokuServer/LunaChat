@@ -19,9 +19,7 @@ import java.nio.charset.StandardCharsets;
  * @author ucchy
  */
 public class IMEConverter {
-
-    private static final String SOCIAL_IME_URL =
-        "http://www.social-ime.com/api/?string=";
+    
     private static final String GOOGLE_IME_URL =
         "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=";
 
@@ -31,11 +29,11 @@ public class IMEConverter {
      * @return 変換後
      */
     public static String convByGoogleIME(String org) {
-        return conv(org, true);
+        return conv(org);
     }
 
     // 変換の実行
-    private static String conv(String org, boolean isGoogleIME) {
+    private static String conv(String org) {
 
         if ( org.length() == 0 ) {
             return "";
@@ -46,13 +44,8 @@ public class IMEConverter {
         try {
             String baseurl;
             String encode;
-            if ( isGoogleIME ) {
-                baseurl = GOOGLE_IME_URL + URLEncoder.encode(org , StandardCharsets.UTF_8);
-                encode = "UTF-8";
-            } else {
-                baseurl = SOCIAL_IME_URL + URLEncoder.encode(org , StandardCharsets.UTF_8);
-                encode = "EUC_JP";
-            }
+            baseurl = GOOGLE_IME_URL + URLEncoder.encode(org , StandardCharsets.UTF_8);
+            encode = "UTF-8";
             URL url = new URL(baseurl);
 
             urlconn = (HttpURLConnection)url.openConnection();
@@ -65,11 +58,7 @@ public class IMEConverter {
             String line;
             StringBuilder result = new StringBuilder();
             while ( (line = reader.readLine()) != null ) {
-                if ( isGoogleIME ) {
-                    result.append(parseGoogleIMEResult(line));
-                } else {
-                    result.append(pickFirstElement(line));
-                }
+                result.append(parseGoogleIMEResult(line));
             }
 
             return result.toString();
@@ -89,15 +78,6 @@ public class IMEConverter {
         }
 
         return "";
-    }
-
-    private static String pickFirstElement(String org) {
-        int index = org.indexOf("\t");
-        if ( index == -1 ) {
-            return org;
-        } else {
-            return org.substring(0, index);
-        }
     }
 
     private static String parseGoogleIMEResult(String result) {
