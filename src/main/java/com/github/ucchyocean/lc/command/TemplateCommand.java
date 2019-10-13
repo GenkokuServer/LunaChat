@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 
 /**
  * templateコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class TemplateCommand extends SubCommandAbst {
@@ -19,6 +20,7 @@ public class TemplateCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -29,6 +31,7 @@ public class TemplateCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -39,6 +42,7 @@ public class TemplateCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -49,8 +53,9 @@ public class TemplateCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -61,9 +66,10 @@ public class TemplateCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
@@ -73,12 +79,12 @@ public class TemplateCommand extends SubCommandAbst {
 
         // 引数チェック
         // このコマンドは、コンソールでも実行できる
-        if ( args.length <= 1 ) {
+        if (args.length <= 1) {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             return true;
         }
 
-        if ( !args[1].matches("[0-9]") ) {
+        if (!args[1].matches("[0-9]")) {
             sendResourceMessage(sender, PREERR, "errmsgInvalidTemplateNumber");
             sendResourceMessage(sender, PREERR, "usageTemplate");
             return true;
@@ -86,7 +92,7 @@ public class TemplateCommand extends SubCommandAbst {
 
         String id = args[1];
         StringBuilder buf = new StringBuilder();
-        if ( args.length >= 3 ) {
+        if (args.length >= 3) {
             for (int i = 2; i < args.length; i++) {
                 buf.append(args[i]).append(" ");
             }
@@ -94,7 +100,7 @@ public class TemplateCommand extends SubCommandAbst {
         String format = buf.toString().trim();
 
         // 登録を実行
-        if ( format.equals("") ) {
+        if (format.equals("")) {
             api.removeTemplate(id);
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgTemplateRemove", id);

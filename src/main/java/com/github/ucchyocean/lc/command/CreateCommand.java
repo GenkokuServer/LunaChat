@@ -5,12 +5,12 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
-
 import com.github.ucchyocean.lc.channel.Channel;
+import org.bukkit.command.CommandSender;
 
 /**
  * createコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class CreateCommand extends SubCommandAbst {
@@ -21,6 +21,7 @@ public class CreateCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -31,6 +32,7 @@ public class CreateCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -41,6 +43,7 @@ public class CreateCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -51,8 +54,9 @@ public class CreateCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -63,9 +67,10 @@ public class CreateCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
@@ -88,20 +93,20 @@ public class CreateCommand extends SubCommandAbst {
 
         // チャンネルが存在するかどうかをチェックする
         Channel other = api.getChannel(name);
-        if ( other != null ) {
+        if (other != null) {
             sendResourceMessage(sender, PREERR, "errmsgExist");
             return true;
         }
 
         // 使用可能なチャンネル名かどうかをチェックする
-        if ( !name.matches("[0-9a-zA-Z\\-_]+") ) {
+        if (!name.matches("[0-9a-zA-Z\\-_]+")) {
             sendResourceMessage(sender, PREERR,
                     "errmsgCannotUseForChannel", name);
             return true;
         }
 
         // 最低文字列長を上回っているかをチェックする
-        if ( name.length() < config.getMinChannelNameLength() ) {
+        if (name.length() < config.getMinChannelNameLength()) {
             sendResourceMessage(sender, PREERR,
                     "errmsgCannotUseForChannelTooShort",
                     name, config.getMinChannelNameLength());
@@ -109,7 +114,7 @@ public class CreateCommand extends SubCommandAbst {
         }
 
         // 最大文字列長を下回っているかをチェックする
-        if ( name.length() > config.getMaxChannelNameLength() ) {
+        if (name.length() > config.getMaxChannelNameLength()) {
             sendResourceMessage(sender, PREERR,
                     "errmsgCannotUseForChannelTooLong",
                     name, config.getMaxChannelNameLength());
@@ -118,7 +123,7 @@ public class CreateCommand extends SubCommandAbst {
 
         // チャンネル作成
         Channel channel = api.createChannel(name);
-        if ( channel != null ) {
+        if (channel != null) {
             channel.setDescription(desc);
             channel.save();
             sendResourceMessage(sender, PREINFO, "cmdmsgCreate", name);

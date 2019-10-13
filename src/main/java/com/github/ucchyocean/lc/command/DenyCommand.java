@@ -5,13 +5,13 @@
  */
 package com.github.ucchyocean.lc.command;
 
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
-
 /**
  * denyコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class DenyCommand extends SubCommandAbst {
@@ -22,6 +22,7 @@ public class DenyCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -32,6 +33,7 @@ public class DenyCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -42,6 +44,7 @@ public class DenyCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -52,8 +55,9 @@ public class DenyCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -64,9 +68,10 @@ public class DenyCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */

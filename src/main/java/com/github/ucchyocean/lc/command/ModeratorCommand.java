@@ -5,17 +5,17 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * moderatorコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class ModeratorCommand extends SubCommandAbst {
@@ -26,6 +26,7 @@ public class ModeratorCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -36,6 +37,7 @@ public class ModeratorCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -46,6 +48,7 @@ public class ModeratorCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -56,8 +59,9 @@ public class ModeratorCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -68,9 +72,10 @@ public class ModeratorCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
@@ -87,13 +92,13 @@ public class ModeratorCommand extends SubCommandAbst {
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
         String cname = null;
         ArrayList<String> moderator = new ArrayList<>();
-        if ( player != null && args.length >= 2 ) {
+        if (player != null && args.length >= 2) {
             Channel def = api.getDefaultChannel(player.getName());
-            if ( def != null ) {
+            if (def != null) {
                 cname = def.getName();
             }
             moderator.addAll(Arrays.asList(args).subList(1, args.length));
-        } else if ( args.length >= 3 ) {
+        } else if (args.length >= 3) {
             cname = args[1];
             moderator.addAll(Arrays.asList(args).subList(2, args.length));
         } else {
@@ -104,7 +109,7 @@ public class ModeratorCommand extends SubCommandAbst {
         Channel channel = api.getChannel(cname);
 
         // チャンネルが存在するかどうかをチェックする
-        if ( channel == null ) {
+        if (channel == null) {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
         }
@@ -112,21 +117,21 @@ public class ModeratorCommand extends SubCommandAbst {
         cname = channel.getName();
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(sender) ) {
+        if (!channel.hasModeratorPermission(sender)) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
 
         // グローバルチャンネルなら設定できない
-        if ( channel.isGlobalChannel() ) {
+        if (channel.isGlobalChannel()) {
             sendResourceMessage(sender, PREERR,
                     "errmsgCannotModeratorGlobal", channel.getName());
             return true;
         }
 
         // 設定する
-        for ( String mod : moderator ) {
-            if ( mod.startsWith("-") ) {
+        for (String mod : moderator) {
+            if (mod.startsWith("-")) {
                 String name = mod.substring(1);
                 ChannelPlayer cp = ChannelPlayer.getChannelPlayer(name);
                 channel.removeModerator(cp);

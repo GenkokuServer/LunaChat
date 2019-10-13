@@ -5,21 +5,21 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import java.util.ArrayList;
-
+import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.github.ucchyocean.lc.LunaChat;
-import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import java.util.ArrayList;
 
 /**
  * checkコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class CheckCommand extends SubCommandAbst {
@@ -38,6 +38,7 @@ public class CheckCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -48,6 +49,7 @@ public class CheckCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -58,6 +60,7 @@ public class CheckCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -68,8 +71,9 @@ public class CheckCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -81,9 +85,10 @@ public class CheckCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
@@ -94,8 +99,8 @@ public class CheckCommand extends SubCommandAbst {
         boolean isRemove = false;
 
         Player player = null;
-        if ( sender instanceof Player ) {
-            player = (Player)sender;
+        if (sender instanceof Player) {
+            player = (Player) sender;
         }
 
         // 引数チェック
@@ -116,10 +121,10 @@ public class CheckCommand extends SubCommandAbst {
             }
         }
 
-        if ( !isRemove ) {
+        if (!isRemove) {
             // チェックの実行と確認メッセージ
             ArrayList<Channel> list = getCheckList();
-            if ( list.size() == 0 ) {
+            if (list.size() == 0) {
                 sendResourceMessage(sender, PREINFO, "cmdmsgCheck", list.size());
             } else {
                 sendCheckListMessages(sender, list);
@@ -140,8 +145,8 @@ public class CheckCommand extends SubCommandAbst {
             // クリーンアップの実行
             int counter = 0;
             ArrayList<Channel> list = getCheckList();
-            for ( Channel channel : list ) {
-                if ( api.removeChannel(channel.getName(), sender) ) {
+            for (Channel channel : list) {
+                if (api.removeChannel(channel.getName(), sender)) {
                     counter++;
                 }
             }
@@ -153,14 +158,15 @@ public class CheckCommand extends SubCommandAbst {
 
     /**
      * 削除対象となるチャンネルのリストを返す
+     *
      * @return 削除対象のチャンネルのリスト
      */
     private ArrayList<Channel> getCheckList() {
 
         ArrayList<Channel> list = new ArrayList<>();
-        for ( Channel channel : api.getChannels() ) {
-            if ( channel.getModerator().size() == 0 &&
-                    !channel.isBroadcastChannel() && !channel.isPersonalChat() ) {
+        for (Channel channel : api.getChannels()) {
+            if (channel.getModerator().size() == 0 &&
+                    !channel.isBroadcastChannel() && !channel.isPersonalChat()) {
                 list.add(channel);
             }
         }
@@ -169,41 +175,42 @@ public class CheckCommand extends SubCommandAbst {
 
     /**
      * 削除対象となるチャンネルを、リスト表示で通知する
+     *
      * @param sender 通知先
-     * @param list 対象チャンネル
+     * @param list   対象チャンネル
      */
     private void sendCheckListMessages(CommandSender sender, ArrayList<Channel> list) {
 
         Player player = null;
-        if ( sender instanceof Player ) {
-            player = (Player)sender;
+        if (sender instanceof Player) {
+            player = (Player) sender;
         }
 
         ArrayList<String> items = new ArrayList<>();
         String dchannel = "";
         String playerName;
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
-        if ( player != null ) {
+        if (player != null) {
             playerName = player.getName();
             Channel def = api.getDefaultChannel(playerName);
-            if ( def != null ) {
+            if (def != null) {
                 dchannel = def.getName();
             }
         }
 
         // メッセージを作成する
         items.add(LIST_FIRSTLINE);
-        for ( Channel channel : list ) {
+        for (Channel channel : list) {
 
             // デフォルト発言先なら赤にする。
             String disp = ChatColor.WHITE + channel.getName();
-            if ( channel.getName().equalsIgnoreCase(dchannel) ) {
+            if (channel.getName().equalsIgnoreCase(dchannel)) {
                 disp = ChatColor.RED + channel.getName();
             }
 
-            if ( player != null &&
+            if (player != null &&
                     !channel.getMembers().contains(cp) &&
-                    !channel.isGlobalChannel() ) {
+                    !channel.isGlobalChannel()) {
 
                 // 参加していないチャンネルならグレーにする
                 disp = ChatColor.GRAY + channel.getName();

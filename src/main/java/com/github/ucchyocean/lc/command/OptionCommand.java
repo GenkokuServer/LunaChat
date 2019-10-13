@@ -5,21 +5,21 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.event.LunaChatChannelOptionChangedEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * optionコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class OptionCommand extends SubCommandAbst {
@@ -34,6 +34,7 @@ public class OptionCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -44,6 +45,7 @@ public class OptionCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -54,6 +56,7 @@ public class OptionCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -64,8 +67,9 @@ public class OptionCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -76,9 +80,10 @@ public class OptionCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
@@ -95,13 +100,13 @@ public class OptionCommand extends SubCommandAbst {
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
         ArrayList<String> optionsTemp = new ArrayList<>();
         String cname = null;
-        if ( player != null && args.length >= 2 ) {
+        if (player != null && args.length >= 2) {
             Channel def = api.getDefaultChannel(player.getName());
-            if ( def != null ) {
+            if (def != null) {
                 cname = def.getName();
             }
             optionsTemp.addAll(Arrays.asList(args).subList(1, args.length));
-        } else if ( args.length >= 3 ) {
+        } else if (args.length >= 3) {
             cname = args[1];
             optionsTemp.addAll(Arrays.asList(args).subList(2, args.length));
         } else {
@@ -112,7 +117,7 @@ public class OptionCommand extends SubCommandAbst {
         Channel channel = api.getChannel(cname);
 
         // チャンネルが存在するかどうかをチェックする
-        if ( channel == null ) {
+        if (channel == null) {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
         }
@@ -120,16 +125,16 @@ public class OptionCommand extends SubCommandAbst {
         cname = channel.getName();
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(sender) ) {
+        if (!channel.hasModeratorPermission(sender)) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
 
         // 指定内容を解析する
         HashMap<String, String> options = new HashMap<>();
-        for ( String t : optionsTemp ) {
+        for (String t : optionsTemp) {
             int index = t.indexOf("=");
-            if ( index == -1 ) {
+            if (index == -1) {
                 continue;
             }
             options.put(t.substring(0, index), t.substring(index + 1));
@@ -139,7 +144,7 @@ public class OptionCommand extends SubCommandAbst {
         LunaChatChannelOptionChangedEvent event =
                 new LunaChatChannelOptionChangedEvent(cname, sender, options);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
+        if (event.isCancelled()) {
             return true;
         }
         options = event.getOptions();
@@ -147,18 +152,18 @@ public class OptionCommand extends SubCommandAbst {
         // 設定する
         boolean setOption = false;
 
-        if ( options.containsKey("description") ) {
+        if (options.containsKey("description")) {
             // チャンネル説明文
 
             String pnode = PERMISSION_NODE + ".description";
-            if ( !sender.hasPermission(pnode) ) {
+            if (!sender.hasPermission(pnode)) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotPermission", pnode);
             } else {
 
                 String desc = options.get("description");
                 // チャンネル説明文は最大文字長を超えていないか確認
-                if ( desc.length() > MAX_LENGTH_DESCRIPTION ) {
+                if (desc.length() > MAX_LENGTH_DESCRIPTION) {
                     sendResourceMessage(sender, PREERR,
                             "errmsgToolongDescription", MAX_LENGTH_DESCRIPTION);
                 } else {
@@ -170,17 +175,17 @@ public class OptionCommand extends SubCommandAbst {
             }
         }
 
-        if ( options.containsKey("alias") ) {
+        if (options.containsKey("alias")) {
             // チャンネル別名
 
             String pnode = PERMISSION_NODE + ".alias";
-            if ( !sender.hasPermission(pnode) ) {
+            if (!sender.hasPermission(pnode)) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotPermission", pnode);
             } else {
 
                 String alias = options.get("alias");
-                if ( alias.length() > MAX_LENGTH_ALIAS ) {
+                if (alias.length() > MAX_LENGTH_ALIAS) {
                     // チャンネル別名が最大文字長を超えている
                     sendResourceMessage(sender, PREERR,
                             "errmsgToolongAlias", MAX_LENGTH_ALIAS);
@@ -200,20 +205,20 @@ public class OptionCommand extends SubCommandAbst {
             }
         }
 
-        if ( options.containsKey("color") ) {
+        if (options.containsKey("color")) {
             // チャンネルカラー
 
             String pnode = PERMISSION_NODE + ".color";
-            if ( !sender.hasPermission(pnode) ) {
+            if (!sender.hasPermission(pnode)) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotPermission", pnode);
             } else {
 
                 String code = options.get("color");
-                if ( Utility.isValidColor(code) ) {
+                if (Utility.isValidColor(code)) {
                     code = Utility.changeToColorCode(code);
                 }
-                if ( Utility.isValidColorCode(code) ) {
+                if (Utility.isValidColorCode(code)) {
                     channel.setColorCode(code);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "color", options.get("color"));
@@ -225,19 +230,19 @@ public class OptionCommand extends SubCommandAbst {
             }
         }
 
-        if ( options.containsKey("broadcast") ) {
+        if (options.containsKey("broadcast")) {
             // ブロードキャストチャンネル
 
             String pnode = PERMISSION_NODE + ".broadcast";
-            if ( !sender.hasPermission(pnode) ) {
+            if (!sender.hasPermission(pnode)) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotPermission", pnode);
             } else {
 
                 String value = options.get("broadcast");
 
-                if ( value.equals("") || value.equalsIgnoreCase("false") ) {
-                    if ( channel.isGlobalChannel() ) {
+                if (value.equals("") || value.equalsIgnoreCase("false")) {
+                    if (channel.isGlobalChannel()) {
                         sendResourceMessage(sender, PREERR,
                                 "errmsgCannotOffGlobalBroadcast");
                     } else {
@@ -246,7 +251,7 @@ public class OptionCommand extends SubCommandAbst {
                                 "cmdmsgOption", "broadcast", "false");
                         setOption = true;
                     }
-                } else if ( value.equalsIgnoreCase("true") ) {
+                } else if (value.equalsIgnoreCase("true")) {
                     channel.setBroadcast(true);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "broadcast", "true");
@@ -258,30 +263,30 @@ public class OptionCommand extends SubCommandAbst {
             }
         }
 
-        if ( options.containsKey("range") ) {
+        if (options.containsKey("range")) {
             // レンジ
 
             String pnode = PERMISSION_NODE + ".range";
-            if ( !sender.hasPermission(pnode) ) {
+            if (!sender.hasPermission(pnode)) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotPermission", pnode);
             } else {
 
                 String value = options.get("range");
 
-                if ( value.equals("") ) {
+                if (value.equals("")) {
                     channel.setWorldRange(false);
                     channel.setChatRange(0);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "range", "無効");
                     setOption = true;
-                } else if ( value.equalsIgnoreCase("world") ) {
+                } else if (value.equalsIgnoreCase("world")) {
                     channel.setWorldRange(true);
                     channel.setChatRange(0);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "range", "world");
                     setOption = true;
-                } else if ( value.matches("[0-9]+") ) {
+                } else if (value.matches("[0-9]+")) {
                     channel.setWorldRange(true);
                     channel.setChatRange(Integer.parseInt(value));
                     sendResourceMessage(sender, PREINFO,
@@ -294,23 +299,23 @@ public class OptionCommand extends SubCommandAbst {
             }
         }
 
-        if ( options.containsKey("allowcc") ) {
+        if (options.containsKey("allowcc")) {
             // カラーコード使用可否
 
             String pnode = PERMISSION_NODE + ".allowcc";
-            if ( !sender.hasPermission(pnode) ) {
+            if (!sender.hasPermission(pnode)) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotPermission", pnode);
             } else {
 
                 String value = options.get("allowcc");
 
-                if ( value.equals("") || value.equalsIgnoreCase("false") ) {
+                if (value.equals("") || value.equalsIgnoreCase("false")) {
                     channel.setAllowCC(false);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "allowcc", "false");
                     setOption = true;
-                } else if ( value.equalsIgnoreCase("true") ) {
+                } else if (value.equalsIgnoreCase("true")) {
                     channel.setAllowCC(true);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "allowcc", "true");
@@ -322,25 +327,25 @@ public class OptionCommand extends SubCommandAbst {
             }
         }
 
-        if ( options.containsKey("japanize") ) {
+        if (options.containsKey("japanize")) {
             // Japanize変換設定
 
             String pnode = PERMISSION_NODE + ".japanize";
-            if ( !sender.hasPermission(pnode) ) {
+            if (!sender.hasPermission(pnode)) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotPermission", pnode);
             } else {
 
                 String value = options.get("japanize");
 
-                if ( value.equals("") ) {
+                if (value.equals("")) {
                     channel.setJapanizeType(null);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "japanize", "デフォルト");
                     setOption = true;
                 } else {
                     JapanizeType type = JapanizeType.fromID(value, null);
-                    if ( type == null ) {
+                    if (type == null) {
                         sendResourceMessage(sender, PREERR,
                                 "errmsgInvalidJapanizeOption", "japanize", value);
                     } else {
@@ -353,23 +358,23 @@ public class OptionCommand extends SubCommandAbst {
             }
         }
 
-        if ( options.containsKey("bungee") ) {
+        if (options.containsKey("bungee")) {
             // BungeeJapanizeMessengerがインストールされているとき
             // 他の鯖のLunachatの同名チャンネルに発言を送信するかどうか
 
             String pnode = PERMISSION_NODE + ".bungee";
-            if ( !sender.hasPermission(pnode) ) {
+            if (!sender.hasPermission(pnode)) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotPermission", pnode);
             } else {
 
                 String temp = options.get("bungee");
-                if ( temp.equalsIgnoreCase("false") ) {
+                if (temp.equalsIgnoreCase("false")) {
                     channel.setBungee(false);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "bungee", "false");
                     setOption = true;
-                } else if ( temp.equalsIgnoreCase("true") ) {
+                } else if (temp.equalsIgnoreCase("true")) {
                     channel.setBungee(true);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "bungee", "true");
@@ -378,20 +383,20 @@ public class OptionCommand extends SubCommandAbst {
             }
         }
 
-        if ( !channel.isGlobalChannel() ) {
+        if (!channel.isGlobalChannel()) {
 
-            if ( options.containsKey("password") ) {
+            if (options.containsKey("password")) {
                 // パスワード
 
                 String pnode = PERMISSION_NODE + ".password";
-                if ( !sender.hasPermission(pnode) ) {
+                if (!sender.hasPermission(pnode)) {
                     sendResourceMessage(sender, PREERR,
                             "errmsgNotPermission", pnode);
                 } else {
 
                     String password = options.get("password");
                     // パスワードが文字制限を超える場合はエラー
-                    if ( password.length() > MAX_LENGTH_PASSWORD ) {
+                    if (password.length() > MAX_LENGTH_PASSWORD) {
                         sendResourceMessage(sender, PREERR,
                                 "errmsgToolongPassword", MAX_LENGTH_PASSWORD);
                     } else {
@@ -403,22 +408,22 @@ public class OptionCommand extends SubCommandAbst {
                 }
             }
 
-            if ( options.containsKey("visible") ) {
+            if (options.containsKey("visible")) {
                 // ビジブル
 
                 String pnode = PERMISSION_NODE + ".visible";
-                if ( !sender.hasPermission(pnode) ) {
+                if (!sender.hasPermission(pnode)) {
                     sendResourceMessage(sender, PREERR,
                             "errmsgNotPermission", pnode);
                 } else {
 
                     String temp = options.get("visible");
-                    if ( temp.equalsIgnoreCase("false") ) {
+                    if (temp.equalsIgnoreCase("false")) {
                         channel.setVisible(false);
                         sendResourceMessage(sender, PREINFO,
                                 "cmdmsgOption", "visible", "false");
                         setOption = true;
-                    } else if ( temp.equalsIgnoreCase("true") ) {
+                    } else if (temp.equalsIgnoreCase("true")) {
                         channel.setVisible(true);
                         sendResourceMessage(sender, PREINFO,
                                 "cmdmsgOption", "visible", "true");
@@ -428,7 +433,7 @@ public class OptionCommand extends SubCommandAbst {
             }
         }
 
-        if ( !setOption ) {
+        if (!setOption) {
             sendResourceMessage(sender, PREERR, "errmsgInvalidOptions");
         } else {
             channel.save();

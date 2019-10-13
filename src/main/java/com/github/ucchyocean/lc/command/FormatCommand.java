@@ -5,15 +5,15 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import java.util.List;
-
+import com.github.ucchyocean.lc.channel.Channel;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.channel.Channel;
+import java.util.List;
 
 /**
  * formatコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class FormatCommand extends SubCommandAbst {
@@ -24,6 +24,7 @@ public class FormatCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -34,6 +35,7 @@ public class FormatCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -44,6 +46,7 @@ public class FormatCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -54,8 +57,9 @@ public class FormatCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -66,9 +70,10 @@ public class FormatCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
@@ -85,15 +90,15 @@ public class FormatCommand extends SubCommandAbst {
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
         StringBuffer format = new StringBuffer();
         String cname = null;
-        if ( player != null && args.length >= 2 ) {
+        if (player != null && args.length >= 2) {
             Channel def = api.getDefaultChannel(player.getName());
-            if ( def != null ) {
+            if (def != null) {
                 cname = def.getName();
             }
             for (int i = 1; i < args.length; i++) {
                 format.append(args[i]).append(" ");
             }
-        } else if ( args.length >= 3 ) {
+        } else if (args.length >= 3) {
             cname = args[1];
             for (int i = 2; i < args.length; i++) {
                 format.append(args[i]).append(" ");
@@ -106,13 +111,13 @@ public class FormatCommand extends SubCommandAbst {
 
         // チャンネルが存在するかどうかをチェックする
         Channel channel = api.getChannel(cname);
-        if ( channel == null ) {
+        if (channel == null) {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
         }
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(sender) ) {
+        if (!channel.hasModeratorPermission(sender)) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
@@ -120,15 +125,15 @@ public class FormatCommand extends SubCommandAbst {
         // 制約キーワードを確認する
         List<String> constraints = config.getFormatConstraint();
         String tempFormat = format.toString();
-        for ( int i=0; i<=9; i++ ) {
+        for (int i = 0; i <= 9; i++) {
             String key = "%" + i;
-            if ( tempFormat.contains(key) && api.getTemplate(i + "") != null ) {
+            if (tempFormat.contains(key) && api.getTemplate(i + "") != null) {
                 tempFormat = tempFormat.replace(key, api.getTemplate("" + i));
                 break;
             }
         }
-        for ( String constraint : constraints ) {
-            if ( !tempFormat.contains(constraint) ) {
+        for (String constraint : constraints) {
+            if (!tempFormat.contains(constraint)) {
                 sendResourceMessage(sender, PREERR, "errmsgFormatConstraint", constraint);
                 return true;
             }

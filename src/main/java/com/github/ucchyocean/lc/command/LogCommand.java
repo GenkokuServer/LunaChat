@@ -5,19 +5,19 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import java.util.ArrayList;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatLogger;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 
 /**
  * logコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class LogCommand extends SubCommandAbst {
@@ -32,6 +32,7 @@ public class LogCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -42,6 +43,7 @@ public class LogCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -52,6 +54,7 @@ public class LogCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -62,8 +65,9 @@ public class LogCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -74,9 +78,10 @@ public class LogCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
@@ -96,27 +101,27 @@ public class LogCommand extends SubCommandAbst {
         boolean reverse = false;
 
         int index = 1;
-        if ( args.length >= 2 && !args[1].contains("=")) {
+        if (args.length >= 2 && !args[1].contains("=")) {
             cname = args[1];
             index = 2;
         }
 
-        for ( int i=index; i<args.length; i++ ) {
+        for (int i = index; i < args.length; i++) {
             String arg = args[i];
-            if ( arg.startsWith("p=") ) {
+            if (arg.startsWith("p=")) {
                 argsPlayer = arg.substring(2);
-            } else if ( arg.startsWith("f=") ) {
+            } else if (arg.startsWith("f=")) {
                 argsFilter = arg.substring(2);
-            } else if ( arg.startsWith("d=") ) {
+            } else if (arg.startsWith("d=")) {
                 argsDate = arg.substring(2);
-            } else if ( arg.equals("r=") ) {
+            } else if (arg.equals("r=")) {
                 reverse = true;
             }
         }
 
-        if ( player != null && cname == null ) {
+        if (player != null && cname == null) {
             Channel def = api.getDefaultChannel(player.getName());
-            if ( def != null ) {
+            if (def != null) {
                 cname = def.getName();
             }
         }
@@ -132,8 +137,8 @@ public class LogCommand extends SubCommandAbst {
         // ログの取得
         ArrayList<String> logs;
 
-        if ( config.getGlobalChannel().equals("") &&
-                (cname == null || cname.equals(config.getGlobalMarker())) ) {
+        if (config.getGlobalChannel().equals("") &&
+                (cname == null || cname.equals(config.getGlobalMarker()))) {
 
             // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
             // 通常チャットのログを取得する
@@ -146,14 +151,14 @@ public class LogCommand extends SubCommandAbst {
 
             // チャンネルが存在するかどうか確認する
             Channel channel = api.getChannel(cname);
-            if ( channel == null ) {
+            if (channel == null) {
                 sendResourceMessage(sender, PREERR, "errmsgNotExist");
                 return true;
             }
 
             // BANされていないかどうか確認する
             ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
-            if ( player != null && channel.getBanned().contains(cp) ) {
+            if (player != null && channel.getBanned().contains(cp)) {
                 sendResourceMessage(sender, PREERR, "errmsgBanned");
                 return true;
             }
@@ -170,13 +175,13 @@ public class LogCommand extends SubCommandAbst {
         // 整形と表示
         sender.sendMessage(String.format(LOGDISPLAY_FIRSTLINE, cname));
 
-        for ( String log : logs ) {
+        for (String log : logs) {
 
             String[] temp = log.split(",");
             String date = temp[0];
             String message = temp[1];
             String playerName = "";
-            if ( temp.length >= 3 ) {
+            if (temp.length >= 3) {
                 playerName = temp[2];
             }
             sender.sendMessage(String.format(

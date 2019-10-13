@@ -5,15 +5,15 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * unhideコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class UnhideCommand extends SubCommandAbst {
@@ -25,6 +25,7 @@ public class UnhideCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -35,6 +36,7 @@ public class UnhideCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -45,6 +47,7 @@ public class UnhideCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -55,8 +58,9 @@ public class UnhideCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -68,9 +72,10 @@ public class UnhideCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
@@ -87,9 +92,9 @@ public class UnhideCommand extends SubCommandAbst {
 
         // 引数チェック
         String cname = null;
-        if ( args.length <= 1 ) {
+        if (args.length <= 1) {
             Channel def = api.getDefaultChannel(player.getName());
-            if ( def != null ) {
+            if (def != null) {
                 cname = def.getName();
             }
         } else {
@@ -99,18 +104,18 @@ public class UnhideCommand extends SubCommandAbst {
         // チャンネルかプレイヤーが存在するかどうかをチェックする
         boolean isChannelCommand = false;
         Channel channel = api.getChannel(cname);
-        if ( channel != null ) {
+        if (channel != null) {
             isChannelCommand = true;
-        } else if ( Utility.getOfflinePlayer(cname) == null ) {
+        } else if (Utility.getOfflinePlayer(cname) == null) {
             sendResourceMessage(sender, PREERR, "errmsgNotExistChannelAndPlayer");
             return true;
         }
 
-        if ( isChannelCommand ) {
+        if (isChannelCommand) {
             // チャンネルが対象の場合の処理
 
             // 非表示になっているかどうかをチェックする
-            if ( !channel.getHided().contains(player) ) {
+            if (!channel.getHided().contains(player)) {
                 sendResourceMessage(sender, PREERR, "errmsgAlreadyUnhided");
                 return true;
             }

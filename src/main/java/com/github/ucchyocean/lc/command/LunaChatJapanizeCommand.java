@@ -5,19 +5,19 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Japanize変換設定コマンド
+ *
  * @author ucchy
  */
 public class LunaChatJapanizeCommand implements CommandExecutor {
@@ -34,8 +34,8 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, String[] args) {
 
-        if ( args.length == 1 &&
-                (args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off")) ) {
+        if (args.length == 1 &&
+                (args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off"))) {
             // japanize on/off の実行
 
             // プレイヤーでなければ終了する
@@ -43,7 +43,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
                 sendResourceMessage(sender, PREERR, "errmsgIngame");
                 return true;
             }
-            Player player = (Player)sender;
+            Player player = (Player) sender;
 
             // Japanize設定をon/offにする
             boolean value = args[0].equalsIgnoreCase("on");
@@ -54,12 +54,12 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
                     "cmdmsgPlayerJapanize", args[0]);
             return true;
 
-        } else if ( args.length == 2 &&
-                (args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("off")) ) {
+        } else if (args.length == 2 &&
+                (args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("off"))) {
             // japanize (player) on/off の実行
 
             // 権限チェック
-            if ( !sender.hasPermission(PERM_JAPANIZE_OTHER) ) {
+            if (!sender.hasPermission(PERM_JAPANIZE_OTHER)) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotPermission", PERM_JAPANIZE_OTHER);
                 return true;
@@ -92,28 +92,30 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
 
     /**
      * コマンドの使い方を senderに送る
+     *
      * @param sender CommandSender
-     * @param label Label
+     * @param label  Label
      */
     private void printUsage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", "usageJapanize", label);
-        if ( sender.hasPermission(PERM_JAPANIZE_OTHER) ) {
+        if (sender.hasPermission(PERM_JAPANIZE_OTHER)) {
             sendResourceMessage(sender, "", "usageJapanizeOther", label);
         }
     }
 
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
+     *
      * @param sender メッセージの送り先
-     * @param pre プレフィックス
-     * @param key リソースキー
-     * @param args リソース内の置き換え対象キーワード
+     * @param pre    プレフィックス
+     * @param key    リソースキー
+     * @param args   リソース内の置き換え対象キーワード
      */
     private void sendResourceMessage(CommandSender sender, String pre,
                                      String key, Object... args) {
 
         String org = Resources.get(key);
-        if ( org == null || org.equals("") ) {
+        if (org == null || org.equals("")) {
             return;
         }
         String msg = String.format(pre + org, args);
@@ -122,14 +124,15 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
 
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
-     * @param cp メッセージの送り先
+     *
+     * @param cp   メッセージの送り先
      * @param args リソース内の置き換え対象キーワード
      */
     private void sendResourceMessage(ChannelPlayer cp,
                                      Object... args) {
 
         String org = Resources.get("cmdmsgPlayerJapanize");
-        if ( org == null || org.equals("") ) {
+        if (org == null || org.equals("")) {
             return;
         }
         String msg = String.format(LunaChatJapanizeCommand.PREINFO + org, args);

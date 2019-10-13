@@ -5,13 +5,14 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import java.util.HashMap;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.util.HashMap;
+
 /**
  * dictionaryコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class DictionaryCommand extends SubCommandAbst {
@@ -22,6 +23,7 @@ public class DictionaryCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -32,6 +34,7 @@ public class DictionaryCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -42,6 +45,7 @@ public class DictionaryCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -52,8 +56,9 @@ public class DictionaryCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -64,9 +69,10 @@ public class DictionaryCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
@@ -75,24 +81,24 @@ public class DictionaryCommand extends SubCommandAbst {
 
         // 引数チェック
         // このコマンドは、コンソールでも実行できる
-        if ( args.length <= 1 ) {
+        if (args.length <= 1) {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             sendUsageMessage(sender, label);
             return true;
         }
 
-        if ( !args[1].equalsIgnoreCase("add") &&
+        if (!args[1].equalsIgnoreCase("add") &&
                 !args[1].equalsIgnoreCase("remove") &&
-                !args[1].equalsIgnoreCase("view") ) {
+                !args[1].equalsIgnoreCase("view")) {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             sendUsageMessage(sender, label);
             return true;
         }
 
-        if ( args[1].equalsIgnoreCase("add") ) {
+        if (args[1].equalsIgnoreCase("add")) {
 
             // addの場合は、さらに2つ引数が必要
-            if ( args.length <= 3 ) {
+            if (args.length <= 3) {
                 sendResourceMessage(sender, PREERR, "errmsgCommand");
                 sendUsageMessage(sender, label);
                 return true;
@@ -105,10 +111,10 @@ public class DictionaryCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREINFO, "cmdmsgDictionaryAdd", key, value);
             return true;
 
-        } else if ( args[1].equalsIgnoreCase("remove") ) {
+        } else if (args[1].equalsIgnoreCase("remove")) {
 
             // removeの場合は、さらに1つ引数が必要
-            if ( args.length <= 2 ) {
+            if (args.length <= 2) {
                 sendResourceMessage(sender, PREERR, "errmsgCommand");
                 sendUsageMessage(sender, label);
                 return true;
@@ -120,10 +126,10 @@ public class DictionaryCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREINFO, "cmdmsgDictionaryRemove", key);
             return true;
 
-        } else if ( args[1].equalsIgnoreCase("view") ) {
+        } else if (args[1].equalsIgnoreCase("view")) {
 
             HashMap<String, String> dic = api.getAllDictionary();
-            for ( String key : dic.keySet() ) {
+            for (String key : dic.keySet()) {
                 String value = dic.get(key);
                 sender.sendMessage(key + ChatColor.GRAY + " -> " + ChatColor.WHITE + value);
             }

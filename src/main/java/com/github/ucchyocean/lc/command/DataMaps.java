@@ -9,17 +9,24 @@ import java.util.HashMap;
 
 /**
  * データマップ
+ *
  * @author ucchy
  */
 class DataMaps {
 
-    /** 招待された人→招待されたチャンネル名 のマップ */
+    /**
+     * 招待された人→招待されたチャンネル名 のマップ
+     */
     static final HashMap<String, String> inviteMap;
 
-    /** 招待された人→招待した人 のマップ */
+    /**
+     * 招待された人→招待した人 のマップ
+     */
     static final HashMap<String, String> inviterMap;
 
-    /** tell/rコマンドの送信者→受信者 のマップ */
+    /**
+     * tell/rコマンドの送信者→受信者 のマップ
+     */
     static final HashMap<String, String> privateMessageMap;
 
     static {

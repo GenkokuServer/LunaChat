@@ -5,14 +5,14 @@
  */
 package com.github.ucchyocean.lc.command;
 
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
-
 /**
  * muteコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class MuteCommand extends SubCommandAbst {
@@ -24,6 +24,7 @@ public class MuteCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -34,6 +35,7 @@ public class MuteCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -44,6 +46,7 @@ public class MuteCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -54,8 +57,9 @@ public class MuteCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -67,9 +71,10 @@ public class MuteCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
@@ -101,7 +106,7 @@ public class MuteCommand extends SubCommandAbst {
         }
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(sender) ) {
+        if (!channel.hasModeratorPermission(sender)) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
@@ -122,12 +127,12 @@ public class MuteCommand extends SubCommandAbst {
         // 期限付きMuteの場合、期限の指定が正しいかどうかをチェックする
         int expireMinutes = -1;
         if (args.length >= 3) {
-            if ( !args[2].matches("[0-9]+") ) {
+            if (!args[2].matches("[0-9]+")) {
                 sendResourceMessage(sender, PREERR, "errmsgInvalidMuteExpireParameter");
                 return true;
             }
             expireMinutes = Integer.parseInt(args[2]);
-            if ( expireMinutes < 1 || 43200 < expireMinutes ) {
+            if (expireMinutes < 1 || 43200 < expireMinutes) {
                 sendResourceMessage(sender, PREERR, "errmsgInvalidMuteExpireParameter");
                 return true;
             }
@@ -135,14 +140,14 @@ public class MuteCommand extends SubCommandAbst {
 
         // Mute実行
         channel.getMuted().add(kicked);
-        if ( expireMinutes != -1 ) {
+        if (expireMinutes != -1) {
             long expire = System.currentTimeMillis() + expireMinutes * 60 * 1000;
             channel.getMuteExpires().put(kicked, expire);
         }
         channel.save();
 
         // senderに通知メッセージを出す
-        if ( expireMinutes != -1 ) {
+        if (expireMinutes != -1) {
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgMuteWithExpire", kickedName, channel.getName(), expireMinutes);
         } else {
@@ -151,7 +156,7 @@ public class MuteCommand extends SubCommandAbst {
         }
 
         // チャンネルに通知メッセージを出す
-        if ( expireMinutes != -1 ) {
+        if (expireMinutes != -1) {
             sendResourceMessageWithKeyword(channel,
                     "muteWithExpireMessage", kicked, expireMinutes);
         } else {

@@ -5,14 +5,14 @@
  */
 package com.github.ucchyocean.lc.command;
 
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
-
 /**
  * leaveコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class LeaveCommand extends SubCommandAbst {
@@ -23,6 +23,7 @@ public class LeaveCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -33,6 +34,7 @@ public class LeaveCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -43,6 +45,7 @@ public class LeaveCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -53,8 +56,9 @@ public class LeaveCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -65,9 +69,10 @@ public class LeaveCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
@@ -86,7 +91,7 @@ public class LeaveCommand extends SubCommandAbst {
         ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
         Channel def = api.getDefaultChannel(player.getName());
         String channelName = null;
-        if ( def != null ) {
+        if (def != null) {
             channelName = def.getName();
         }
         if (args.length >= 2) {
@@ -96,7 +101,7 @@ public class LeaveCommand extends SubCommandAbst {
         Channel channel = api.getChannel(channelName);
 
         // チャンネルが存在するかどうかをチェックする
-        if ( channel == null ) {
+        if (channel == null) {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
         }
@@ -112,13 +117,13 @@ public class LeaveCommand extends SubCommandAbst {
         }
 
         // グローバルチャンネルなら退出できない
-        if ( channel.isGlobalChannel() ) {
+        if (channel.isGlobalChannel()) {
             sendResourceMessage(sender, PREERR, "errmsgCannotLeaveGlobal", channelName);
             return true;
         }
 
         // 強制参加チャンネルなら退出できない
-        if ( channel.isForceJoinChannel() ) {
+        if (channel.isForceJoinChannel()) {
             sendResourceMessage(sender, PREERR, "errmsgCannotLeaveForceJoin", channelName);
             return true;
         }

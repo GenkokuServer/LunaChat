@@ -5,15 +5,15 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * 1:1チャット受信コマンド
+ *
  * @author ucchy
  */
 public class LunaChatReplyCommand extends LunaChatMessageCommand {
@@ -36,7 +36,7 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
 
         // 引数が無ければ、現在の会話相手を表示して終了する
         if (args.length == 0) {
-            if ( invitedName == null ) {
+            if (invitedName == null) {
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgReplyInviterNone", inviter.getName());
             } else {
@@ -47,7 +47,7 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
         }
 
         // 会話相手がからっぽなら、コマンドを終了する。
-        if ( invitedName == null ) {
+        if (invitedName == null) {
             sendResourceMessage(sender, PREERR, "errmsgNotfoundPM");
             return true;
         }

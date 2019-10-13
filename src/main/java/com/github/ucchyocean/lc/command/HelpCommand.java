@@ -5,12 +5,13 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import java.util.ArrayList;
-
 import org.bukkit.command.CommandSender;
+
+import java.util.ArrayList;
 
 /**
  * helpコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class HelpCommand extends SubCommandAbst {
@@ -26,6 +27,7 @@ public class HelpCommand extends SubCommandAbst {
 
     /**
      * コンストラクタ
+     *
      * @param commands サブコマンドのリスト
      */
     HelpCommand(ArrayList<SubCommandAbst> commands) {
@@ -34,6 +36,7 @@ public class HelpCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -44,6 +47,7 @@ public class HelpCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -54,6 +58,7 @@ public class HelpCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -64,8 +69,9 @@ public class HelpCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -76,9 +82,10 @@ public class HelpCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
@@ -88,17 +95,17 @@ public class HelpCommand extends SubCommandAbst {
         CommandType type = CommandType.USER;
         int page = 1;
 
-        if ( args.length >= 2 &&
+        if (args.length >= 2 &&
                 (args[1].equalsIgnoreCase("mod")
-                        || args[1].equalsIgnoreCase("moderator") ) ) {
+                        || args[1].equalsIgnoreCase("moderator"))) {
             type = CommandType.MODERATOR;
-        } else if ( args.length >= 2 && args[1].equalsIgnoreCase("admin") ) {
+        } else if (args.length >= 2 && args[1].equalsIgnoreCase("admin")) {
             type = CommandType.ADMIN;
-        } else if ( args.length >= 2 && args[1].matches("[1-9]") ) {
+        } else if (args.length >= 2 && args[1].matches("[1-9]")) {
             page = Integer.parseInt(args[1]);
         }
 
-        if ( args.length >= 3 && args[2].matches("[1-9]") ) {
+        if (args.length >= 3 && args[2].matches("[1-9]")) {
             page = Integer.parseInt(args[2]);
         }
 
@@ -109,46 +116,47 @@ public class HelpCommand extends SubCommandAbst {
 
     /**
      * コマンドの使い方を senderに送る
+     *
      * @param sender CommandSender
-     * @param label Label
-     * @param type コマンド種別
-     * @param page ページ
+     * @param label  Label
+     * @param type   コマンド種別
+     * @param page   ページ
      */
     private void printUsage(CommandSender sender, String label,
-            CommandType type, int page) {
+                            CommandType type, int page) {
 
         String typeDesc;
         switch (type) {
             case MODERATOR:
-            typeDesc = "moderator";
-            break;
-        case ADMIN:
-            typeDesc = "admin";
-            break;
-        default:
-            typeDesc = "user";
+                typeDesc = "moderator";
+                break;
+            case ADMIN:
+                typeDesc = "admin";
+                break;
+            default:
+                typeDesc = "user";
         }
 
         // 種別に該当するコマンドを取得
         ArrayList<SubCommandAbst> com = new ArrayList<>();
-        for ( SubCommandAbst c : commands ) {
-            if ( c.getCommandType() == type
-                    && sender.hasPermission(c.getPermissionNode()) ) {
+        for (SubCommandAbst c : commands) {
+            if (c.getCommandType() == type
+                    && sender.hasPermission(c.getPermissionNode())) {
                 com.add(c);
             }
         }
 
-        int lastPage = ( (com.size() - 1) / PAGE_ITEM_NUM) + 1;
+        int lastPage = ((com.size() - 1) / PAGE_ITEM_NUM) + 1;
 
         // 表示処理
         sendResourceMessage(sender, "", "usageTop", typeDesc, page, lastPage);
-        for (int index=(page-1)*PAGE_ITEM_NUM; index<page*PAGE_ITEM_NUM; index++) {
-            if ( index >= com.size() ) break;
+        for (int index = (page - 1) * PAGE_ITEM_NUM; index < page * PAGE_ITEM_NUM; index++) {
+            if (index >= com.size()) break;
             com.get(index).sendUsageMessage(sender, label);
         }
         sendResourceMessage(sender, "", "usageFoot");
-        if ( page < lastPage ) {
-            if ( type != CommandType.USER ) {
+        if (page < lastPage) {
+            if (type != CommandType.USER) {
                 sendResourceMessage(sender, "", "usageNoticeNextPage", typeDesc, (page + 1));
             } else {
                 sendResourceMessage(sender, "", "usageNoticeNextPage", "", (page + 1));

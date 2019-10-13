@@ -5,18 +5,18 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import java.util.ArrayList;
-
+import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import java.util.ArrayList;
 
 /**
  * listコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class ListCommand extends SubCommandAbst {
@@ -31,6 +31,7 @@ public class ListCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -41,6 +42,7 @@ public class ListCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -51,6 +53,7 @@ public class ListCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -61,8 +64,9 @@ public class ListCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -73,9 +77,10 @@ public class ListCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
@@ -98,6 +103,7 @@ public class ListCommand extends SubCommandAbst {
 
     /**
      * リスト表示用のリストを返す
+     *
      * @param player プレイヤー、指定しない場合はnullにする
      * @return リスト
      */
@@ -106,10 +112,10 @@ public class ListCommand extends SubCommandAbst {
         ArrayList<String> items = new ArrayList<>();
         String dchannel = "";
         String playerName;
-        if ( player != null ) {
+        if (player != null) {
             playerName = player.getName();
             Channel def = api.getDefaultChannel(playerName);
-            if ( def == null ) {
+            if (def == null) {
                 dchannel = "";
             } else {
                 dchannel = def.getName();
@@ -118,32 +124,32 @@ public class ListCommand extends SubCommandAbst {
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
 
         items.add(LIST_FIRSTLINE);
-        for ( Channel channel : api.getChannels() ) {
+        for (Channel channel : api.getChannels()) {
 
             // BANされているチャンネルは表示しない
-            if ( channel.getBanned().contains(cp) ) {
+            if (channel.getBanned().contains(cp)) {
                 continue;
             }
 
             // 個人チャットはリストに表示しない
-            if ( channel.isPersonalChat() ) {
+            if (channel.isPersonalChat()) {
                 continue;
             }
 
             // デフォルト発言先なら赤に、非表示中なら暗青にする。
             String disp = ChatColor.WHITE + channel.getName();
-            if ( channel.getName().equalsIgnoreCase(dchannel) ) {
+            if (channel.getName().equalsIgnoreCase(dchannel)) {
                 disp = ChatColor.RED + channel.getName();
-            } else if ( channel.getHided().contains(cp) ) {
+            } else if (channel.getHided().contains(cp)) {
                 disp = ChatColor.DARK_AQUA + channel.getName();
             }
 
-            if ( player != null &&
+            if (player != null &&
                     !channel.getMembers().contains(cp) &&
-                    !channel.isGlobalChannel() ) {
+                    !channel.isGlobalChannel()) {
 
                 // 未参加で visible=false のチャンネルは表示しない
-                if ( !channel.isVisible() ) {
+                if (!channel.isVisible()) {
                     continue;
                 }
                 disp = ChatColor.GRAY + channel.getName();

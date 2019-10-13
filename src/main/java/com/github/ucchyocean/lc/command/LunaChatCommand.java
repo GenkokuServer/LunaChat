@@ -5,23 +5,23 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Lunachatコマンドの処理クラス
+ *
  * @author ucchy
  */
 public class LunaChatCommand implements CommandExecutor {
@@ -81,13 +81,13 @@ public class LunaChatCommand implements CommandExecutor {
 
         // チャンネルチャットが無効でも利用できるコマンドはここで処理する
         // （hide, unhide, dic, dictionary, reload）
-        if ( args.length >= 1 ) {
-            for ( SubCommandAbst c : commonCommands ) {
-                if ( c.getCommandName().equalsIgnoreCase(args[0]) ) {
+        if (args.length >= 1) {
+            for (SubCommandAbst c : commonCommands) {
+                if (c.getCommandName().equalsIgnoreCase(args[0])) {
 
                     // パーミッションの確認
                     String node = c.getPermissionNode();
-                    if ( !sender.hasPermission(node) ) {
+                    if (!sender.hasPermission(node)) {
                         sendResourceMessage(sender, PREERR, "errmsgPermission", node);
                         return true;
                     }
@@ -99,8 +99,8 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // チャンネルチャット機能が無効になっている場合は、メッセージを表示して終了
-        if ( !LunaChat.getInstance().getLunaChatConfig().isEnableChannelChat()
-                && !sender.isOp() ) {
+        if (!LunaChat.getInstance().getLunaChatConfig().isEnableChannelChat()
+                && !sender.isOp()) {
             sendResourceMessage(sender, PREERR, "errmsgChannelChatDisabled");
             return true;
         }
@@ -112,12 +112,12 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // 第1引数に指定されたコマンドを実行する
-        for ( SubCommandAbst c : commands ) {
-            if ( c.getCommandName().equalsIgnoreCase(args[0]) ) {
+        for (SubCommandAbst c : commands) {
+            if (c.getCommandName().equalsIgnoreCase(args[0])) {
 
                 // パーミッションの確認
                 String node = c.getPermissionNode();
-                if ( !sender.hasPermission(node) ) {
+                if (!sender.hasPermission(node)) {
                     sendResourceMessage(sender, PREERR, "errmsgPermission", node);
                     return true;
                 }
@@ -129,7 +129,7 @@ public class LunaChatCommand implements CommandExecutor {
 
         // 第1引数がコマンドでないなら、joinが指定されたとみなす
         String node = joinCommand.getPermissionNode();
-        if ( !sender.hasPermission(node) ) {
+        if (!sender.hasPermission(node)) {
             sendResourceMessage(sender, PREERR, "errmsgPermission", node);
             return true;
         }
@@ -139,90 +139,91 @@ public class LunaChatCommand implements CommandExecutor {
 
     /**
      * TABキー補完が実行されたときに呼び出されるメソッド
-     * @param sender TABキー補完の実行者
+     *
+     * @param sender  TABキー補完の実行者
      * @param command 実行されたコマンド
-     * @param label 実行されたコマンドのラベル
-     * @param args 実行されたコマンドの引数
+     * @param label   実行されたコマンドのラベル
+     * @param args    実行されたコマンドの引数
      * @return 補完候補
      */
     public List<String> onTabComplete(
             CommandSender sender, Command command, String label, String[] args) {
 
-        if ( args.length == 1 ) {
+        if (args.length == 1) {
             // コマンド名で補完する
             String arg = args[0].toLowerCase();
             ArrayList<String> coms = new ArrayList<>();
-            for ( SubCommandAbst c : commands ) {
-                if ( c.getCommandName().startsWith(arg) &&
-                        sender.hasPermission(c.getPermissionNode()) ) {
+            for (SubCommandAbst c : commands) {
+                if (c.getCommandName().startsWith(arg) &&
+                        sender.hasPermission(c.getPermissionNode())) {
                     coms.add(c.getCommandName());
                 }
             }
             return coms;
 
-        } else if ( args.length == 2 && (
+        } else if (args.length == 2 && (
                 args[0].equalsIgnoreCase("join") ||
-                args[0].equalsIgnoreCase("info") ) ) {
+                        args[0].equalsIgnoreCase("info"))) {
             // 参加可能チャンネル名で補完する
             String arg = args[1].toLowerCase();
             ArrayList<String> items = new ArrayList<>();
-            for ( String name : getListCanJoin(sender) ) {
-                if ( name.toLowerCase().startsWith(arg) ) {
+            for (String name : getListCanJoin(sender)) {
+                if (name.toLowerCase().startsWith(arg)) {
                     items.add(name);
                 }
             }
             return items;
 
-        } else if ( args.length == 2 && (
+        } else if (args.length == 2 && (
                 args[0].equalsIgnoreCase("hide") ||
-                args[0].equalsIgnoreCase("unhide") ) ) {
+                        args[0].equalsIgnoreCase("unhide"))) {
             // 参加可能チャンネル名とプレイヤー名で補完する
             String arg = args[1].toLowerCase();
             ArrayList<String> items = new ArrayList<>();
-            for ( String name : getListCanJoin(sender) ) {
-                if ( name.toLowerCase().startsWith(arg) ) {
+            for (String name : getListCanJoin(sender)) {
+                if (name.toLowerCase().startsWith(arg)) {
                     items.add(name);
                 }
             }
-            for ( Player player : Utility.getOnlinePlayers() ) {
-                if ( player.getName().toLowerCase().startsWith(arg) ) {
+            for (Player player : Utility.getOnlinePlayers()) {
+                if (player.getName().toLowerCase().startsWith(arg)) {
                     items.add(player.getName());
                 }
             }
             return items;
 
-        } else if ( args.length == 2 && args[0].equalsIgnoreCase("remove") ) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
             // 削除可能チャンネル名で補完する
             String arg = args[1].toLowerCase();
             ArrayList<String> items = new ArrayList<>();
-            for ( String name : getListCanRemove(sender) ) {
-                if ( name.toLowerCase().startsWith(arg) ) {
+            for (String name : getListCanRemove(sender)) {
+                if (name.toLowerCase().startsWith(arg)) {
                     items.add(name);
                 }
             }
             return items;
 
-        } else if ( args.length == 2 &&
-                (args[0].equalsIgnoreCase("dic") || args[0].equalsIgnoreCase("dictionary")) ) {
+        } else if (args.length == 2 &&
+                (args[0].equalsIgnoreCase("dic") || args[0].equalsIgnoreCase("dictionary"))) {
             // add、remove、viewで補完する
             String arg = args[1].toLowerCase();
             ArrayList<String> items = new ArrayList<>();
-            for ( String name : new String[]{"add", "remove", "view"} ) {
-                if ( name.toLowerCase().startsWith(arg) ) {
+            for (String name : new String[]{"add", "remove", "view"}) {
+                if (name.toLowerCase().startsWith(arg)) {
                     items.add(name);
                 }
             }
             return items;
 
-        } else if ( args.length == 3 &&
+        } else if (args.length == 3 &&
                 (args[0].equalsIgnoreCase("dic") || args[0].equalsIgnoreCase("dictionary")) &&
-                args[1].equalsIgnoreCase("remove") ) {
+                args[1].equalsIgnoreCase("remove")) {
             // 辞書に登録されているワードで補完する
             String arg = args[2].toLowerCase();
             ArrayList<String> items = new ArrayList<>();
-            for ( String name :
-                    LunaChat.getInstance().getLunaChatAPI().getAllDictionary().keySet() ) {
-                if ( name.toLowerCase().startsWith(arg) ) {
+            for (String name :
+                    LunaChat.getInstance().getLunaChatAPI().getAllDictionary().keySet()) {
+                if (name.toLowerCase().startsWith(arg)) {
                     items.add(name);
                 }
             }
@@ -236,15 +237,15 @@ public class LunaChatCommand implements CommandExecutor {
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
      *
      * @param sender メッセージの送り先
-     * @param pre プレフィックス
-     * @param key リソースキー
-     * @param args リソース内の置き換え対象キーワード
+     * @param pre    プレフィックス
+     * @param key    リソースキー
+     * @param args   リソース内の置き換え対象キーワード
      */
     private void sendResourceMessage(CommandSender sender, String pre,
-            String key, Object... args) {
+                                     String key, Object... args) {
 
         String org = Resources.get(key);
-        if ( org == null || org.equals("") ) {
+        if (org == null || org.equals("")) {
             return;
         }
         String msg = String.format(pre + org, args);
@@ -253,6 +254,7 @@ public class LunaChatCommand implements CommandExecutor {
 
     /**
      * TAB補完用の参加可能チャンネルリストを返す
+     *
      * @param sender コマンド実行者
      * @return リスト
      */
@@ -261,23 +263,23 @@ public class LunaChatCommand implements CommandExecutor {
         ArrayList<String> items = new ArrayList<>();
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(sender);
 
-        for ( Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
+        for (Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels()) {
 
             // BANされているチャンネルは対象外
-            if ( channel.getBanned().contains(cp) ) {
+            if (channel.getBanned().contains(cp)) {
                 continue;
             }
 
             // 個人チャットは対象外
-            if ( channel.isPersonalChat() ) {
+            if (channel.isPersonalChat()) {
                 continue;
             }
 
             // 未参加で visible=false のチャンネルは対象外
-            if ( sender instanceof Player &&
+            if (sender instanceof Player &&
                     !channel.getMembers().contains(cp) &&
                     !channel.isGlobalChannel() &&
-                    !channel.isVisible() ) {
+                    !channel.isVisible()) {
                 continue;
             }
 
@@ -289,6 +291,7 @@ public class LunaChatCommand implements CommandExecutor {
 
     /**
      * TAB補完用の削除可能チャンネルリストを返す
+     *
      * @param sender コマンド実行者
      * @return リスト
      */
@@ -296,20 +299,20 @@ public class LunaChatCommand implements CommandExecutor {
 
         ArrayList<String> items = new ArrayList<>();
 
-        for ( Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
+        for (Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels()) {
 
             // 実行者がチャンネルモデレーターでない場合は対象外
-            if ( !channel.hasModeratorPermission(sender) ) {
+            if (!channel.hasModeratorPermission(sender)) {
                 continue;
             }
 
             // 個人チャットは対象外
-            if ( channel.isPersonalChat() ) {
+            if (channel.isPersonalChat()) {
                 continue;
             }
 
             // グローバルチャンネルは対象外
-            if ( channel.isGlobalChannel() ) {
+            if (channel.isGlobalChannel()) {
                 continue;
             }
 

@@ -5,14 +5,14 @@
  */
 package com.github.ucchyocean.lc.command;
 
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
-
 /**
  * inviteコマンドの実行クラス
+ *
  * @author ucchy
  */
 public class InviteCommand extends SubCommandAbst {
@@ -26,6 +26,7 @@ public class InviteCommand extends SubCommandAbst {
 
     /**
      * コマンドを取得します。
+     *
      * @return コマンド
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
      */
@@ -36,6 +37,7 @@ public class InviteCommand extends SubCommandAbst {
 
     /**
      * パーミッションノードを取得します。
+     *
      * @return パーミッションノード
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
      */
@@ -46,6 +48,7 @@ public class InviteCommand extends SubCommandAbst {
 
     /**
      * コマンドの種別を取得します。
+     *
      * @return コマンド種別
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
      */
@@ -56,8 +59,9 @@ public class InviteCommand extends SubCommandAbst {
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
+     * @param label  実行ラベル
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
@@ -68,16 +72,17 @@ public class InviteCommand extends SubCommandAbst {
 
     /**
      * コマンドを実行します。
+     *
      * @param sender コマンド実行者
-     * @param label 実行ラベル
-     * @param args 実行時の引数
+     * @param label  実行ラベル
+     * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
     public boolean runCommand(CommandSender sender, String label, String[] args) {
 
-        if ( args.length >= 3 && args[2].equalsIgnoreCase("force") ) {
+        if (args.length >= 3 && args[2].equalsIgnoreCase("force")) {
             return runForceInviteCommand(sender, args);
         }
 
@@ -86,8 +91,9 @@ public class InviteCommand extends SubCommandAbst {
 
     /**
      * 通常のinviteコマンドを処理する
+     *
      * @param sender CommandSender
-     * @param args args
+     * @param args   args
      * @return コマンドが成功したかどうか
      */
     private boolean runNormalInviteCommand(CommandSender sender, String[] args) {
@@ -99,9 +105,9 @@ public class InviteCommand extends SubCommandAbst {
         }
 
         // デフォルトの発言先を取得する
-        Player inviter = (Player)sender;
+        Player inviter = (Player) sender;
         Channel channel = api.getDefaultChannel(inviter.getName());
-        if ( channel == null ) {
+        if (channel == null) {
             sendResourceMessage(sender, PREERR, "errmsgNoJoin");
             return true;
         }
@@ -116,7 +122,7 @@ public class InviteCommand extends SubCommandAbst {
         }
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(sender) ) {
+        if (!channel.hasModeratorPermission(sender)) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
@@ -150,14 +156,15 @@ public class InviteCommand extends SubCommandAbst {
 
     /**
      * 強制入室コマンドを処理する
+     *
      * @param sender CommandSender
-     * @param args args
+     * @param args   args
      * @return コマンドが成功したかどうか
      */
     private boolean runForceInviteCommand(CommandSender sender, String[] args) {
 
         // パーミッションチェック
-        if ( !sender.hasPermission(PERMISSION_NODE_FORCE_INVITE) ) {
+        if (!sender.hasPermission(PERMISSION_NODE_FORCE_INVITE)) {
             sendResourceMessage(sender, PREERR, "errmsgPermission",
                     PERMISSION_NODE_FORCE_INVITE);
             return true;
@@ -171,12 +178,12 @@ public class InviteCommand extends SubCommandAbst {
         // 引数チェック
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
         String cname = null;
-        if ( player != null && args.length <= 3 ) {
+        if (player != null && args.length <= 3) {
             Channel def = api.getDefaultChannel(player.getName());
-            if ( def != null ) {
+            if (def != null) {
                 cname = def.getName();
             }
-        } else if ( args.length >= 4 ) {
+        } else if (args.length >= 4) {
             cname = args[3];
         } else {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
@@ -185,7 +192,7 @@ public class InviteCommand extends SubCommandAbst {
 
         // チャンネルが存在するかどうか確認する
         Channel channel = api.getChannel(cname);
-        if ( channel == null ) {
+        if (channel == null) {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
         }
