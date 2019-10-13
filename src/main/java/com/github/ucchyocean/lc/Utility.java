@@ -271,11 +271,7 @@ public class Utility {
             }
             index++;
         }
-        if ( borderNumbers.length == index ) {
-            return true;
-        } else {
-            return false;
-        }
+        return borderNumbers.length == index;
     }
 
     /**
