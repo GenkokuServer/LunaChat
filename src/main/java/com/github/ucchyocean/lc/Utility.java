@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.jar.JarFile;
@@ -69,11 +70,11 @@ public class Utility {
                 }
 
             } else {
-                reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 
                 // CB190以降は、書き出すファイルエンコードにUTF-8を強制する。see issue #141.
                 if ( isCB19orLater() ) {
-                    writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8"));
+                    writer = new BufferedWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8));
                 } else {
                     writer = new BufferedWriter(new OutputStreamWriter(fos));
                 }

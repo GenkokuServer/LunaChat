@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * ひらがなのみの文章を、IMEを使用して変換します。
@@ -59,10 +60,10 @@ public class IMEConverter {
             String baseurl;
             String encode;
             if ( isGoogleIME ) {
-                baseurl = GOOGLE_IME_URL + URLEncoder.encode(org , "UTF-8");
+                baseurl = GOOGLE_IME_URL + URLEncoder.encode(org , StandardCharsets.UTF_8);
                 encode = "UTF-8";
             } else {
-                baseurl = SOCIAL_IME_URL + URLEncoder.encode(org , "UTF-8");
+                baseurl = SOCIAL_IME_URL + URLEncoder.encode(org , StandardCharsets.UTF_8);
                 encode = "EUC_JP";
             }
             URL url = new URL(baseurl);
