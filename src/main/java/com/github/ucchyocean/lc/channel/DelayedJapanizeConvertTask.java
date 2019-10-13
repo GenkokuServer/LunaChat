@@ -44,8 +44,8 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
      * @param player 発言したプレイヤー
      * @param japanizeFormat 変換後に発言するときの、発言フォーマット
      */
-    public DelayedJapanizeConvertTask(String org, JapanizeType type, Channel channel,
-            ChannelPlayer player, String japanizeFormat) {
+    DelayedJapanizeConvertTask(String org, JapanizeType type, Channel channel,
+                               ChannelPlayer player, String japanizeFormat) {
         this.org = org;
         this.type = type;
         this.channel = channel;
@@ -62,7 +62,7 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
      * 同期処理で変換を行います。結果は getResult() で取得してください。
      * @return 処理を実行したかどうか（イベントでキャンセルされた場合はfalseになります）
      */
-    public boolean runSync() {
+    boolean runSync() {
 
         // 変換対象外のキーワード
         HashMap<String, String> keywordMap = new HashMap<>();
@@ -142,14 +142,14 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
      * Japanize変換の結果を返します。
      * @return 変換結果
      */
-    public String getResult() {
+    String getResult() {
         return result;
     }
 
     /**
      * 数値を、全角文字の文字列に変換して返す
-     * @param digit
-     * @return
+     * @param digit 数字
+     * @return 全角文字にした数字
      */
     private String makeMultibytesDigit(int digit) {
 
