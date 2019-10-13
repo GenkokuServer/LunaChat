@@ -86,8 +86,6 @@ public class Utility {
 
             }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -303,9 +301,9 @@ public class Utility {
                 }
                 return players;
             }
-        } catch (NoSuchMethodException ex) {} // never happen
-        catch (InvocationTargetException ex) {} // never happen
-        catch (IllegalAccessException ex) {} // never happen
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {} // never happen
+        // never happen
+        // never happen
         return new ArrayList<>();
     }
 

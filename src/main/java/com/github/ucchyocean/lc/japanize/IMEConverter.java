@@ -86,8 +86,6 @@ public class IMEConverter {
 
             return result.toString();
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (ProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {

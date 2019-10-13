@@ -65,34 +65,25 @@ public class Resources {
     private static YamlConfiguration loadDefaultMessages() {
 
         YamlConfiguration messages = new YamlConfiguration();
-        JarFile jarFile = null;
-        try {
-            jarFile = new JarFile(LunaChat.getPluginJarFile());
+        try (JarFile jarFile = new JarFile(LunaChat.getPluginJarFile())) {
             ZipEntry zipEntry = jarFile.getEntry(FILE_NAME);
             InputStream inputStream = jarFile.getInputStream(zipEntry);
             BufferedReader reader =
                     new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
             String line;
-            while ( (line = reader.readLine()) != null ) {
-                if ( line.contains(":") && !line.startsWith("#") ) {
+            while ((line = reader.readLine()) != null) {
+                if (line.contains(":") && !line.startsWith("#")) {
                     String key = line.substring(0, line.indexOf(":")).trim();
                     String value = line.substring(line.indexOf(":") + 1).trim();
-                    if ( value.startsWith("'") && value.endsWith("'") )
-                        value = value.substring(1, value.length()-1);
+                    if (value.startsWith("'") && value.endsWith("'"))
+                        value = value.substring(1, value.length() - 1);
                     messages.set(key, value);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if ( jarFile != null ) {
-                try {
-                    jarFile.close();
-                } catch (IOException e) {
-                    // do nothing.
-                }
-            }
         }
+        // do nothing.
 
         return messages;
     }

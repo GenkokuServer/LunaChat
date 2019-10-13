@@ -66,24 +66,15 @@ public class LunaChatLogger {
             public void run() {
 
                 String msg = ChatColor.stripColor(message).replace(",", "，");
-                FileWriter writer = null;
-                try {
-                    writer = new FileWriter(file, true);
+                try (FileWriter writer = new FileWriter(file, true)) {
                     String str = lformat.format(new Date()) +
                             "," + msg + "," + player;
                     writer.write(str + "\r\n");
                     writer.flush();
                 } catch (Exception e) {
                     e.printStackTrace();
-                } finally {
-                    if ( writer != null ) {
-                        try {
-                            writer.close();
-                        } catch (Exception e) {
-                            // do nothing.
-                        }
-                    }
                 }
+                // do nothing.
 
             }
         }.runTaskAsynchronously(LunaChat.getInstance());
@@ -150,14 +141,11 @@ public class LunaChatLogger {
 
         ArrayList<String> data = new ArrayList<>();
 
-        BufferedReader reader = null;
-
-        try {
-            reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
-            while ( (line = reader.readLine()) != null ) {
+            while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                if ( line.length() > 0 ) {
+                if (line.length() > 0) {
                     data.add(line);
                 }
             }
@@ -165,15 +153,8 @@ public class LunaChatLogger {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if ( reader != null ) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    // do nothing.
-                }
-            }
         }
+        // do nothing.
 
         return data;
     }
