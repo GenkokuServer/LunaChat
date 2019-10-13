@@ -22,6 +22,7 @@ import com.github.ucchyocean.lc.command.LunaChatCommand;
 import com.github.ucchyocean.lc.command.LunaChatJapanizeCommand;
 import com.github.ucchyocean.lc.command.LunaChatMessageCommand;
 import com.github.ucchyocean.lc.command.LunaChatReplyCommand;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * LunaChat プラグイン
@@ -124,7 +125,7 @@ public class LunaChat extends JavaPlugin {
      */
     @Override
     public boolean onCommand(
-            CommandSender sender, Command command, String label, String[] args) {
+            @NotNull CommandSender sender, Command command, @NotNull String label, @NotNull String[] args) {
 
         if ( command.getName().equals("lunachat") ) {
             return lunachatCommand.onCommand(sender, command, label, args);
@@ -145,7 +146,7 @@ public class LunaChat extends JavaPlugin {
      */
     @Override
     public List<String> onTabComplete(
-            CommandSender sender, Command command, String label, String[] args) {
+            @NotNull CommandSender sender, Command command, @NotNull String label, @NotNull String[] args) {
 
         List<String> completeList = null;
         if ( command.getName().equals("lunachat") ) {

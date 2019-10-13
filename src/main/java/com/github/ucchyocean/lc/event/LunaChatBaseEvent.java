@@ -10,6 +10,7 @@ import org.bukkit.event.HandlerList;
 
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.channel.Channel;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 基底イベントクラス
@@ -29,6 +30,7 @@ public abstract class LunaChatBaseEvent extends Event {
         this.channelName = channelName;
     }
 
+    @NotNull
     @Override
     public HandlerList getHandlers() {
         return handlers;

@@ -11,13 +11,14 @@ import com.github.ucchyocean.lc.channel.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.jetbrains.annotations.NotNull;
 
 public class PluginMessageChannelManager implements PluginMessageListener {
 
     private static final LunaChat lunaChat = LunaChat.getInstance();
 
     @Override
-    public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+    public void onPluginMessageReceived(String channel, @NotNull Player player, @NotNull byte[] message) {
         if (!channel.equalsIgnoreCase("lunachat:out")) return;
 
         ByteArrayInputStream byteIn = new ByteArrayInputStream(message);

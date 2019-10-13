@@ -14,6 +14,7 @@ import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 1:1チャット送信コマンド
@@ -27,8 +28,8 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command,
-            String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
+                             @NotNull String label, String[] args) {
 
         // senderからChannelPlayerを作成する
         ChannelPlayer inviter = ChannelPlayer.getChannelPlayer(sender);

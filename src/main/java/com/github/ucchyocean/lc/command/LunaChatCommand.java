@@ -18,6 +18,7 @@ import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Lunachatコマンドの処理クラス
@@ -75,8 +76,8 @@ public class LunaChatCommand implements CommandExecutor {
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command,
-            String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
+                             @NotNull String label, String[] args) {
 
         // チャンネルチャットが無効でも利用できるコマンドはここで処理する
         // （hide, unhide, dic, dictionary, reload）

@@ -25,6 +25,7 @@ import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * チャンネル
@@ -447,6 +448,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * ConfigurationSerializable互換のための実装。
      * @see org.bukkit.configuration.serialization.ConfigurationSerializable#serialize()
      */
+    @NotNull
     @Override
     public Map<String, Object> serialize() {
 

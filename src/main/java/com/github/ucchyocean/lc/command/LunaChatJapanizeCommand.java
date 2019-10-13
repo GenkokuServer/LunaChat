@@ -14,6 +14,7 @@ import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Japanize変換設定コマンド
@@ -30,8 +31,8 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command,
-            String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
+                             @NotNull String label, String[] args) {
 
         if ( args.length == 1 &&
                 (args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off")) ) {
