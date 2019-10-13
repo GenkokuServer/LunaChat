@@ -486,7 +486,7 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     private static Channel deserialize(Map<String, Object> data) {
 
-        String name = castWithDefault(data.get(KEY_NAME), (String)null);
+        String name = castWithDefault(data.get(KEY_NAME), null);
         if ( name == null ) {
             return null;
         }
