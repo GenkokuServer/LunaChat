@@ -651,7 +651,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * チャンネルの別名を返す
      * @return チャンネルの別名
      */
-    public String getAlias() {
+    String getAlias() {
         return alias;
     }
 
