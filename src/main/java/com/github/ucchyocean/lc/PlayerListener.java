@@ -389,9 +389,8 @@ class PlayerListener implements Listener {
     /**
      * 既定のチャンネルへの参加を試みる。
      * @param player プレイヤー
-     * @return 参加できたかどうか
      */
-    private boolean tryJoinToGlobalChannel(Player player) {
+    private void tryJoinToGlobalChannel(Player player) {
 
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
@@ -410,7 +409,6 @@ class PlayerListener implements Listener {
             api.setDefaultChannel(player.getName(), gcName);
         }
 
-        return true;
     }
 
     /**
@@ -549,16 +547,15 @@ class PlayerListener implements Listener {
      * @param player プレイヤー
      * @param channel チャンネル
      * @param message 発言内容
-     * @return イベントでキャンセルされたかどうか
      */
-    private boolean chatToChannelWithEvent(ChannelPlayer player, Channel channel, String message, boolean async) {
+    private void chatToChannelWithEvent(ChannelPlayer player, Channel channel, String message, boolean async) {
 
         // LunaChatPreChatEvent イベントコール
         LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
                 channel.getName(), player, message, async);
         Bukkit.getPluginManager().callEvent(preChatEvent);
         if ( preChatEvent.isCancelled() ) {
-            return true;
+            return;
         }
         Channel alt = preChatEvent.getChannel();
         if ( alt != null ) {
@@ -569,7 +566,6 @@ class PlayerListener implements Listener {
         // チャンネルチャット発言
         channel.chat(player, message, async);
 
-        return false;
     }
 
     /**

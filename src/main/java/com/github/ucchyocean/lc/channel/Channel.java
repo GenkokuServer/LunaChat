@@ -6,7 +6,6 @@
 package com.github.ucchyocean.lc.channel;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -928,9 +927,8 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネルの情報をファイルに保存する。
-     * @return 保存をしたかどうか。
      */
-    public boolean save() {
+    public void save() {
 
         // フォルダーの取得と、必要に応じて作成
         File folder = new File(
@@ -941,7 +939,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // 1:1チャットチャンネルの場合は、何もしない。
         if ( isPersonalChat() ) {
-            return false;
+            return;
         }
 
         File file = new File(folder, name + ".yml");
@@ -954,32 +952,29 @@ public abstract class Channel implements ConfigurationSerializable {
         }
         try {
             conf.save(file);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
     /**
      * チャンネルの情報を保存したファイルを、削除する。
-     * @return 削除したかどうか。
      */
-    boolean remove() {
+    void remove() {
 
         // フォルダーの取得
         File folder = new File(
                 LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
         if ( !folder.exists() ) {
-            return false;
+            return;
         }
         File file = new File(folder, name + ".yml");
         if ( !file.exists() ) {
-            return false;
+            return;
         }
 
         // ファイルを削除
-        return file.delete();
+        file.delete();
     }
 
     /**

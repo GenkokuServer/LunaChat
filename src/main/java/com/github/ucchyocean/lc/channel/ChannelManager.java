@@ -188,9 +188,8 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * デフォルトチャンネル設定を保存する
-     * @return 保存したかどうか
      */
-    private boolean saveDefaults() {
+    private void saveDefaults() {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
@@ -198,18 +197,15 @@ public class ChannelManager implements LunaChatAPI {
                 config.set(key, defaultChannels.get(key));
             }
             config.save(fileDefaults);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
     /**
      * テンプレート設定を保存する
-     * @return 保存したかどうか
      */
-    private boolean saveTemplates() {
+    private void saveTemplates() {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
@@ -217,18 +213,15 @@ public class ChannelManager implements LunaChatAPI {
                 config.set(key, templates.get(key));
             }
             config.save(fileTemplates);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
     /**
      * Japanize設定を保存する
-     * @return 保存したかどうか
      */
-    private boolean saveJapanize() {
+    private void saveJapanize() {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
@@ -236,18 +229,15 @@ public class ChannelManager implements LunaChatAPI {
                 config.set(key, japanize.get(key));
             }
             config.save(fileJapanize);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
     /**
      * Dictionary設定を保存する
-     * @return 保存したかどうか
      */
-    private boolean saveDictionary() {
+    private void saveDictionary() {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
@@ -255,18 +245,15 @@ public class ChannelManager implements LunaChatAPI {
                 config.set(key, dictionary.get(key));
             }
             config.save(fileDictionary);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
     /**
      * Hidelist設定を保存する
-     * @return 保存したかどうか
      */
-    private boolean saveHidelist() {
+    private void saveHidelist() {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
@@ -274,10 +261,8 @@ public class ChannelManager implements LunaChatAPI {
                 config.set(key, getIdList(hidelist.get(key)));
             }
             config.save(fileHidelist);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
