@@ -22,7 +22,7 @@ public class ChannelPlayerConsole extends ChannelPlayer {
      * コンストラクタ
      * @param sender コンソール
      */
-    public ChannelPlayerConsole(ConsoleCommandSender sender) {
+    ChannelPlayerConsole(ConsoleCommandSender sender) {
         this.sender = sender;
     }
 
