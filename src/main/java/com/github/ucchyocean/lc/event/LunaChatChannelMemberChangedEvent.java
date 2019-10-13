@@ -33,7 +33,7 @@ public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEv
 
     /**
      * 変更前のメンバーリストをかえす
-     * @return
+     * @return 変更前のメンバーリスト
      */
     public List<ChannelPlayer> getMembersBefore() {
         return before;
@@ -41,7 +41,7 @@ public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEv
 
     /**
      * 変更後のメンバーリストをかえす
-     * @return
+     * @return 変更後のメンバーリスト
      */
     public List<ChannelPlayer> getMembersAfter() {
         return after;
