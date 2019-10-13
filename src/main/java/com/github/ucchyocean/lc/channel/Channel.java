@@ -7,6 +7,9 @@ package com.github.ucchyocean.lc.channel;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -926,29 +929,30 @@ public abstract class Channel implements ConfigurationSerializable {
      * チャンネルの情報をファイルに保存する。
      */
     public void save() {
-
         // フォルダーの取得と、必要に応じて作成
-        File folder = new File(
-                LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
-        if ( !folder.exists() ) {
-            folder.mkdirs();
+        Path folder = LunaChat.getInstance().getDataFolder().toPath().resolve(FOLDER_NAME_CHANNELS);
+
+        if (Files.isDirectory(folder)) {
+            try {
+                Files.createDirectories(folder);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         // 1:1チャットチャンネルの場合は、何もしない。
-        if ( isPersonalChat() ) {
-            return;
-        }
-
-        File file = new File(folder, name + ".yml");
+        if ( isPersonalChat() )            return;
 
         // ファイルへ保存する
         YamlConfiguration conf = new YamlConfiguration();
         Map<String, Object> data = this.serialize();
+
         for ( String key : data.keySet() ) {
             conf.set(key, data.get(key));
         }
+
         try {
-            conf.save(file);
+            conf.save(folder.resolve(name + ".yml").toFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -958,20 +962,12 @@ public abstract class Channel implements ConfigurationSerializable {
      * チャンネルの情報を保存したファイルを、削除する。
      */
     void remove() {
-
-        // フォルダーの取得
-        File folder = new File(
-                LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
-        if ( !folder.exists() ) {
-            return;
+        try {
+            Files.deleteIfExists(
+                    LunaChat.getInstance().getDataFolder().toPath().resolve(FOLDER_NAME_CHANNELS).resolve(name + ".yml"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        File file = new File(folder, name + ".yml");
-        if ( !file.exists() ) {
-            return;
-        }
-
-        // ファイルを削除
-        file.delete();
     }
 
     /**
@@ -981,30 +977,31 @@ public abstract class Channel implements ConfigurationSerializable {
     static HashMap<String, Channel> loadAllChannels() {
 
         // フォルダーの取得
-        File folder = new File(
-                LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
-        if ( !folder.exists() ) {
-            return new HashMap<>();
-        }
+        Path folder = LunaChat.getInstance().getDataFolder().toPath().resolve(FOLDER_NAME_CHANNELS);
 
-        File[] files = folder.listFiles((dir, name) -> name.endsWith(".yml"));
+        if (!Files.exists(folder))             return new HashMap<>();
+
+        File[] files = folder.toFile().listFiles((dir, name) -> name.endsWith(".yml"));
+
+        if (files == null) return new HashMap<>();
 
         HashMap<String, Channel> result = new HashMap<>();
+
         for ( File file : files ) {
-            YamlConfiguration config =
-                YamlConfiguration.loadConfiguration(file);
+            YamlConfiguration config =                YamlConfiguration.loadConfiguration(file);
             Map<String, Object> data = new HashMap<>();
             for ( String key : config.getKeys(false) ) {
                 data.put(key, config.get(key));
             }
+
             Channel channel = deserialize(data);
 
             // 自動アップデート
-            if ( isNeedToSaveForUUIDUpdate(data) ) {
+            if (channel != null&& isNeedToSaveForUUIDUpdate(data) ) {
                 channel.save();
             }
 
-            result.put(channel.name.toLowerCase(), channel);
+            if (channel != null ) result.put(channel.name.toLowerCase(), channel);
         }
 
         return result;
