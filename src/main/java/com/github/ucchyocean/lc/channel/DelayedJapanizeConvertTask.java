@@ -27,7 +27,7 @@ import com.github.ucchyocean.lc.japanize.KanaConverter;
  */
 public class DelayedJapanizeConvertTask extends BukkitRunnable {
 
-    private static final String REGEX_URL = "https?://[\\w/:%#\\$&\\?\\(\\)~\\.=\\+\\-]+";
+    private static final String REGEX_URL = "https?://[\\w/:%#$&?()~.=+\\-]+";
 
     private String org;
     private JapanizeType type;
