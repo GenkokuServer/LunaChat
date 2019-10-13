@@ -40,8 +40,8 @@ public abstract class SubCommandAbst {
     static final String PREINFO = Resources.get("infoPrefix");
     static final String PREERR = Resources.get("errorPrefix");
 
-    LunaChatAPI api;
-    LunaChatConfig config;
+    final LunaChatAPI api;
+    final LunaChatConfig config;
 
     /**
      * コンストラクタ

@@ -29,11 +29,11 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
 
     private static final String REGEX_URL = "https?://[\\w/:%#$&?()~.=+\\-]+";
 
-    private String org;
-    private JapanizeType type;
-    private Channel channel;
-    private ChannelPlayer player;
-    private String format;
+    private final String org;
+    private final JapanizeType type;
+    private final Channel channel;
+    private final ChannelPlayer player;
+    private final String format;
     private String result;
 
     /**

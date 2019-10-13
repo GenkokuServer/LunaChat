@@ -19,7 +19,7 @@ import com.github.ucchyocean.lc.japanize.JapanizeType;
  */
 public class DelayedJapanizeRecipientChatTask extends DelayedJapanizeConvertTask {
 
-    private List<Player> recipients;
+    private final List<Player> recipients;
 
     /**
      * コンストラクタ

@@ -69,11 +69,11 @@ public class ChannelImpl extends Channel {
 
     private static final String ERRMSG_MUTED = Resources.get("errmsgMuted");
 
-    private SimpleDateFormat dateFormat;
-    private SimpleDateFormat timeFormat;
+    private final SimpleDateFormat dateFormat;
+    private final SimpleDateFormat timeFormat;
 
     /** ロガー */
-    private LunaChatLogger logger;
+    private final LunaChatLogger logger;
 
     /**
      * コンストラクタ

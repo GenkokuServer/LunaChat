@@ -19,7 +19,7 @@ import com.github.ucchyocean.lc.bridge.VaultChatBridge;
  */
 public class ChannelPlayerName extends ChannelPlayer {
 
-    private String name;
+    private final String name;
 
     /**
      * コンストラクタ

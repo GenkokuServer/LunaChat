@@ -13,9 +13,9 @@ import com.github.ucchyocean.lc.japanize.JapanizeType;
  */
 public class DelayedJapanizeChannelChatTask extends DelayedJapanizeConvertTask {
 
-    private Channel channel;
-    private ChannelPlayer player;
-    private String lineFormat;
+    private final Channel channel;
+    private final ChannelPlayer player;
+    private final String lineFormat;
 
     /**
      * コンストラクタ

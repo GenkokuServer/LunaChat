@@ -27,10 +27,10 @@ public class LunaChatCommand implements CommandExecutor {
 
     private static final String PREERR = Resources.get("errorPrefix");
 
-    private ArrayList<SubCommandAbst> commands;
-    private ArrayList<SubCommandAbst> commonCommands;
-    private JoinCommand joinCommand;
-    private HelpCommand helpCommand;
+    private final ArrayList<SubCommandAbst> commands;
+    private final ArrayList<SubCommandAbst> commonCommands;
+    private final JoinCommand joinCommand;
+    private final HelpCommand helpCommand;
 
     /**
      * コンストラクタ

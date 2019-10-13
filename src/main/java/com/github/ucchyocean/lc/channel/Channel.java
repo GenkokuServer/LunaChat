@@ -73,7 +73,7 @@ public abstract class Channel implements ConfigurationSerializable {
     private List<ChannelPlayer> hided;
 
     /** チャンネルの名称 */
-    private String name;
+    private final String name;
 
     /** チャンネルの別名 */
     private String alias;

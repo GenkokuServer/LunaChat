@@ -27,14 +27,14 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class LunaChatLogger {
 
-    private SimpleDateFormat lformat;
-    private SimpleDateFormat dformat;
+    private final SimpleDateFormat lformat;
+    private final SimpleDateFormat dformat;
 
-    private SimpleDateFormat logYearDateFormat;
+    private final SimpleDateFormat logYearDateFormat;
 
     private File file;
     private String dirPath;
-    private String name;
+    private final String name;
 
     /**
      * コンストラクタ

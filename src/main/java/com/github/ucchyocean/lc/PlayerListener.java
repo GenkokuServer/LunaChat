@@ -43,8 +43,8 @@ class PlayerListener implements Listener {
     private static final String LIST_FORMAT = Resources.get("listFormat");
     private static final String PREERR = Resources.get("errorPrefix");
 
-    private SimpleDateFormat dateFormat;
-    private SimpleDateFormat timeFormat;
+    private final SimpleDateFormat dateFormat;
+    private final SimpleDateFormat timeFormat;
 
     /**
      * コンストラクタ

@@ -18,8 +18,8 @@ import com.github.ucchyocean.lc.japanize.JapanizeType;
  */
 public class DelayedJapanizeNormalChatTask extends DelayedJapanizeConvertTask {
 
-    private ChannelPlayer player;
-    private AsyncPlayerChatEvent event;
+    private final ChannelPlayer player;
+    private final AsyncPlayerChatEvent event;
 
     /**
      * コンストラクタ

@@ -22,7 +22,7 @@ import com.github.ucchyocean.lc.bridge.VaultChatBridge;
  */
 public class ChannelPlayerUUID extends ChannelPlayer {
 
-    private UUID id;
+    private final UUID id;
 
     /**
      * コンストラクタ

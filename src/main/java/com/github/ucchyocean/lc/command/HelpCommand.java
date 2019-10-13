@@ -22,7 +22,7 @@ public class HelpCommand extends SubCommandAbst {
     // 1ページに表示するコマンドヘルプの項目数
     private static final int PAGE_ITEM_NUM = 6;
 
-    private ArrayList<SubCommandAbst> commands;
+    private final ArrayList<SubCommandAbst> commands;
 
     /**
      * コンストラクタ
