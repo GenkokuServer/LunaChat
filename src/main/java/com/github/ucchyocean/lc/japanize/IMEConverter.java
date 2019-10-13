@@ -16,15 +16,17 @@ import java.nio.charset.StandardCharsets;
 /**
  * ひらがなのみの文章を、IMEを使用して変換します。
  * 使用される変換候補は全て第1候補のため、正しくない結果が含まれることもよくあります。
+ *
  * @author ucchy
  */
 public class IMEConverter {
-    
+
     private static final String GOOGLE_IME_URL =
-        "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=";
+            "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=";
 
     /**
      * GoogleIMEを使って変換する
+     *
      * @param org 変換元
      * @return 変換後
      */
@@ -35,7 +37,7 @@ public class IMEConverter {
     // 変換の実行
     private static String conv(String org) {
 
-        if ( org.length() == 0 ) {
+        if (org.length() == 0) {
             return "";
         }
 
@@ -44,11 +46,11 @@ public class IMEConverter {
         try {
             String baseurl;
             String encode;
-            baseurl = GOOGLE_IME_URL + URLEncoder.encode(org , StandardCharsets.UTF_8);
+            baseurl = GOOGLE_IME_URL + URLEncoder.encode(org, StandardCharsets.UTF_8);
             encode = "UTF-8";
             URL url = new URL(baseurl);
 
-            urlconn = (HttpURLConnection)url.openConnection();
+            urlconn = (HttpURLConnection) url.openConnection();
             urlconn.setRequestMethod("GET");
             urlconn.setInstanceFollowRedirects(false);
             urlconn.connect();
@@ -57,7 +59,7 @@ public class IMEConverter {
                     new InputStreamReader(urlconn.getInputStream(), encode));
             String line;
             StringBuilder result = new StringBuilder();
-            while ( (line = reader.readLine()) != null ) {
+            while ((line = reader.readLine()) != null) {
                 result.append(parseGoogleIMEResult(line));
             }
 
@@ -66,10 +68,10 @@ public class IMEConverter {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if ( urlconn != null ) {
+            if (urlconn != null) {
                 urlconn.disconnect();
             }
-            if ( reader != null ) {
+            if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) { // do nothing.
@@ -84,34 +86,34 @@ public class IMEConverter {
         StringBuilder buf = new StringBuilder();
         int level = 0;
         int index = 0;
-        while ( index < result.length() ) {
-            if ( level < 3 ) {
+        while (index < result.length()) {
+            if (level < 3) {
                 int nextStart = result.indexOf("[", index);
                 int nextEnd = result.indexOf("]", index);
-                if ( nextStart == -1 ) {
+                if (nextStart == -1) {
                     return buf.toString();
                 } else {
-                    if ( nextStart < nextEnd ) {
+                    if (nextStart < nextEnd) {
                         level++;
-                        index = nextStart+1;
+                        index = nextStart + 1;
                     } else {
                         level--;
-                        index = nextEnd+1;
+                        index = nextEnd + 1;
                     }
                 }
             } else {
                 int start = result.indexOf("\"", index);
-                int end = result.indexOf("\"", start+1);
-                if ( start == -1 || end == -1 ) {
+                int end = result.indexOf("\"", start + 1);
+                if (start == -1 || end == -1) {
                     return buf.toString();
                 }
-                buf.append(result, start+1, end);
+                buf.append(result, start + 1, end);
                 int next = result.indexOf("]", end);
-                if ( next == -1 ) {
+                if (next == -1) {
                     return buf.toString();
                 } else {
                     level--;
-                    index = next+1;
+                    index = next + 1;
                 }
             }
         }
