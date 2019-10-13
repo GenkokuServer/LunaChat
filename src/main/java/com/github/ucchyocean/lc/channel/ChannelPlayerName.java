@@ -25,7 +25,7 @@ public class ChannelPlayerName extends ChannelPlayer {
      * コンストラクタ
      * @param name プレイヤー名
      */
-    public ChannelPlayerName(String name) {
+    ChannelPlayerName(String name) {
         this.name = name;
     }
 
