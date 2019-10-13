@@ -53,8 +53,8 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
 
         // メッセージを取得する
         StringBuilder message = new StringBuilder();
-        for ( int i=0; i<args.length; i++ ) {
-            message.append(args[i] + " ");
+        for (String arg : args) {
+            message.append(arg + " ");
         }
 
         sendTellMessage(inviter, invitedName, message.toString().trim());
