@@ -89,7 +89,7 @@ public class KanaConverter {
      */
     public static String conv(String org) {
 
-        String last = "";
+        StringBuilder last = new StringBuilder();
         StringBuilder line = new StringBuilder();
 
         for ( int i=0; i<org.length(); i++ ) {
@@ -97,29 +97,29 @@ public class KanaConverter {
 
             switch (tmp) {
                 case "a":
-                    line.append(getKanaFromTable(last, 0));
-                    last = "";
+                    line.append(getKanaFromTable(last.toString(), 0));
+                    last = new StringBuilder();
                     break;
                 case "i":
-                    line.append(getKanaFromTable(last, 1));
-                    last = "";
+                    line.append(getKanaFromTable(last.toString(), 1));
+                    last = new StringBuilder();
                     break;
                 case "u":
-                    line.append(getKanaFromTable(last, 2));
-                    last = "";
+                    line.append(getKanaFromTable(last.toString(), 2));
+                    last = new StringBuilder();
                     break;
                 case "e":
-                    line.append(getKanaFromTable(last, 3));
-                    last = "";
+                    line.append(getKanaFromTable(last.toString(), 3));
+                    last = new StringBuilder();
                     break;
                 case "o":
-                    line.append(getKanaFromTable(last, 4));
-                    last = "";
+                    line.append(getKanaFromTable(last.toString(), 4));
+                    last = new StringBuilder();
                     break;
                 default:
-                    if (last.equals("n") && !(tmp.equals("y"))) {
+                    if (last.toString().equals("n") && !(tmp.equals("y"))) {
                         line.append("ん");
-                        last = "";
+                        last = new StringBuilder();
                         if (tmp.equals("n")) {
                             continue;
                         }
@@ -127,67 +127,67 @@ public class KanaConverter {
                     if (Character.isLetter(tmp.charAt(0))) {
                         if (Character.isUpperCase(tmp.charAt(0))) {
                             line.append(last).append(tmp);
-                            last = "";
-                        } else if (last.equals(tmp)) {
+                            last = new StringBuilder();
+                        } else if (last.toString().equals(tmp)) {
                             line.append("っ");
-                            last = tmp;
+                            last = new StringBuilder(tmp);
                         } else {
-                            last = last + tmp;
+                            last.append(tmp);
                         }
                     } else {
                         switch (tmp) {
                             case "-":
                                 line.append(last).append("ー");
-                                last = "";
+                                last = new StringBuilder();
                                 break;
                             case ".":
                                 line.append(last).append("。");
-                                last = "";
+                                last = new StringBuilder();
                                 break;
                             case ",":
                                 line.append(last).append("、");
-                                last = "";
+                                last = new StringBuilder();
                                 break;
                             case "?":
                                 line.append(last).append("？");
-                                last = "";
+                                last = new StringBuilder();
                                 break;
                             case "!":
                                 line.append(last).append("！");
-                                last = "";
+                                last = new StringBuilder();
                                 break;
                             case "[":
                                 line.append(last).append("「");
-                                last = "";
+                                last = new StringBuilder();
                                 break;
                             case "]":
                                 line.append(last).append("」");
-                                last = "";
+                                last = new StringBuilder();
                                 break;
                             case "<":
                                 line.append(last).append("＜");
-                                last = "";
+                                last = new StringBuilder();
                                 break;
                             case ">":
                                 line.append(last).append("＞");
-                                last = "";
+                                last = new StringBuilder();
                                 break;
                             case "&":
                                 line.append(last).append("＆");
-                                last = "";
+                                last = new StringBuilder();
                                 break;
                             case "\"":
                                 line.append(last).append("”");
-                                last = "";
+                                last = new StringBuilder();
                                 break;
                             case "(":
                             case ")":
                                 line.append(last);
-                                last = "";
+                                last = new StringBuilder();
                                 break;
                             default:
                                 line.append(last).append(tmp);
-                                last = "";
+                                last = new StringBuilder();
                                 break;
                         }
                     }

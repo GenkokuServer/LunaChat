@@ -83,7 +83,7 @@ public class FormatCommand extends SubCommandAbst {
 
         // 引数チェック
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
-        String format = "";
+        StringBuffer format = new StringBuffer();
         String cname = null;
         if ( player != null && args.length >= 2 ) {
             Channel def = api.getDefaultChannel(player.getName());
@@ -91,18 +91,18 @@ public class FormatCommand extends SubCommandAbst {
                 cname = def.getName();
             }
             for (int i = 1; i < args.length; i++) {
-                format = format + args[i] + " ";
+                format.append(args[i]).append(" ");
             }
         } else if ( args.length >= 3 ) {
             cname = args[1];
             for (int i = 2; i < args.length; i++) {
-                format = format + args[i] + " ";
+                format.append(args[i]).append(" ");
             }
         } else {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             return true;
         }
-        format = format.trim();
+        format = new StringBuffer(format.toString().trim());
 
         // チャンネルが存在するかどうかをチェックする
         Channel channel = api.getChannel(cname);
@@ -119,7 +119,7 @@ public class FormatCommand extends SubCommandAbst {
 
         // 制約キーワードを確認する
         List<String> constraints = config.getFormatConstraint();
-        String tempFormat = new String(format);
+        String tempFormat = new String(format.toString());
         for ( int i=0; i<=9; i++ ) {
             String key = "%" + i;
             if ( tempFormat.contains(key) && api.getTemplate(i + "") != null ) {
@@ -135,8 +135,8 @@ public class FormatCommand extends SubCommandAbst {
         }
 
         // フォーマットの設定
-        channel.setFormat(format);
-        sendResourceMessage(sender, PREINFO, "cmdmsgFormat", format);
+        channel.setFormat(format.toString());
+        sendResourceMessage(sender, PREINFO, "cmdmsgFormat", format.toString());
         channel.save();
         return true;
     }
