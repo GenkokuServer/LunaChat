@@ -301,7 +301,7 @@ public class Utility {
                 }
                 return players;
             }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {} // never happen
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {} // never happen
         // never happen
         // never happen
         return new ArrayList<>();
