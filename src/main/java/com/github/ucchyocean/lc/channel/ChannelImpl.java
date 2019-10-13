@@ -417,9 +417,7 @@ public class ChannelImpl extends Channel {
         // hideされている場合は、受信対象者から抜く。
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
         for ( ChannelPlayer cp : api.getHidelist(player) )  {
-            if ( recipients.contains(cp) ) {
-                recipients.remove(cp);
-            }
+            recipients.remove(cp);
         }
 
         // フォーマットがある場合は置き換える

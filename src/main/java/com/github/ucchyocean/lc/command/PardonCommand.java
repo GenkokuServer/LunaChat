@@ -113,9 +113,7 @@ public class PardonCommand extends SubCommandAbst {
 
         // BAN解除実行
         channel.getBanned().remove(kicked);
-        if ( channel.getBanExpires().containsKey(kicked) ) {
-            channel.getBanExpires().remove(kicked);
-        }
+        channel.getBanExpires().remove(kicked);
         channel.save();
 
         // senderに通知メッセージを出す

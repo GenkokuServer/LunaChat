@@ -304,14 +304,10 @@ public abstract class Channel implements ConfigurationSerializable {
         }
 
         // 非表示設定プレイヤーだったら、リストから削除する
-        if ( hided.contains(player) ) {
-            hided.remove(player);
-        }
+        hided.remove(player);
 
         // モデレーターだった場合は、モデレーターから除去する
-        if ( moderator.contains(player) ) {
-            moderator.remove(player);
-        }
+        moderator.remove(player);
 
         save();
     }

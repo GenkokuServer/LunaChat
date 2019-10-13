@@ -373,9 +373,7 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public void removeDefaultChannel(String playerName) {
-        if ( defaultChannels.containsKey(playerName) ) {
-            defaultChannels.remove(playerName);
-        }
+        defaultChannels.remove(playerName);
         saveDefaults();
     }
 

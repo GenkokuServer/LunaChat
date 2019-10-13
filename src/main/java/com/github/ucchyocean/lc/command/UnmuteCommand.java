@@ -113,9 +113,7 @@ public class UnmuteCommand extends SubCommandAbst {
 
         // Mute解除実行
         channel.getMuted().remove(kicked);
-        if ( channel.getMuteExpires().containsKey(kicked) ) {
-            channel.getMuteExpires().remove(kicked);
-        }
+        channel.getMuteExpires().remove(kicked);
         channel.save();
 
         // senderに通知メッセージを出す
