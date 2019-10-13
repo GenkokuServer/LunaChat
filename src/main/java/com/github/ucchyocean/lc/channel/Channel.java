@@ -995,12 +995,7 @@ public abstract class Channel implements ConfigurationSerializable {
             return new HashMap<>();
         }
 
-        File[] files = folder.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".yml");
-            }
-        });
+        File[] files = folder.listFiles((dir, name) -> name.endsWith(".yml"));
 
         HashMap<String, Channel> result = new HashMap<>();
         for ( File file : files ) {
