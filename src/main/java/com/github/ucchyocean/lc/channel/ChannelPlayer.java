@@ -152,14 +152,8 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
             String id = nameOrUuid.substring(1);
             return new ChannelPlayerUUID(id);
         }
-        if (Utility.isCB178orLater()) {
-            ChannelPlayer player =
-                    ChannelPlayerUUID.getChannelPlayerUUIDFromName(nameOrUuid);
-            if (player != null) {
-                return player;
-            }
-        }
-        return new ChannelPlayerName(nameOrUuid);
+
+        return ChannelPlayerUUID.getChannelPlayerUUIDFromName(nameOrUuid);
     }
 
     /**
@@ -175,8 +169,6 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
             return new ChannelPlayerBlock((BlockCommandSender) sender);
         } else if (sender instanceof ConsoleCommandSender) {
             return new ChannelPlayerConsole((ConsoleCommandSender) sender);
-        } else if (Utility.isCB178orLater()) {
-            return ChannelPlayerUUID.getChannelPlayer(sender);
         }
         return new ChannelPlayerName(sender.getName());
     }

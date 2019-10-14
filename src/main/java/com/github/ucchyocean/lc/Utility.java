@@ -5,126 +5,26 @@
  */
 package com.github.ucchyocean.lc;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 /**
  * ユーティリティクラス
+ *
  * @author ucchy
  */
 public class Utility {
 
-    private static Boolean isCB178orLaterCache;
-    private static Boolean isCB19orLaterCache;
-
-    /**
-     * jarファイルの中に格納されているファイルを、jarファイルの外にコピーするメソッド
-     * @param jarFile jarファイル
-     * @param targetFile コピー先
-     * @param sourceFilePath コピー元
-     * @param isBinary バイナリファイルかどうか
-     */
-    public static void copyFileFromJar(
-            File jarFile, File targetFile, String sourceFilePath, boolean isBinary) {
-
-        InputStream is = null;
-        FileOutputStream fos = null;
-        BufferedReader reader = null;
-        BufferedWriter writer = null;
-
-        File parent = targetFile.getParentFile();
-        if (!parent.exists()) {
-            parent.mkdirs();
-        }
-
-        try {
-            JarFile jar = new JarFile(jarFile);
-            ZipEntry zipEntry = jar.getEntry(sourceFilePath);
-            is = jar.getInputStream(zipEntry);
-
-            fos = new FileOutputStream(targetFile);
-
-            if (isBinary) {
-                byte[] buf = new byte[8192];
-                int len;
-                while ((len = is.read(buf)) != -1) {
-                    fos.write(buf, 0, len);
-                }
-
-            } else {
-                reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-
-                // CB190以降は、書き出すファイルエンコードにUTF-8を強制する。see issue #141.
-                if ( isCB19orLater() ) {
-                    writer = new BufferedWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8));
-                } else {
-                    writer = new BufferedWriter(new OutputStreamWriter(fos));
-                }
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.flush();
-                    writer.close();
-                } catch (IOException e) {
-                    // do nothing.
-                }
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    // do nothing.
-                }
-            }
-            if (fos != null) {
-                try {
-                    fos.flush();
-                    fos.close();
-                } catch (IOException e) {
-                    // do nothing.
-                }
-            }
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    // do nothing.
-                }
-            }
-        }
-    }
-
     /**
      * 文字列内のカラーコード候補（&a）を、カラーコード（§a）に置き換えする
+     *
      * @param source 置き換え元の文字列
      * @return 置き換え後の文字列
      */
@@ -136,6 +36,7 @@ public class Utility {
 
     /**
      * 文字列に含まれているカラーコード（§a）を除去して返す
+     *
      * @param source 置き換え元の文字列
      * @return 置き換え後の文字列
      */
@@ -147,6 +48,7 @@ public class Utility {
 
     /**
      * 指定された文字数のアスタリスクの文字列を返す
+     *
      * @param length アスタリスクの個数
      * @return 指定された文字数のアスタリスク
      */
@@ -160,6 +62,7 @@ public class Utility {
 
     /**
      * カラー表記の文字列を、ChatColorクラスに変換する
+     *
      * @param color カラー表記の文字列
      * @return ChatColorクラス
      */
@@ -173,6 +76,7 @@ public class Utility {
 
     /**
      * カラー表記の文字列を、カラーコードに変換する
+     *
      * @param color カラー表記の文字列
      * @return カラーコード
      */
@@ -183,6 +87,7 @@ public class Utility {
 
     /**
      * ChatColorで指定可能な色かどうかを判断する
+     *
      * @param color カラー表記の文字列
      * @return 指定可能かどうか
      */
@@ -198,7 +103,8 @@ public class Utility {
 
     /**
      * カラーコードかどうかを判断する
-     * @param color カラー表記の文字列
+     *
+     * @param code カラー表記の文字列
      * @return 指定可能かどうか
      */
     public static boolean isValidColorCode(String code) {
@@ -210,74 +116,11 @@ public class Utility {
     }
 
     /**
-     * 現在動作中のCraftBukkitが、v1.7.8 以上かどうかを確認する
-     * @return v1.7.8以上ならtrue、そうでないならfalse
-     */
-    public static boolean isCB178orLater() {
-        if ( isCB178orLaterCache == null ) {
-            isCB178orLaterCache = isUpperVersion(Bukkit.getBukkitVersion(), "1.7.8");
-        }
-        return isCB178orLaterCache;
-    }
-
-    /**
-     * 現在動作中のCraftBukkitが、v1.9 以上かどうかを確認する
-     * @return v1.9以上ならtrue、そうでないならfalse
-     */
-    private static boolean isCB19orLater() {
-        if ( isCB19orLaterCache == null ) {
-            isCB19orLaterCache = isUpperVersion(Bukkit.getBukkitVersion(), "1.9");
-        }
-        return isCB19orLaterCache;
-    }
-
-    /**
-     * 指定されたバージョンが、基準より新しいバージョンかどうかを確認する
-     * @param version 確認するバージョン
-     * @param border 基準のバージョン
-     * @return 基準より確認対象の方が新しいバージョンかどうか<br/>
-     * ただし、無効なバージョン番号（数値でないなど）が指定された場合はfalseに、
-     * 2つのバージョンが完全一致した場合はtrueになる。
-     */
-    private static boolean isUpperVersion(String version, String border) {
-
-        int hyphen = version.indexOf("-");
-        if ( hyphen > 0 ) {
-            version = version.substring(0, hyphen);
-        }
-
-        String[] versionArray = version.split("\\.");
-        int[] versionNumbers = new int[versionArray.length];
-        for ( int i=0; i<versionArray.length; i++ ) {
-            if ( !versionArray[i].matches("[0-9]+") )
-                return false;
-            versionNumbers[i] = Integer.parseInt(versionArray[i]);
-        }
-
-        String[] borderArray = border.split("\\.");
-        int[] borderNumbers = new int[borderArray.length];
-        for ( int i=0; i<borderArray.length; i++ ) {
-            if ( !borderArray[i].matches("[0-9]+") )
-                return false;
-            borderNumbers[i] = Integer.parseInt(borderArray[i]);
-        }
-
-        int index = 0;
-        while ( (versionNumbers.length > index) && (borderNumbers.length > index) ) {
-            if ( versionNumbers[index] > borderNumbers[index] ) {
-                return true;
-            } else if ( versionNumbers[index] < borderNumbers[index] ) {
-                return false;
-            }
-            index++;
-        }
-        return borderNumbers.length == index;
-    }
-
-    /**
      * 現在接続中のプレイヤーを全て取得する
+     *
      * @return 接続中の全てのプレイヤー
      */
+
     @SuppressWarnings("unchecked")
     public static ArrayList<Player> getOnlinePlayers() {
         // CB179以前と、CB1710以降で戻り値が異なるため、
@@ -294,7 +137,8 @@ public class Utility {
                                 .invoke(null, new Object[0]));
                 return new ArrayList<>(Arrays.asList(temp));
             }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {} // never happen
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
+        } // never happen
         // never happen
         // never happen
         return new ArrayList<>();
@@ -302,6 +146,7 @@ public class Utility {
 
     /**
      * 現在のサーバー接続人数を返します。
+     *
      * @return サーバー接続人数
      */
     public static int getOnlinePlayersCount() {
@@ -310,23 +155,15 @@ public class Utility {
 
     /**
      * 指定された名前のオフラインプレイヤーを取得する
+     *
      * @param name プレイヤー名
      * @return オフラインプレイヤー
      */
     @SuppressWarnings("deprecation")
     public static OfflinePlayer getOfflinePlayer(String name) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(name);
-        if (player == null || (!player.hasPlayedBefore() && !player.isOnline()))
+        if (!player.hasPlayedBefore() && !player.isOnline())
             return null;
         return player;
-    }
-
-    /**
-     * 指定された名前のプレイヤーを取得する
-     * @param name プレイヤー名
-     * @return プレイヤー
-     */
-    public static Player getPlayerExact(String name) {
-        return Bukkit.getPlayer(stripColor(name));
     }
 }

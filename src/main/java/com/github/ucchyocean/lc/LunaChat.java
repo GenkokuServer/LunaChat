@@ -6,6 +6,7 @@
 package com.github.ucchyocean.lc;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -170,11 +171,11 @@ public class LunaChat extends JavaPlugin {
     }
 
     /**
-     * このプラグインのJarファイル自身を示すFileクラスを返す。
+     * このプラグインのJarファイル自身を示すPathクラスを返す。
      * @return Jarファイル
      */
-    static File getPluginJarFile() {
-        return getInstance().getFile();
+    static Path getPluginJarFile() {
+        return getInstance().getFile().toPath();
     }
 
     /**

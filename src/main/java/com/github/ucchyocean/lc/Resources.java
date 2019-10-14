@@ -5,19 +5,19 @@
  */
 package com.github.ucchyocean.lc;
 
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
-
-import org.bukkit.configuration.file.YamlConfiguration;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * プラグインのリソース管理クラス
+ *
  * @author ucchy
  */
 public class Resources {
@@ -32,60 +32,58 @@ public class Resources {
      */
     private static void initialize() {
 
-        File file = new File(
-                LunaChat.getInstance().getDataFolder() +
-                File.separator + FILE_NAME);
+        Path file = LunaChat.getInstance().getDataFolder().toPath().resolve(FILE_NAME);
 
-        if ( !file.exists() ) {
-            Utility.copyFileFromJar(LunaChat.getPluginJarFile(),
-                    file, FILE_NAME, false);
+        if (!Files.exists(file)) {
+            LunaChat.getInstance().saveResource(FILE_NAME, false);
         }
 
         defaultMessages = loadDefaultMessages();
-        resources = YamlConfiguration.loadConfiguration(file);
+        resources = YamlConfiguration.loadConfiguration(file.toFile());
     }
 
     /**
      * リソースを取得する
+     *
      * @param key リソースキー
      * @return リソース
      */
     public static String get(String key) {
-
-        if ( resources == null ) {
+        if (resources == null) {
             initialize();
         }
+
         String def = defaultMessages.getString(key);
         return Utility.replaceColorCode(resources.getString(key, def));
     }
 
     /**
      * Jarファイル内から直接 messages.yml を読み込み、YamlConfigurationにして返すメソッド
-     * @return
+     *
+     * @return YamlConfiguration
      */
     private static YamlConfiguration loadDefaultMessages() {
 
         YamlConfiguration messages = new YamlConfiguration();
-        try (JarFile jarFile = new JarFile(LunaChat.getPluginJarFile())) {
-            ZipEntry zipEntry = jarFile.getEntry(FILE_NAME);
-            InputStream inputStream = jarFile.getInputStream(zipEntry);
-            BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.contains(":") && !line.startsWith("#")) {
-                    String key = line.substring(0, line.indexOf(":")).trim();
-                    String value = line.substring(line.indexOf(":") + 1).trim();
-                    if (value.startsWith("'") && value.endsWith("'"))
-                        value = value.substring(1, value.length() - 1);
-                    messages.set(key, value);
+        try {
+            InputStream inputStream = LunaChat.getInstance().getResource(FILE_NAME);
+            if (inputStream != null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.contains(":") && !line.startsWith("#")) {
+                        String key = line.substring(0, line.indexOf(":")).trim();
+                        String value = line.substring(line.indexOf(":") + 1).trim();
+                        if (value.startsWith("'") && value.endsWith("'"))
+                            value = value.substring(1, value.length() - 1);
+                        messages.set(key, value);
+                    }
                 }
+
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // do nothing.
-
         return messages;
     }
 }

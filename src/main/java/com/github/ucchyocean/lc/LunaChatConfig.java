@@ -5,144 +5,219 @@
  */
 package com.github.ucchyocean.lc;
 
-import java.io.File;
+import com.github.ucchyocean.lc.japanize.JapanizeType;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.EventPriority;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.EventPriority;
-
-import com.github.ucchyocean.lc.japanize.JapanizeType;
-
 /**
  * LunaChatのコンフィグクラス
+ *
  * @author ucchy
  */
 public class LunaChatConfig {
 
-    /** チャンネルチャット機能を利用可能にするかどうか */
+    /**
+     * チャンネルチャット機能を利用可能にするかどうか
+     */
     private boolean enableChannelChat;
 
-    /** チャットイベントの処理優先度 */
+    /**
+     * チャットイベントの処理優先度
+     */
     private EventPriority playerChatEventListenerPriority;
 
-    /** チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか */
+    /**
+     * チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか
+     */
     private boolean noJoinAsGlobal;
 
-    /** チャンネルチャットの発言内容を、ログに残すかどうか */
+    /**
+     * チャンネルチャットの発言内容を、ログに残すかどうか
+     */
     private boolean loggingChat;
 
-    /** チャンネルチャットの発言内容を、HawkEyeに記録するかどうか */
+    /**
+     * チャンネルチャットの発言内容を、HawkEyeに記録するかどうか
+     */
     private boolean loggingChatToHawkEye;
 
-    /** チャンネルチャットの発言内容を、Prismに記録するかどうか */
+    /**
+     * チャンネルチャットの発言内容を、Prismに記録するかどうか
+     */
     private boolean loggingChatToPrism;
 
-    /** チャンネルチャットの発言内容を、コンソールに表示するかどうか */
+    /**
+     * チャンネルチャットの発言内容を、コンソールに表示するかどうか
+     */
     private boolean displayChatOnConsole;
 
-    /** グローバルマーカー  これが発言の頭に入っている場合は、強制的にグローバル発言になる */
+    /**
+     * グローバルマーカー  これが発言の頭に入っている場合は、強制的にグローバル発言になる
+     */
     private String globalMarker;
 
-    /** 全てのメンバーが退出したときに、チャンネルを削除するかどうか */
+    /**
+     * 全てのメンバーが退出したときに、チャンネルを削除するかどうか
+     */
     private boolean zeroMemberRemove;
 
-    /** ログイン時に、参加中チャンネルを表示するかどうか */
+    /**
+     * ログイン時に、参加中チャンネルを表示するかどうか
+     */
     private boolean showListOnJoin;
 
-    /** /ch join コマンドで存在しないチャンネルを指定したときに、
-     *  チャンネルを新規作成して入室するかどうか */
+    /**
+     * /ch join コマンドで存在しないチャンネルを指定したときに、
+     * チャンネルを新規作成して入室するかどうか
+     */
     private boolean createChannelOnJoinCommand;
 
-    /** サーバーに初参加したユーザーを参加させる、既定のチャンネル。<br/>
-     *  参加させない場合は、から文字列 "" を指定すること。 */
+    /**
+     * サーバーに初参加したユーザーを参加させる、既定のチャンネル。<br/>
+     * 参加させない場合は、から文字列 "" を指定すること。
+     */
     private String globalChannel;
 
-    /** サーバーに参加したユーザーに必ず参加させるチャンネル。<br/>
-     *  グローバルチャンネルとは別で指定できる。 */
+    /**
+     * サーバーに参加したユーザーに必ず参加させるチャンネル。<br/>
+     * グローバルチャンネルとは別で指定できる。
+     */
     private List<String> forceJoinChannels;
 
-    /** formatコマンド実行時に、必ず含まれる必要があるキーワード。 */
+    /**
+     * formatコマンド実行時に、必ず含まれる必要があるキーワード。
+     */
     private List<String> formatConstraint;
 
-    /** チャンネルを作成したときに、デフォルトで設定されるフォーマット */
+    /**
+     * チャンネルを作成したときに、デフォルトで設定されるフォーマット
+     */
     private String defaultFormat;
 
-    /** プライベートメッセージを送信するときに、適用されるフォーマット */
+    /**
+     * プライベートメッセージを送信するときに、適用されるフォーマット
+     */
     private String defaultFormatForPrivateMessage;
 
-    /** OPの画面に、全チャンネルの発言内容を表示するかどうか */
+    /**
+     * OPの画面に、全チャンネルの発言内容を表示するかどうか
+     */
     private boolean opListenAllChannel;
 
-    /** チャンネルを新規作成するときに、チャンネル名が満たさなければならない、最低文字列長 */
+    /**
+     * チャンネルを新規作成するときに、チャンネル名が満たさなければならない、最低文字列長
+     */
     private int minChannelNameLength;
 
-    /** チャンネルを新規作成するときに、チャンネル名が満たさなければならない、最大文字列長 */
+    /**
+     * チャンネルを新規作成するときに、チャンネル名が満たさなければならない、最大文字列長
+     */
     private int maxChannelNameLength;
 
-    /** クイックチャンネルチャット機能を有効化するかどうか */
+    /**
+     * クイックチャンネルチャット機能を有効化するかどうか
+     */
     private boolean enableQuickChannelChat;
 
-    /** クイックチャンネルチャット機能に使用する記号 */
+    /**
+     * クイックチャンネルチャット機能に使用する記号
+     */
     private String quickChannelChatSeparator;
 
-    /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
-     *  dynmapがロードされていない場合は、この設定は無視される（false扱い）。 */
+    /**
+     * ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
+     * dynmapがロードされていない場合は、この設定は無視される（false扱い）。
+     */
     private boolean sendBroadcastChannelChatToDynmap;
 
-    /** dynmapへ送信するときに、チャンネルのフォーマットを反映して送信するかどうか。*/
+    /**
+     * dynmapへ送信するときに、チャンネルのフォーマットを反映して送信するかどうか。
+     */
     private boolean sendFormattedMessageToDynmap;
 
-    /** dynmapのWebUIから発言された発言内容を表示するチャンネル。 */
+    /**
+     * dynmapのWebUIから発言された発言内容を表示するチャンネル。
+     */
     private String dynmapChannel;
 
-    /** NGワードの設定 */
+    /**
+     * NGワードの設定
+     */
     private List<String> ngword;
 
-    /** NGワードを発言した人に対して実行するアクション<br/>
-     *  mask = マスクするのみ<br/>
-     *  kick = マスクしてチャンネルからキックする<br/>
-     *  ban = マスクしてチャンネルからBANする */
+    /**
+     * NGワードを発言した人に対して実行するアクション<br/>
+     * mask = マスクするのみ<br/>
+     * kick = マスクしてチャンネルからキックする<br/>
+     * ban = マスクしてチャンネルからBANする
+     */
     private NGWordAction ngwordAction;
 
-    /** NGワードの設定、正規表現マッチング用にコンパイルされたもの */
+    /**
+     * NGワードの設定、正規表現マッチング用にコンパイルされたもの
+     */
     private List<Pattern> ngwordCompiled;
 
-    /** 通常チャット（非チャンネルチャット）の装飾を、LunaChatから行うかどうか */
+    /**
+     * 通常チャット（非チャンネルチャット）の装飾を、LunaChatから行うかどうか
+     */
     private boolean enableNormalChatMessageFormat;
 
-    /** 通常チャットの装飾フォーマット */
+    /**
+     * 通常チャットの装飾フォーマット
+     */
     private String normalChatMessageFormat;
 
-    /** 通常チャットで、カラーコードを使用可能にするかどうか */
+    /**
+     * 通常チャットで、カラーコードを使用可能にするかどうか
+     */
     private boolean enableNormalChatColorCode;
 
-    /** Japanize変換のタイプ<br/>
-     *  none = 日本語変換をしない<br/>
-     *  kana = カナ変換のみする<br/>
-     *  googleime = カナ変換後、GoogleIMEで漢字変換する */
+    /**
+     * Japanize変換のタイプ<br/>
+     * none = 日本語変換をしない<br/>
+     * kana = カナ変換のみする<br/>
+     * googleime = カナ変換後、GoogleIMEで漢字変換する
+     */
     private JapanizeType japanizeType;
 
-    /** Japanize変換の1行表示と2行表示の切り替え<br/>
-     *  1 = 1行表示<br/>
-     *  2 = 2行表示 */
+    /**
+     * Japanize変換の1行表示と2行表示の切り替え<br/>
+     * 1 = 1行表示<br/>
+     * 2 = 2行表示
+     */
     private int japanizeDisplayLine;
 
-    /** Japanize変換の1行表示時のフォーマット */
+    /**
+     * Japanize変換の1行表示時のフォーマット
+     */
     private String japanizeLine1Format;
 
-    /** Japanize変換の2行表示時の2行目のフォーマット */
+    /**
+     * Japanize変換の2行表示時の2行目のフォーマット
+     */
     private String japanizeLine2Format;
 
-    /** 発言に含まれているプレイヤー名を、Japanize変換から除外するかどうか */
+    /**
+     * 発言に含まれているプレイヤー名を、Japanize変換から除外するかどうか
+     */
     private boolean japanizeIgnorePlayerName;
 
-    /** ノンジャパナイズマーカー これが発言の頭に入っている場合は、一時的にjapanizeを実行しない */
+    /**
+     * ノンジャパナイズマーカー これが発言の頭に入っている場合は、一時的にjapanizeを実行しない
+     */
     private String noneJapanizeMarker;
 
-    /** 通常チャットで、JapanizeDisplayLine=2のとき、Japanize変換したあと表示するまでのウェイト(tick)
-     *  隠し設定。 */
+    /**
+     * 通常チャットで、JapanizeDisplayLine=2のとき、Japanize変換したあと表示するまでのウェイト(tick)
+     * 隠し設定。
+     */
     private int japanizeWait;
 
     /**
@@ -157,12 +232,9 @@ public class LunaChatConfig {
      */
     public void reloadConfig() {
 
-        File configFile = new File(
-                LunaChat.getInstance().getDataFolder(), "config.yml");
-        if ( !configFile.exists() ) {
-            //LunaChat.instance.saveDefaultConfig();
-            Utility.copyFileFromJar(LunaChat.getPluginJarFile(),
-                    configFile, "config_ja.yml", false);
+        Path configFile = LunaChat.getInstance().getDataFolder().toPath().resolve("config.yml");
+        if (!Files.exists(configFile)) {
+            LunaChat.getInstance().saveResource("config_ja.yml", false);
         }
 
         LunaChat.getInstance().reloadConfig();
@@ -170,7 +242,7 @@ public class LunaChatConfig {
 
         enableChannelChat = config.getBoolean("enableChannelChat", true);
         playerChatEventListenerPriority
-            = getEventPriority(config.getString("playerChatEventListenerPriority"));
+                = getEventPriority(config.getString("playerChatEventListenerPriority"));
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
         loggingChatToHawkEye = config.getBoolean("loggingChatToHawkEye", true);
@@ -180,24 +252,24 @@ public class LunaChatConfig {
         zeroMemberRemove = config.getBoolean("zeroMemberRemove", false);
         showListOnJoin = config.getBoolean("showListOnJoin", false);
         createChannelOnJoinCommand =
-            config.getBoolean("createChannelOnJoinCommand", false);
+                config.getBoolean("createChannelOnJoinCommand", false);
 
         // チャンネルチャット有効のときだけ、globalChannel設定を読み込む
         // (see issue #58)
-        if ( enableChannelChat ) {
+        if (enableChannelChat) {
             globalChannel = config.getString("globalChannel", "");
         } else {
             globalChannel = "";
         }
         // チャンネルチャット有効のときだけ、forceJoinChannels設定を読み込む
         // (see issue #58)
-        if ( enableChannelChat ) {
+        if (enableChannelChat) {
             forceJoinChannels = config.getStringList("forceJoinChannels");
         } else {
             forceJoinChannels = new ArrayList<>();
         }
 
-        if ( config.contains("formatConstraint") ) {
+        if (config.contains("formatConstraint")) {
             formatConstraint = config.getStringList("formatConstraint");
         } else {
             formatConstraint = new ArrayList<>();
@@ -209,7 +281,7 @@ public class LunaChatConfig {
                 "&f[%color%ch&f]%prefix%username%suffix&a:&f %msg");
         defaultFormatForPrivateMessage =
                 config.getString("defaultFormatForPrivateMessage",
-                "&7[%player -> %to]&f %msg");
+                        "&7[%player -> %to]&f %msg");
 
         opListenAllChannel = config.getBoolean("opListenAllChannel", false);
 
@@ -220,15 +292,15 @@ public class LunaChatConfig {
         quickChannelChatSeparator = config.getString("quickChannelChatSeparator", ":");
 
         sendBroadcastChannelChatToDynmap =
-            config.getBoolean("sendBroadcastChannelChatToDynmap", true);
+                config.getBoolean("sendBroadcastChannelChatToDynmap", true);
         sendFormattedMessageToDynmap =
-            config.getBoolean("sendFormattedMessageToDynmap", false);
+                config.getBoolean("sendFormattedMessageToDynmap", false);
         dynmapChannel = config.getString("dynmapChannel", "");
         ngword = config.getStringList("ngword");
         ngwordAction = NGWordAction.fromID(config.getString("ngwordAction", "mask"));
 
         ngwordCompiled = new ArrayList<>();
-        for ( String word : ngword ) {
+        for (String word : ngword) {
             ngwordCompiled.add(Pattern.compile(word));
         }
 
@@ -241,7 +313,7 @@ public class LunaChatConfig {
 
         japanizeType = JapanizeType.fromID(config.getString("japanizeType"), JapanizeType.KANA);
         japanizeDisplayLine = config.getInt("japanizeDisplayLine", 2);
-        if ( japanizeDisplayLine != 1 && japanizeDisplayLine != 2 ) {
+        if (japanizeDisplayLine != 1 && japanizeDisplayLine != 2) {
             japanizeDisplayLine = 2;
         }
         japanizeLine1Format = config.getString("japanizeLine1Format", "%msg &6(%japanize)");
@@ -251,8 +323,8 @@ public class LunaChatConfig {
         japanizeWait = config.getInt("japanizeWait", 1);
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
-        if ( !globalChannel.equals("") &&
-                !globalChannel.matches("[0-9a-zA-Z\\-_]{1,20}") ) {
+        if (!globalChannel.equals("") &&
+                !globalChannel.matches("[0-9a-zA-Z\\-_]{1,20}")) {
             String msg = String.format(
                     Resources.get("errmsgCannotUseForGlobal"), globalChannel);
             LunaChat.getInstance().getLogger().warning(msg);
@@ -262,6 +334,7 @@ public class LunaChatConfig {
 
     /**
      * チャンネルチャット機能を利用可能にするかどうか
+     *
      * @return enableChannelChatを返す
      */
     public boolean isDisableChannelChat() {
@@ -270,6 +343,7 @@ public class LunaChatConfig {
 
     /**
      * チャットイベントの処理優先度
+     *
      * @return playerChatEventListenerPriorityを返す
      */
     EventPriority getPlayerChatEventListenerPriority() {
@@ -278,6 +352,7 @@ public class LunaChatConfig {
 
     /**
      * チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか
+     *
      * @return noJoinAsGlobalを返す
      */
     boolean isNoJoinAsGlobal() {
@@ -286,6 +361,7 @@ public class LunaChatConfig {
 
     /**
      * チャンネルチャットの発言内容を、ログに残すかどうか
+     *
      * @return loggingChatを返す
      */
     public boolean isLoggingChat() {
@@ -294,6 +370,7 @@ public class LunaChatConfig {
 
     /**
      * チャンネルチャットの発言内容を、HawkEyeに記録するかどうか
+     *
      * @return loggingChatToHawkEye
      */
     public boolean isLoggingChatToHawkEye() {
@@ -302,6 +379,7 @@ public class LunaChatConfig {
 
     /**
      * チャンネルチャットの発言内容を、Prismに記録するかどうか
+     *
      * @return loggingChatToPrism
      */
     public boolean isLoggingChatToPrism() {
@@ -310,6 +388,7 @@ public class LunaChatConfig {
 
     /**
      * チャンネルチャットの発言内容を、コンソールに表示するかどうか
+     *
      * @return displayChatOnConsoleを返す
      */
     public boolean isDisplayChatOnConsole() {
@@ -318,6 +397,7 @@ public class LunaChatConfig {
 
     /**
      * グローバルマーカー  これが発言の頭に入っている場合は、強制的にグローバル発言になる
+     *
      * @return globalMarkerを返す
      */
     public String getGlobalMarker() {
@@ -326,6 +406,7 @@ public class LunaChatConfig {
 
     /**
      * 全てのメンバーが退出したときに、チャンネルを削除するかどうか
+     *
      * @return zeroMemberRemoveを返す
      */
     public boolean isZeroMemberRemove() {
@@ -334,6 +415,7 @@ public class LunaChatConfig {
 
     /**
      * ログイン時に、参加中チャンネルを表示するかどうか
+     *
      * @return showListOnJoinを返す
      */
     boolean isShowListOnJoin() {
@@ -342,6 +424,7 @@ public class LunaChatConfig {
 
     /**
      * /ch join コマンドで存在しないチャンネルを指定したときに、チャンネルを新規作成して入室するかどうか
+     *
      * @return createChannelOnJoinCommandを返す
      */
     public boolean isCreateChannelOnJoinCommand() {
@@ -351,6 +434,7 @@ public class LunaChatConfig {
     /**
      * サーバーに初参加したユーザーを参加させる、既定のチャンネル。<br/>
      * 参加させない場合は、から文字列 "" を指定すること。
+     *
      * @return globalChannelを返す
      */
     public String getGlobalChannel() {
@@ -360,6 +444,7 @@ public class LunaChatConfig {
     /**
      * サーバーに参加したユーザーに必ず参加させるチャンネル。<br/>
      * グローバルチャンネルとは別で指定できる。
+     *
      * @return globalChannelを返す
      */
     public List<String> getForceJoinChannels() {
@@ -368,6 +453,7 @@ public class LunaChatConfig {
 
     /**
      * formatコマンド実行時に、必ず含まれる必要があるキーワード。
+     *
      * @return formatConstraintを返す
      */
     public List<String> getFormatConstraint() {
@@ -376,6 +462,7 @@ public class LunaChatConfig {
 
     /**
      * チャンネルを作成したときに、デフォルトで設定されるフォーマット。
+     *
      * @return defaultFormatを返す
      */
     public String getDefaultFormat() {
@@ -384,6 +471,7 @@ public class LunaChatConfig {
 
     /**
      * プライベートメッセージを送信するときに、適用されるフォーマット。
+     *
      * @return defaultFormatForPrivateMessageを返す
      */
     public String getDefaultFormatForPrivateMessage() {
@@ -392,6 +480,7 @@ public class LunaChatConfig {
 
     /**
      * OPの画面に、全チャンネルの発言内容を表示するかどうか
+     *
      * @return opListenAllChannel opListenAllChannelを返す
      */
     public boolean isOpListenAllChannel() {
@@ -400,6 +489,7 @@ public class LunaChatConfig {
 
     /**
      * チャンネルを新規作成するときに、チャンネル名が満たさなければならない、最低文字列長
+     *
      * @return minChannelNameLength
      */
     public int getMinChannelNameLength() {
@@ -408,6 +498,7 @@ public class LunaChatConfig {
 
     /**
      * チャンネルを新規作成するときに、チャンネル名が満たさなければならない、最大文字列長
+     *
      * @return maxChannelNameLength
      */
     public int getMaxChannelNameLength() {
@@ -416,6 +507,7 @@ public class LunaChatConfig {
 
     /**
      * クイックチャンネルチャット機能を有効化するかどうかを取得する
+     *
      * @return enableQuickChannelChat
      */
     boolean isEnableQuickChannelChat() {
@@ -424,6 +516,7 @@ public class LunaChatConfig {
 
     /**
      * クイックチャンネルチャット機能に使用する記号
+     *
      * @return quickChannelChatSeparator
      */
     String getQuickChannelChatSeparator() {
@@ -432,6 +525,7 @@ public class LunaChatConfig {
 
     /**
      * NGワード
+     *
      * @return ngwordを返す
      * @deprecated 全て正規表現に変更するため、getNgwordCompiledを使用してください
      */
@@ -442,9 +536,10 @@ public class LunaChatConfig {
 
     /**
      * NGワードを発言した人に対して実行するアクション<br/>
-     *  mask = マスクするのみ<br/>
-     *  kick = マスクしてチャンネルからキックする<br/>
-     *  ban = マスクしてチャンネルからBANする
+     * mask = マスクするのみ<br/>
+     * kick = マスクしてチャンネルからキックする<br/>
+     * ban = マスクしてチャンネルからBANする
+     *
      * @return ngwordActionを返す
      */
     public NGWordAction getNgwordAction() {
@@ -453,6 +548,7 @@ public class LunaChatConfig {
 
     /**
      * コンパイルされたNGワード
+     *
      * @return ngwordCompiledを返す
      */
     public List<Pattern> getNgwordCompiled() {
@@ -462,6 +558,7 @@ public class LunaChatConfig {
     /**
      * ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
      * dynmapがロードされていない場合は、この設定は無視される（false扱い）。
+     *
      * @return sendBroadcastChannelChatToDynmapを返す
      */
     public boolean isSendBroadcastChannelChatToDynmap() {
@@ -470,6 +567,7 @@ public class LunaChatConfig {
 
     /**
      * dynmapへ送信するときに、チャンネルのフォーマットを反映して送信するかどうか。
+     *
      * @return sendFormattedMessageToDynmapを返す
      */
     public boolean isSendFormattedMessageToDynmap() {
@@ -478,6 +576,7 @@ public class LunaChatConfig {
 
     /**
      * dynmapのWebUIから発言された発言内容を表示するチャンネル。
+     *
      * @return dynmapChannel dynmapの発言を表示するチャンネル名を返す
      */
     public String getDynmapChannel() {
@@ -486,6 +585,7 @@ public class LunaChatConfig {
 
     /**
      * 通常チャット（非チャンネルチャット）の装飾を、LunaChatから行うかどうか
+     *
      * @return enableNormalChatMessageFormatを返す
      */
     boolean isEnableNormalChatMessageFormat() {
@@ -494,6 +594,7 @@ public class LunaChatConfig {
 
     /**
      * 通常チャットの装飾フォーマット
+     *
      * @return normalChatMessageFormatを返す
      */
     String getNormalChatMessageFormat() {
@@ -502,9 +603,10 @@ public class LunaChatConfig {
 
     /**
      * Japanize変換のタイプ<br/>
-     *  none = 日本語変換をしない<br/>
-     *  kana = カナ変換のみする<br/>
-     *  googleime = カナ変換後、GoogleIMEで漢字変換する
+     * none = 日本語変換をしない<br/>
+     * kana = カナ変換のみする<br/>
+     * googleime = カナ変換後、GoogleIMEで漢字変換する
+     *
      * @return japanizeTypeを返す
      */
     public JapanizeType getJapanizeType() {
@@ -513,8 +615,9 @@ public class LunaChatConfig {
 
     /**
      * Japanize変換の1行表示と2行表示の切り替え<br/>
-     *  1 = 1行表示<br/>
-     *  2 = 2行表示<br/>
+     * 1 = 1行表示<br/>
+     * 2 = 2行表示<br/>
+     *
      * @return japanizeDisplayLineを返す
      */
     public int getJapanizeDisplayLine() {
@@ -523,6 +626,7 @@ public class LunaChatConfig {
 
     /**
      * Japanize変換の1行表示時のフォーマット
+     *
      * @return japanizeLine1Formatを返す
      */
     public String getJapanizeLine1Format() {
@@ -531,6 +635,7 @@ public class LunaChatConfig {
 
     /**
      * Japanize変換の2行表示時の2行目のフォーマット
+     *
      * @return japanizeLine2Formatを返す
      */
     public String getJapanizeLine2Format() {
@@ -539,6 +644,7 @@ public class LunaChatConfig {
 
     /**
      * 発言に含まれているプレイヤー名を、Japanize変換から除外するかどうか
+     *
      * @return japanizeIgnorePlayerName
      */
     public boolean isJapanizeIgnorePlayerName() {
@@ -547,6 +653,7 @@ public class LunaChatConfig {
 
     /**
      * ノンジャパナイズマーカー これが発言の頭に入っている場合は、一時的にjapanizeを実行しない
+     *
      * @return noneJapanizeMarkerを返す
      */
     public String getNoneJapanizeMarker() {
@@ -555,6 +662,7 @@ public class LunaChatConfig {
 
     /**
      * 通常チャットで、JapanizeDisplayLine=2のとき、Japanize変換したあと表示するまでのウェイト(tick)
+     *
      * @return japanizeWaitを返す
      */
     int getJapanizeWait() {
@@ -563,6 +671,7 @@ public class LunaChatConfig {
 
     /**
      * 通常チャットで、カラーコードを使用可能にするかどうか
+     *
      * @return enableNormalChatColorCodeを返す
      */
     boolean isEnableNormalChatColorCode() {
@@ -571,22 +680,23 @@ public class LunaChatConfig {
 
     /**
      * 指定された文字列から、対応するEventPriorityを返す。
+     *
      * @param value 文字列
      * @return EventPriority
      */
     private static EventPriority getEventPriority(String value) {
 
-        if ( value == null ) return EventPriority.HIGH;
+        if (value == null) return EventPriority.HIGH;
 
-        if ( value.equalsIgnoreCase("LOWEST") ) {
+        if (value.equalsIgnoreCase("LOWEST")) {
             return EventPriority.LOWEST;
-        } else if ( value.equalsIgnoreCase("LOW") ) {
+        } else if (value.equalsIgnoreCase("LOW")) {
             return EventPriority.LOW;
-        } else if ( value.equalsIgnoreCase("NORMAL") ) {
+        } else if (value.equalsIgnoreCase("NORMAL")) {
             return EventPriority.NORMAL;
-        } else if ( value.equalsIgnoreCase("HIGH") ) {
+        } else if (value.equalsIgnoreCase("HIGH")) {
             return EventPriority.HIGH;
-        } else if ( value.equalsIgnoreCase("HIGHEST") ) {
+        } else if (value.equalsIgnoreCase("HIGHEST")) {
             return EventPriority.HIGHEST;
         }
 

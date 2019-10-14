@@ -700,11 +700,6 @@ public abstract class Channel implements ConfigurationSerializable {
      * @param data チャンネルの実コンフィグデータ
      */
     private static boolean isNeedToSaveForUUIDUpdate(Map<String, Object> data) {
-
-        if (!Utility.isCB178orLater()) {
-            return false;
-        }
-
         List<String> members = castToStringList(data.get(KEY_MEMBERS));
         if (members.size() == 0) {
             return false;
