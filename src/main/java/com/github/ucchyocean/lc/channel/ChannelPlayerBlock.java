@@ -124,9 +124,7 @@ public class ChannelPlayerBlock extends ChannelPlayer {
      */
     @Override
     public Location getLocation() {
-        if (sender != null) {
-            return sender.getBlock().getLocation();
-        }
+        if (sender != null) return sender.getBlock().getLocation();
         return null;
     }
 
