@@ -319,7 +319,7 @@ class PlayerListener implements Listener {
             // 置き換え設定になっていて、発言者がパーミッションを持っているなら、置き換えする
             if (config.isEnableNormalChatColorCode() &&
                     event.getPlayer().hasPermission("lunachat.allowcc")) {
-                message = Utility.replaceColorCode(message);
+                message = ChatColor.translateAlternateColorCodes('&', message);
             }
 
             // hideされているプレイヤーを、recipientから抜く
@@ -355,7 +355,7 @@ class PlayerListener implements Listener {
 
                 if (lineType == 1) {
 
-                    String taskFormat = Utility.replaceColorCode(config.getJapanizeLine1Format());
+                    String taskFormat = ChatColor.translateAlternateColorCodes('&', config.getJapanizeLine1Format());
 
                     String japanized = api.japanize(
                             kanaTemp, config.getJapanizeType());
@@ -366,7 +366,7 @@ class PlayerListener implements Listener {
 
                 } else {
 
-                    String taskFormat = Utility.replaceColorCode(config.getJapanizeLine2Format());
+                    String taskFormat = ChatColor.translateAlternateColorCodes('&', config.getJapanizeLine2Format());
 
                     DelayedJapanizeNormalChatTask task = new DelayedJapanizeNormalChatTask(
                             message, config.getJapanizeType(), player, taskFormat, event);
@@ -491,7 +491,7 @@ class PlayerListener implements Listener {
             format = format.replace("%world", worldname);
         }
 
-        return Utility.replaceColorCode(format);
+        return ChatColor.translateAlternateColorCodes('&', format);
     }
 
     /**

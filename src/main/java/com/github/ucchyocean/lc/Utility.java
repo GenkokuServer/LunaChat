@@ -5,15 +5,7 @@
  */
 package com.github.ucchyocean.lc;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * ユーティリティクラス
@@ -21,19 +13,6 @@ import java.util.Collection;
  * @author ucchy
  */
 public class Utility {
-
-    /**
-     * 文字列内のカラーコード候補（&a）を、カラーコード（§a）に置き換えする
-     *
-     * @param source 置き換え元の文字列
-     * @return 置き換え後の文字列
-     */
-    public static String replaceColorCode(String source) {
-        if (source == null)
-            return null;
-        return ChatColor.translateAlternateColorCodes('&', source);
-    }
-
     /**
      * 文字列に含まれているカラーコード（§a）を除去して返す
      *

@@ -52,7 +52,7 @@ public abstract class SubCommandAbst {
             msg = msg.replace("%username", "");
             msg = msg.replace("%player", "");
         }
-        msg = Utility.replaceColorCode(msg);
+        msg = ChatColor.translateAlternateColorCodes('&', msg);
         channel.sendMessage(null, msg, null, true, "system", false);
     }
 
@@ -81,7 +81,7 @@ public abstract class SubCommandAbst {
             msg = msg.replace("%username", "");
             msg = msg.replace("%player", "");
         }
-        msg = Utility.replaceColorCode(msg);
+        msg = ChatColor.translateAlternateColorCodes('&', msg);
         channel.sendMessage(null, msg, null, true, "system", false);
     }
 

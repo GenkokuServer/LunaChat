@@ -54,7 +54,7 @@ public class Resources {
         }
 
         String def = defaultMessages.getString(key);
-        return Utility.replaceColorCode(resources.getString(key, def));
+        return ChatColor.translateAlternateColorCodes('&', resources.getString(key, def));
     }
 
     /**

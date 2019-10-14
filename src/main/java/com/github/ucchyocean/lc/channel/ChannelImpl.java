@@ -139,7 +139,7 @@ public class ChannelImpl extends Channel {
         // カラーコード置き換え
         // チャンネルで許可されていて、発言者がパーミッションを持っている場合に置き換える
         if (isAllowCC() && player.hasPermission("lunachat.allowcc")) {
-            maskedMessage = Utility.replaceColorCode(maskedMessage);
+            maskedMessage = ChatColor.translateAlternateColorCodes('&', maskedMessage);
         }
 
         // イベントコール
@@ -176,11 +176,11 @@ public class ChannelImpl extends Channel {
             String jpFormat;
             String messageFormat = null;
             if (lineType == 1) {
-                jpFormat = Utility.replaceColorCode(config.getJapanizeLine1Format());
+                jpFormat = ChatColor.translateAlternateColorCodes('&', config.getJapanizeLine1Format());
                 messageFormat = msgFormat;
                 isIncludeSyncChat = false;
             } else {
-                jpFormat = Utility.replaceColorCode(config.getJapanizeLine2Format());
+                jpFormat = ChatColor.translateAlternateColorCodes('&', config.getJapanizeLine2Format());
             }
 
             // タスクを作成しておく
@@ -289,7 +289,7 @@ public class ChannelImpl extends Channel {
 
         // カラーコード置き換え チャンネルで許可されている場合に置き換える。
         if (isAllowCC()) {
-            maskedMessage = Utility.replaceColorCode(maskedMessage);
+            maskedMessage = ChatColor.translateAlternateColorCodes('&', maskedMessage);
         }
 
         // メッセージの送信
@@ -755,7 +755,7 @@ public class ChannelImpl extends Channel {
             msg = msg.replace("%world", "");
         }
 
-        return Utility.replaceColorCode(msg);
+        return ChatColor.translateAlternateColorCodes('&', msg);
     }
 
     /**
@@ -772,7 +772,7 @@ public class ChannelImpl extends Channel {
         msg = msg.replace("%username", playerName);
         msg = msg.replace("%player", playerName);
 
-        return Utility.replaceColorCode(msg);
+        return ChatColor.translateAlternateColorCodes('&', msg);
     }
 
     /**
