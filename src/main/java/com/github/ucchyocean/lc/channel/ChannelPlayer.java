@@ -5,7 +5,6 @@
  */
 package com.github.ucchyocean.lc.channel;
 
-import com.github.ucchyocean.lc.Utility;
 import org.bukkit.Location;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
@@ -152,7 +151,6 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
             String id = nameOrUuid.substring(1);
             return new ChannelPlayerUUID(id);
         }
-
         return ChannelPlayerUUID.getChannelPlayerUUIDFromName(nameOrUuid);
     }
 
