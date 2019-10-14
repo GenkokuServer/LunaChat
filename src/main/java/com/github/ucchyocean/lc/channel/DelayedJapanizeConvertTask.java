@@ -12,6 +12,7 @@ import com.github.ucchyocean.lc.japanize.IMEConverter;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 import com.github.ucchyocean.lc.japanize.KanaConverter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -64,15 +65,14 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
      * @return 処理を実行したかどうか（イベントでキャンセルされた場合はfalseになります）
      */
     boolean runSync() {
-
         // 変換対象外のキーワード
         HashMap<String, String> keywordMap = new HashMap<>();
         ArrayList<String> keywords = new ArrayList<>();
+
         if (LunaChat.getInstance().getLunaChatConfig().isJapanizeIgnorePlayerName())
             Bukkit.getOnlinePlayers().forEach(player -> keywords.add(player.getName()));
 
-        HashMap<String, String> dictionary =
-                LunaChat.getInstance().getLunaChatAPI().getAllDictionary();
+        HashMap<String, String> dictionary = LunaChat.getInstance().getLunaChatAPI().getAllDictionary();
 
         // カラーコード削除、URL削除
         String deletedURL = ChatColor.stripColor(org.replaceAll(REGEX_URL, " "));
@@ -88,6 +88,7 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
                 keywordMap.put(key, keyword);
             }
         }
+
         for (String dickey : dictionary.keySet()) {
             if (keywordLocked.contains(dickey)) {
                 index++;
@@ -101,18 +102,13 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
         String japanized = KanaConverter.conv(keywordLocked);
 
         // IME変換
-        if (type == JapanizeType.GOOGLE_IME) {
-            japanized = IMEConverter.convByGoogleIME(japanized);
-        }
+        if (type == JapanizeType.GOOGLE_IME) japanized = IMEConverter.convByGoogleIME(japanized);
 
         // キーワードのアンロック
-        for (String key : keywordMap.keySet()) {
-            japanized = japanized.replace(key, keywordMap.get(key));
-        }
+        for (String key : keywordMap.keySet()) japanized = japanized.replace(key, keywordMap.get(key));
 
         // 変換後の文字列にNGワードが含まれている場合は、マスクする
-        for (Pattern pattern :
-                LunaChat.getInstance().getLunaChatConfig().getNgwordCompiled()) {
+        for (Pattern pattern : LunaChat.getInstance().getLunaChatConfig().getNgwordCompiled()) {
             Matcher matcher = pattern.matcher(japanized);
             if (matcher.find()) {
                 japanized = matcher.replaceAll(
@@ -122,12 +118,10 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
 
         // イベントコール
         String channelName = (channel == null) ? "" : channel.getName();
-        LunaChatPostJapanizeEvent event =
-                new LunaChatPostJapanizeEvent(channelName, player, org, japanized);
+        LunaChatPostJapanizeEvent event = new LunaChatPostJapanizeEvent(channelName, player, org, japanized);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
-            return false;
-        }
+        if (event.isCancelled()) return false;
+
         japanized = event.getJapanized();
 
         // フォーマットする
@@ -156,7 +150,7 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
 
         String half = Integer.toString(digit);
         StringBuilder result = new StringBuilder();
-        for (int index = 0; index < half.length(); index++) {
+        for (int index = 0, l = half.length(); index < l; index++) {
             switch (half.charAt(index)) {
                 case '0':
                     result.append("０");
