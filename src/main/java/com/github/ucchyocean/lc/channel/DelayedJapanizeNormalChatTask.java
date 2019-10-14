@@ -8,7 +8,6 @@ package com.github.ucchyocean.lc.channel;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 /**
@@ -42,21 +41,16 @@ public class DelayedJapanizeNormalChatTask extends DelayedJapanizeConvertTask {
      */
     @Override
     public void run() {
-
         if (runSync()) {
-
             String result = getResult();
 
             // 送信
-            for (Player p : event.getRecipients()) {
-                p.sendMessage(result);
-            }
+            event.getRecipients().forEach(p -> p.sendMessage(result));
             Bukkit.getConsoleSender().sendMessage(result);
 
             // 設定に応じてdynmapへ送信する
-            if (LunaChat.getInstance().getLunaChatConfig().
-                    isSendBroadcastChannelChatToDynmap() &&
-                    LunaChat.getInstance().getDynmap() != null) {
+            if (LunaChat.getInstance().getLunaChatConfig().isSendBroadcastChannelChatToDynmap()
+                    && LunaChat.getInstance().getDynmap() != null) {
                 if (player != null && player.getPlayer() != null)
                     LunaChat.getInstance().getDynmap().chat(player.getPlayer(), result);
                 else
