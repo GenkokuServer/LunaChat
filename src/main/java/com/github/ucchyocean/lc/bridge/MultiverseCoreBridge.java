@@ -24,19 +24,12 @@ public class MultiverseCoreBridge {
     private Core mvc;
 
     /**
-     * コンストラクタは使用不可
-     */
-    private MultiverseCoreBridge() {
-    }
-
-    /**
      * MultiverseCore-apiをロードする
      *
      * @param plugin MultiverseCoreのプラグインインスタンス
      * @return MultiverseCoreBridge
      */
     public static MultiverseCoreBridge load(Plugin plugin) {
-
         if (plugin instanceof MultiverseCore) {
             MultiverseCoreBridge bridge = new MultiverseCoreBridge();
             bridge.mvc = (Core) plugin;
@@ -53,7 +46,6 @@ public class MultiverseCoreBridge {
      * @return エイリアス名、取得できない場合はnullが返される
      */
     public String getWorldAlias(String worldName) {
-
         MultiverseWorld mvworld = mvc.getMVWorldManager().getMVWorld(worldName);
         if (mvworld != null) {
             return mvworld.getColoredWorldString();
@@ -69,7 +61,6 @@ public class MultiverseCoreBridge {
      * @return エイリアス名、取得できない場合はnullが返される
      */
     public String getWorldAlias(World world) {
-
         MultiverseWorld mvworld = mvc.getMVWorldManager().getMVWorld(world);
         if (mvworld != null) {
             return mvworld.getColoredWorldString();

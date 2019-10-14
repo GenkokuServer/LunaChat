@@ -29,19 +29,12 @@ public class DynmapBridge implements Listener {
     private DynmapAPI dynmap;
 
     /**
-     * コンストラクタは使用不可
-     */
-    private DynmapBridge() {
-    }
-
-    /**
      * dynmap-apiをロードする
      *
      * @param plugin dynmap-apiのプラグインインスタンス
      * @return DynmapBridge
      */
     public static DynmapBridge load(Plugin plugin) {
-
         if (plugin instanceof DynmapAPI) {
             DynmapBridge bridge = new DynmapBridge();
             bridge.dynmap = (DynmapAPI) plugin;
@@ -58,7 +51,6 @@ public class DynmapBridge implements Listener {
      * @param message 発言内容
      */
     public void chat(Player player, String message) {
-
         dynmap.postPlayerMessageToWeb(player, message);
     }
 
@@ -68,7 +60,6 @@ public class DynmapBridge implements Listener {
      * @param message メッセージ
      */
     public void broadcast(String message) {
-
         dynmap.sendBroadcastToWeb(null, message);
     }
 
@@ -88,14 +79,12 @@ public class DynmapBridge implements Listener {
         if (!dchannel.equals("")) {
             // dynmapChannelが設定されている場合
             channel = api.getChannel(dchannel);
-
         } else {
             String gchannel = config.getGlobalChannel();
             if (!gchannel.equals("")) {
                 // dynmapChannelが設定されていなくて、
                 // globalChannelが設定されている場合
                 channel = api.getChannel(gchannel);
-
             }
         }
 

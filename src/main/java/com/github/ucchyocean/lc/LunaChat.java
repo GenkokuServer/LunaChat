@@ -70,7 +70,7 @@ public class LunaChat extends JavaPlugin {
         // Vault のロード
         Plugin temp = getServer().getPluginManager().getPlugin("Vault");
         if ( temp != null ) {
-            vaultchat = VaultChatBridge.load(temp);
+            vaultchat = VaultChatBridge.load();
         }
 
         // Dynmap のロード

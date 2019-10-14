@@ -8,7 +8,6 @@ package com.github.ucchyocean.lc.bridge;
 import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 /**
@@ -24,27 +23,17 @@ public class VaultChatBridge {
     private Chat chatPlugin;
 
     /**
-     * コンストラクタは使用不可
-     */
-    private VaultChatBridge() {
-    }
-
-    /**
      * vault-chatをロードする
      *
-     * @param plugin vaultのプラグインインスタンス
      * @return ロードしたブリッジのインスタンス
      */
-    public static VaultChatBridge load(Plugin plugin) {
-
-        RegisteredServiceProvider<Chat> chatProvider =
-                Bukkit.getServicesManager().getRegistration(Chat.class);
+    public static VaultChatBridge load() {
+        RegisteredServiceProvider<Chat> chatProvider = Bukkit.getServicesManager().getRegistration(Chat.class);
         if (chatProvider != null) {
             VaultChatBridge bridge = new VaultChatBridge();
             bridge.chatPlugin = chatProvider.getProvider();
             return bridge;
         }
-
         return null;
     }
 
