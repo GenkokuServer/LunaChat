@@ -5,46 +5,45 @@
  */
 package com.github.ucchyocean.lc;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.IOException;
+import java.nio.file.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+
 /**
  * LunaChatロガー
+ *
  * @author ucchy
  */
 public class LunaChatLogger {
 
-    private final SimpleDateFormat lformat;
-    private final SimpleDateFormat dformat;
+    private final DateTimeFormatter lformat;
+    private final DateTimeFormatter dformat;
+    private final DateTimeFormatter logYearDateFormat;
 
-    private final SimpleDateFormat logYearDateFormat;
+    private final String lineSeparator;
 
-    private File file;
+    private Path file;
     private String dirPath;
     private final String name;
 
     /**
      * コンストラクタ
+     *
      * @param name ログ名
      */
     public LunaChatLogger(String name) {
+        lformat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        dformat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        logYearDateFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-        lformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        dformat = new SimpleDateFormat("yyyy-MM-dd");
-
-        logYearDateFormat = new SimpleDateFormat("yyyyMMdd");
+        lineSeparator = System.getProperty("line.separator");
 
         this.name = name;
         checkDir();
@@ -52,8 +51,9 @@ public class LunaChatLogger {
 
     /**
      * ログを出力する
+     *
      * @param message ログ内容
-     * @param player 発言者名
+     * @param player  発言者名
      */
     public synchronized void log(final String message, final String player) {
 
@@ -63,17 +63,11 @@ public class LunaChatLogger {
         new BukkitRunnable() {
             @Override
             public void run() {
-
-                String msg = ChatColor.stripColor(message).replace(",", "，");
-                try (FileWriter writer = new FileWriter(file, true)) {
-                    String str = lformat.format(new Date()) +
-                            "," + msg + "," + player;
-                    writer.write(str + "\r\n");
-                    writer.flush();
-                } catch (Exception e) {
+                try {
+                    Files.write(file, formatLog(player, ChatColor.stripColor(message)).getBytes(), StandardOpenOption.APPEND);
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-                // do nothing.
 
             }
         }.runTaskAsynchronously(LunaChat.getInstance());
@@ -81,18 +75,18 @@ public class LunaChatLogger {
 
     /**
      * ログファイルを読み込んで、ログデータを取得する
-     * @param player プレイヤー名、フィルタしないならnullを指定すること
-     * @param filter フィルタ、フィルタしないならnullを指定すること
-     * @param date 日付、今日のデータを取得するならnullを指定すること
+     *
+     * @param player  プレイヤー名、フィルタしないならnullを指定すること
+     * @param filter  フィルタ、フィルタしないならnullを指定すること
+     * @param date    日付、今日のデータを取得するならnullを指定すること
      * @param reverse 逆順取得
      * @return ログデータ
      */
-    public ArrayList<String> getLog(
-            String player, String filter, String date, boolean reverse) {
+    public ArrayList<String> getLog(String player, String filter, String date, boolean reverse) {
 
         // 指定された日付のログを取得する
-        File f = getLogFile(date);
-        if ( f == null ) {
+        Path f = getLogFile(date);
+        if (f == null) {
             return new ArrayList<>();
         }
 
@@ -100,31 +94,31 @@ public class LunaChatLogger {
         ArrayList<String> data = readAllLines(f);
 
         // プレイヤー指定なら、一致するプレイヤー名が含まれているログに絞る
-        if ( player != null ) {
+        if (player != null) {
             ArrayList<String> temp = new ArrayList<>(data);
             data = new ArrayList<>();
-            for ( String t : temp ) {
+            for (String t : temp) {
                 String[] line = t.split(",");
-                if ( line.length >= 3 && line[2].contains(player) ) {
+                if (line.length >= 3 && line[2].contains(player)) {
                     data.add(t);
                 }
             }
         }
 
         // フィルタ指定なら、指定のキーワードが含まれているログに絞る
-        if ( filter != null ) {
+        if (filter != null) {
             ArrayList<String> temp = new ArrayList<>(data);
             data = new ArrayList<>();
-            for ( String t : temp ) {
+            for (String t : temp) {
                 String[] line = t.split(",");
-                if ( line.length >= 2 && line[1].contains(filter) ) {
+                if (line.length >= 2 && line[1].contains(filter)) {
                     data.add(t);
                 }
             }
         }
 
         // 逆順が指定されているなら、逆順に並び替える
-        if ( reverse ) {
+        if (reverse) {
             Collections.reverse(data);
         }
 
@@ -133,65 +127,48 @@ public class LunaChatLogger {
 
     /**
      * テキストファイルの内容を読み出す。
+     *
      * @param file ファイル
      * @return 内容
      */
-    private ArrayList<String> readAllLines(File file) {
-
-        ArrayList<String> data = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-                if (line.length() > 0) {
-                    data.add(line);
-                }
-            }
+    private ArrayList<String> readAllLines(Path file) {
+        try {
+            return new ArrayList<>(Files.readAllLines(file));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // do nothing.
-
-        return data;
+        return new ArrayList<>();
     }
 
     /**
      * 指定された日付のログファイルを取得します。
      * 取得できない場合は、nullを返します。
+     *
      * @param date 日付
      * @return 指定された日付のログファイル
      */
-    private File getLogFile(String date) {
-
-        if ( date == null ) {
+    private Path getLogFile(String date) {
+        if (date == null) {
             return file;
         }
 
-        Date d;
-        try {
-            if ( date.matches("[0-9]{4}") ) {
-                date = Calendar.getInstance().get(Calendar.YEAR) + date;
-            }
-            if ( date.matches("[0-9]{8}") ) {
-                d = logYearDateFormat.parse(date);
-            } else {
-                return null;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        LocalDate d;
+
+        if (date.matches("[0-9]{4}")) {
+            date = LocalDate.now().getYear() + date;
+        }
+
+        if (date.matches("[0-9]{8}")) {
+            d = LocalDate.parse(date, logYearDateFormat);
+        } else {
             return null;
         }
 
-        File folder = new File(getFolderPath(d));
-        if ( !folder.exists() || !folder.isDirectory() ) {
-            return null;
-        }
+        Path folder = Paths.get(getFolderPath(d));
+        if (!Files.isDirectory(folder) || !Files.exists(folder)) return null;
 
-        File f = new File(folder, name + ".log");
-        if ( !f.exists() ) {
-            return null;
-        }
+        Path f = folder.resolve(name + ".log");
+        if (Files.exists(folder.resolve(name + ".log"))) return null;
 
         return f;
     }
@@ -201,29 +178,36 @@ public class LunaChatLogger {
      */
     private void checkDir() {
 
-        String temp = getFolderPath(new Date());
-        if ( temp.equals(dirPath) ) {
-            return;
-        }
+        String temp = getFolderPath(LocalDate.now());
+
+        if (temp.equals(dirPath)) return;
+
         dirPath = temp;
 
-        File dir = new File(dirPath);
-        if ( !dir.exists() || !dir.isDirectory() ) {
-            dir.mkdirs();
+        Path dir = Paths.get(dirPath);
+        if (!Files.isDirectory(dir) || !Files.exists(dir)) {
+            try {
+                Files.createDirectories(dir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        file = new File(dir, name + ".log");
+        file = dir.resolve(name + ".log");
     }
 
     /**
      * 指定された日付のログファイル名を生成して返します。
+     *
      * @param date 日付
      * @return ログファイル名
      */
-    private String getFolderPath(Date date) {
+    private String getFolderPath(LocalDate date) {
+        return LunaChat.getInstance().getDataFolder() + FileSystems.getDefault().getSeparator() +
+                "logs" + FileSystems.getDefault().getSeparator() + dformat.format(date);
+    }
 
-        return LunaChat.getInstance().getDataFolder() +
-                File.separator + "logs" +
-                File.separator + dformat.format(date);
+    private String formatLog(String player, String msg) {
+        return lformat.format(LocalDateTime.now()) + "," + msg + "," + player + lineSeparator;
     }
 }
