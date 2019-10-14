@@ -42,12 +42,8 @@ public class DelayedJapanizeChannelChatToBungeeTask extends DelayedJapanizeConve
      */
     @Override
     public void run() {
-        if (runSync()) {
-            String message = getResult();
+        if (runSync())
             LunaChat.getInstance().getPluginMessageChannelManager()
-                    .sendBungeeMessage(channel.getName(), player.getPlayer(), message, lineFormat);
-
-        }
+                    .sendBungeeMessage(channel.getName(), player.getPlayer(), getResult(), lineFormat);
     }
-
 }
