@@ -141,7 +141,12 @@ public class LunaChatCommand implements CommandExecutor {
             // コマンド名で補完する
             String arg = args[0].toLowerCase();
             ArrayList<String> coms = new ArrayList<>();
+
             for (SubCommandAbst c : commands)
+                if (c.getCommandName().startsWith(arg) && sender.hasPermission(c.getPermissionNode()))
+                    coms.add(c.getCommandName());
+
+            for (SubCommandAbst c : commonCommands)
                 if (c.getCommandName().startsWith(arg) && sender.hasPermission(c.getPermissionNode()))
                     coms.add(c.getCommandName());
             return coms;
@@ -163,6 +168,32 @@ public class LunaChatCommand implements CommandExecutor {
             Bukkit.getOnlinePlayers().forEach(player -> {
                 if (player.getName().toLowerCase().startsWith(args[1].toLowerCase())) items.add(player.getName());
             });
+
+            if ("player".startsWith(args[1].toLowerCase())) items.add("player");
+
+            if ("channel".startsWith(args[1].toLowerCase())) items.add("channel");
+
+            return items;
+
+        } else if (args.length == 3 && (args[0].equalsIgnoreCase("hide") ||
+                args[0].equalsIgnoreCase("unhide")) && args[1].equalsIgnoreCase("player")) {
+            // プレイヤー名で補完する
+            ArrayList<String> items = new ArrayList<>();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                String pname = player.getName().toLowerCase();
+                if (pname.startsWith(args[2].toLowerCase())) items.add(player.getName());
+            }
+            return items;
+        } else if (args.length == 3 &&
+                (args[0].equalsIgnoreCase("hide") ||
+                        args[0].equalsIgnoreCase("unhide")) &&
+                args[1].equalsIgnoreCase("channel")) {
+
+            // チャンネル名で補完する
+            String arg = args[2].toLowerCase();
+            ArrayList<String> items = new ArrayList<>();
+            for (String name : getListCanJoin(sender))
+                if (name.toLowerCase().startsWith(arg)) items.add(name);
             return items;
 
         } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {

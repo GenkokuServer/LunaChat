@@ -98,30 +98,41 @@ public class HideCommand extends SubCommandAbst {
 
         // 引数チェック
         String cname = null;
+        boolean isPlayerCommand = false;
+        boolean isChannelCommand = false;
         if (args.length <= 1) {
             Channel def = api.getDefaultChannel(player.getName());
             if (def != null) cname = def.getName();
-        } else {
-            cname = args[1];
-        }
 
-        // 指定されたコマンドが「/ch hide list」なら、リストを表示して終了
-        if (cname != null && cname.equals("list")) {
-            getHideInfoList(player).forEach(player::sendMessage);
-            return true;
+        } else {
+            if (args[1].equals("list")) {
+                // 指定されたコマンドが「/ch hide list」なら、リストを表示して終了
+                getHideInfoList(player).forEach(player::sendMessage);
+                return true;
+            } else if (args.length >= 3 && args[1].equalsIgnoreCase("player")) {
+                // 指定されたコマンドが「/ch hide player (player名)」なら、対象をプレイヤーとする。
+                isPlayerCommand = true;
+                cname = args[2];
+            } else if (args.length >= 3 && args[1].equalsIgnoreCase("channel")) {
+                // 指定されたコマンドが「/ch hide channel (channel名)」なら、対象をチャンネルとする。
+                isChannelCommand = true;
+                cname = args[2];
+            } else {
+                // 「/ch hide (player名 または channel名)」
+                cname = args[1];
+            }
         }
 
         // チャンネルかプレイヤーが存在するかどうかをチェックする
-        boolean isChannelCommand = false;
         Channel channel = api.getChannel(cname);
-        if (channel != null) {
+        if (!isPlayerCommand && channel != null) {
             isChannelCommand = true;
         } else if (cname != null && Bukkit.getPlayer(cname) == null) {
             sendResourceMessage(sender, PREERR, "errmsgNotExistChannelAndPlayer");
             return true;
         }
 
-        if (isChannelCommand) {
+        if (isChannelCommand && channel != null) {
             // チャンネルが対象の場合の処理
             // 既に非表示になっていないかどうかをチェックする
             if (channel.getHided().contains(player)) {
@@ -141,30 +152,29 @@ public class HideCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREINFO, "cmdmsgHided", channel.getName());
 
             return true;
-        } else {
+        } else if (cname != null) {
             // プレイヤーが対象の場合の処理
+
             // 既に非表示になっていないかどうかをチェックする
-            if (cname != null) {
-                ChannelPlayer hided = ChannelPlayer.getChannelPlayer(cname);
-                if (api.getHidelist(hided).contains(player)) {
-                    sendResourceMessage(sender, PREERR, "errmsgAlreadyHidedPlayer");
-                    return true;
-                }
-
-                // 自分自身を指定していないかどうかチェックする
-                if (hided.equals(player)) {
-                    sendResourceMessage(sender, PREERR, "errmsgCannotHideSelf");
-                    return true;
-                }
-
-                // 設定する
-                api.addHidelist(player, hided);
-                sendResourceMessage(sender, PREINFO, "cmdmsgHidedPlayer", hided.getDisplayName());
-
+            ChannelPlayer hided = ChannelPlayer.getChannelPlayer(cname);
+            if (api.getHidelist(hided).contains(player)) {
+                sendResourceMessage(sender, PREERR, "errmsgAlreadyHidedPlayer");
                 return true;
             }
+
+            // 自分自身を指定していないかどうかチェックする
+            if (hided.equals(player)) {
+                sendResourceMessage(sender, PREERR, "errmsgCannotHideSelf");
+                return true;
+            }
+
+            // 設定する
+            api.addHidelist(player, hided);
+            sendResourceMessage(sender, PREINFO, "cmdmsgHidedPlayer", hided.getDisplayName());
+
             return true;
         }
+        return true;
     }
 
     /**

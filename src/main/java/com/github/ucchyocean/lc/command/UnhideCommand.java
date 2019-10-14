@@ -90,25 +90,37 @@ public class UnhideCommand extends SubCommandAbst {
 
         // 引数チェック
         String cname = null;
+        boolean isPlayerCommand = false;
+        boolean isChannelCommand = false;
         if (args.length <= 1) {
             Channel def = api.getDefaultChannel(player.getName());
             if (def != null) cname = def.getName();
 
         } else {
-            cname = args[1];
+            if (args.length >= 3 && args[1].equalsIgnoreCase("player")) {
+                // 指定されたコマンドが「/ch unhide player (player名)」なら、対象をプレイヤーとする。
+                isPlayerCommand = true;
+                cname = args[2];
+            } else if (args.length >= 3 && args[1].equalsIgnoreCase("channel")) {
+                // 指定されたコマンドが「/ch unhide channel (channel名)」なら、対象をチャンネルとする。
+                isChannelCommand = true;
+                cname = args[2];
+            } else {
+                // 「/ch hide (player名 または channel名)」
+                cname = args[1];
+            }
         }
 
         // チャンネルかプレイヤーが存在するかどうかをチェックする
-        boolean isChannelCommand = false;
         Channel channel = api.getChannel(cname);
-        if (channel != null) {
+        if (!isPlayerCommand && channel != null) {
             isChannelCommand = true;
         } else if (cname != null && Bukkit.getPlayer(cname) == null) {
             sendResourceMessage(sender, PREERR, "errmsgNotExistChannelAndPlayer");
             return true;
         }
 
-        if (isChannelCommand) {
+        if (channel != null && isChannelCommand) {
             // チャンネルが対象の場合の処理
             // 非表示になっているかどうかをチェックする
             if (!channel.getHided().contains(player)) {
