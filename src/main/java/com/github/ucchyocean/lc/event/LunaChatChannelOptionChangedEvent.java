@@ -19,8 +19,7 @@ public class LunaChatChannelOptionChangedEvent extends LunaChatBaseCancellableEv
     private final CommandSender sender;
     private HashMap<String, String> options;
 
-    public LunaChatChannelOptionChangedEvent(String channelName,
-                                             CommandSender sender, HashMap<String, String> options) {
+    public LunaChatChannelOptionChangedEvent(String channelName, CommandSender sender, HashMap<String, String> options) {
         super(channelName, false);
         this.sender = sender;
         this.options = options;
