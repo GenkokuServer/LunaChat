@@ -229,7 +229,6 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public Collection<Channel> getChannels() {
-
         return channels.values();
     }
 
@@ -242,7 +241,6 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public Collection<Channel> getChannelsByPlayer(String playerName) {
-
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(playerName);
         Collection<Channel> result = new ArrayList<>();
         for (String key : channels.keySet()) {
@@ -264,9 +262,7 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public Channel getDefaultChannel(String playerName) {
-
         String cname = defaultChannels.get(playerName);
-
         if (cname == null || !isExistChannel(cname)) {
             return null;
         }
@@ -312,8 +308,10 @@ public class ChannelManager implements LunaChatAPI {
     @Override
     public Channel getChannel(String channelName) {
         if (channelName == null) return null;
+
         Channel channel = channels.get(channelName.toLowerCase());
         if (channel != null) return channel;
+
         for (Channel ch : channels.values()) {
             String alias = ch.getAlias();
             if (alias != null && alias.length() > 0
@@ -345,16 +343,14 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public Channel createChannel(String channelName, CommandSender sender) {
-
         // イベントコール
-        LunaChatChannelCreateEvent event =
-                new LunaChatChannelCreateEvent(channelName, sender);
+        LunaChatChannelCreateEvent event = new LunaChatChannelCreateEvent(channelName, sender);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return null;
         }
-        String name = event.getChannelName();
 
+        String name = event.getChannelName();
         Channel channel = new ChannelImpl(name);
         channels.put(name.toLowerCase(), channel);
         channel.save();
@@ -382,12 +378,10 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public boolean removeChannel(String channelName, CommandSender sender) {
-
         channelName = channelName.toLowerCase();
 
         // イベントコール
-        LunaChatChannelRemoveEvent event =
-                new LunaChatChannelRemoveEvent(channelName, sender);
+        LunaChatChannelRemoveEvent event = new LunaChatChannelRemoveEvent(channelName, sender);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return false;
@@ -395,7 +389,6 @@ public class ChannelManager implements LunaChatAPI {
 
         Channel channel = getChannel(channelName);
         if (channel != null) {
-
             // 強制解散のメッセージを、残ったメンバーに流す
             if (!channel.isPersonalChat() && !MSG_BREAKUP.equals("")) {
                 String message = MSG_BREAKUP;
@@ -405,12 +398,10 @@ public class ChannelManager implements LunaChatAPI {
                     cp.sendMessage(message);
                 }
             }
-
             // チャンネルの削除
             channel.remove();
             channels.remove(channelName);
         }
-
         return true;
     }
 
@@ -562,7 +553,6 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public String japanize(String message, JapanizeType type) {
-
         if (type == JapanizeType.NONE) {
             return message;
         }
