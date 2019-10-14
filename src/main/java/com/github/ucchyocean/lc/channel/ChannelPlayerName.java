@@ -203,11 +203,7 @@ public class ChannelPlayerName extends ChannelPlayer {
      */
     @Override
     public boolean equals(CommandSender sender) {
-        if (!(sender instanceof Player)) {
-            return false;
-        }
-        Player player = (Player) sender;
-        return name.equals(player.getName());
+        return name.equals(sender.getName());
     }
 
     /**
