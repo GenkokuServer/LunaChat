@@ -55,8 +55,7 @@ public class IMEConverter {
             urlconn.setInstanceFollowRedirects(false);
             urlconn.connect();
 
-            reader = new BufferedReader(
-                    new InputStreamReader(urlconn.getInputStream(), encode));
+            reader = new BufferedReader(new InputStreamReader(urlconn.getInputStream(), encode));
             String line;
             StringBuilder result = new StringBuilder();
             while ((line = reader.readLine()) != null) {
@@ -74,7 +73,7 @@ public class IMEConverter {
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (IOException e) { // do nothing.
+                } catch (IOException ignored) { // do nothing.
                 }
             }
         }
@@ -86,6 +85,7 @@ public class IMEConverter {
         StringBuilder buf = new StringBuilder();
         int level = 0;
         int index = 0;
+
         while (index < result.length()) {
             if (level < 3) {
                 int nextStart = result.indexOf("[", index);
