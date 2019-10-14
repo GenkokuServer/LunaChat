@@ -339,7 +339,7 @@ class PlayerListener implements Listener {
             }
 
             // 2byteコードを含むなら、Japanize変換は行わない
-            String kanaTemp = Utility.stripColor(message);
+            String kanaTemp = ChatColor.stripColor(message);
             if (!skipJapanize &&
                     (kanaTemp.getBytes().length > kanaTemp.length() ||
                             kanaTemp.matches("[ \\uFF61-\\uFF9F]+"))) {

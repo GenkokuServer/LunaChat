@@ -154,7 +154,7 @@ public class ChannelImpl extends Channel {
         maskedMessage = event.getNgMaskedMessage();
 
         // 2byteコードを含むか、半角カタカナのみなら、Japanize変換は行わない
-        String kanaTemp = Utility.stripColor(maskedMessage);
+        String kanaTemp = ChatColor.stripColor(maskedMessage);
         if (!skipJapanize &&
                 (kanaTemp.getBytes().length > kanaTemp.length() ||
                         kanaTemp.matches("[ \\uFF61-\\uFF9F]+"))) {
