@@ -16,7 +16,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -471,7 +470,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // ブロードキャストチャンネルならサーバー接続人数を返す
         if (isBroadcastChannel()) {
-            return Utility.getOnlinePlayersCount();
+            return Bukkit.getOnlinePlayers().size();
         }
 
         // メンバーの人数を数える
@@ -493,7 +492,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // ブロードキャストチャンネルならサーバー接続人数を返す
         if (isBroadcastChannel()) {
-            return Utility.getOnlinePlayersCount();
+            return Bukkit.getOnlinePlayers().size();
         }
 
         return members.size();
@@ -828,17 +827,13 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return チャンネルのメンバー
      */
     public List<ChannelPlayer> getMembers() {
-
         // ブロードキャストチャンネルなら、
         // 現在サーバーに接続している全プレイヤーをメンバーとして返す
         if (isBroadcastChannel()) {
             List<ChannelPlayer> mem = new ArrayList<>();
-            for (Player p : Utility.getOnlinePlayers()) {
-                mem.add(ChannelPlayer.getChannelPlayer(p));
-            }
+            Bukkit.getOnlinePlayers().forEach(p -> mem.add(ChannelPlayer.getChannelPlayer(p)));
             return mem;
         }
-
         return members;
     }
 

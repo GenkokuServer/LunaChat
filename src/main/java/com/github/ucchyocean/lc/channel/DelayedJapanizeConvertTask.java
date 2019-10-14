@@ -12,7 +12,6 @@ import com.github.ucchyocean.lc.japanize.IMEConverter;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 import com.github.ucchyocean.lc.japanize.KanaConverter;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -69,11 +68,9 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
         // 変換対象外のキーワード
         HashMap<String, String> keywordMap = new HashMap<>();
         ArrayList<String> keywords = new ArrayList<>();
-        if (LunaChat.getInstance().getLunaChatConfig().isJapanizeIgnorePlayerName()) {
-            for (Player player : Utility.getOnlinePlayers()) {
-                keywords.add(player.getName());
-            }
-        }
+        if (LunaChat.getInstance().getLunaChatConfig().isJapanizeIgnorePlayerName())
+            Bukkit.getOnlinePlayers().forEach(player -> keywords.add(player.getName()));
+
         HashMap<String, String> dictionary =
                 LunaChat.getInstance().getLunaChatAPI().getAllDictionary();
 

@@ -7,9 +7,9 @@ package com.github.ucchyocean.lc.command;
 
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -88,7 +88,7 @@ public class LunaChatCommand implements CommandExecutor {
                     // パーミッションの確認
                     String node = c.getPermissionNode();
                     if (!sender.hasPermission(node)) {
-                        sendResourceMessage(sender, PREERR, "errmsgPermission", node);
+                        sendResourceMessage(sender, "errmsgPermission", node);
                         return true;
                     }
 
@@ -101,7 +101,7 @@ public class LunaChatCommand implements CommandExecutor {
         // チャンネルチャット機能が無効になっている場合は、メッセージを表示して終了
         if (LunaChat.getInstance().getLunaChatConfig().isDisableChannelChat()
                 && !sender.isOp()) {
-            sendResourceMessage(sender, PREERR, "errmsgChannelChatDisabled");
+            sendResourceMessage(sender, "errmsgChannelChatDisabled");
             return true;
         }
 
@@ -118,7 +118,7 @@ public class LunaChatCommand implements CommandExecutor {
                 // パーミッションの確認
                 String node = c.getPermissionNode();
                 if (!sender.hasPermission(node)) {
-                    sendResourceMessage(sender, PREERR, "errmsgPermission", node);
+                    sendResourceMessage(sender, "errmsgPermission", node);
                     return true;
                 }
 
@@ -130,7 +130,7 @@ public class LunaChatCommand implements CommandExecutor {
         // 第1引数がコマンドでないなら、joinが指定されたとみなす
         String node = joinCommand.getPermissionNode();
         if (!sender.hasPermission(node)) {
-            sendResourceMessage(sender, PREERR, "errmsgPermission", node);
+            sendResourceMessage(sender, "errmsgPermission", node);
             return true;
         }
 
@@ -141,13 +141,11 @@ public class LunaChatCommand implements CommandExecutor {
      * TABキー補完が実行されたときに呼び出されるメソッド
      *
      * @param sender  TABキー補完の実行者
-     * @param command 実行されたコマンド
-     * @param label   実行されたコマンドのラベル
      * @param args    実行されたコマンドの引数
      * @return 補完候補
      */
     public List<String> onTabComplete(
-            CommandSender sender, Command command, String label, String[] args) {
+            CommandSender sender, String[] args) {
 
         if (args.length == 1) {
             // コマンド名で補完する
@@ -185,11 +183,13 @@ public class LunaChatCommand implements CommandExecutor {
                     items.add(name);
                 }
             }
-            for (Player player : Utility.getOnlinePlayers()) {
+
+            Bukkit.getOnlinePlayers().forEach(player -> {
                 if (player.getName().toLowerCase().startsWith(arg)) {
                     items.add(player.getName());
                 }
-            }
+            });
+
             return items;
 
         } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
@@ -235,20 +235,18 @@ public class LunaChatCommand implements CommandExecutor {
 
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
-     *
-     * @param sender メッセージの送り先
-     * @param pre    プレフィックス
+     *  @param sender メッセージの送り先
      * @param key    リソースキー
      * @param args   リソース内の置き換え対象キーワード
      */
-    private void sendResourceMessage(CommandSender sender, String pre,
+    private void sendResourceMessage(CommandSender sender,
                                      String key, Object... args) {
 
         String org = Resources.get(key);
         if (org == null || org.equals("")) {
             return;
         }
-        String msg = String.format(pre + org, args);
+        String msg = String.format(LunaChatCommand.PREERR + org, args);
         sender.sendMessage(msg);
     }
 

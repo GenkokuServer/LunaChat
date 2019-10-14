@@ -5,7 +5,6 @@
  */
 package com.github.ucchyocean.lc;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -151,7 +150,7 @@ public class LunaChat extends JavaPlugin {
 
         List<String> completeList = null;
         if ( command.getName().equals("lunachat") ) {
-            completeList = lunachatCommand.onTabComplete(sender, command, label, args);
+            completeList = lunachatCommand.onTabComplete(sender, args);
         }
         if ( completeList != null ) {
             return completeList;

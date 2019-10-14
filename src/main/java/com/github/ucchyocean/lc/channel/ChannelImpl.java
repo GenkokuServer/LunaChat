@@ -353,7 +353,7 @@ public class ChannelImpl extends Channel {
                     // 範囲チャット
 
                     Location origin = player.getPlayer().getLocation();
-                    for (Player p : Utility.getOnlinePlayers()) {
+                    for (Player p : Bukkit.getOnlinePlayers()) {
                         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
                         if (p.getWorld().equals(w) &&
                                 origin.distance(p.getLocation()) <= getChatRange() &&
@@ -365,7 +365,7 @@ public class ChannelImpl extends Channel {
                 } else {
                     // ワールドチャット
 
-                    for (Player p : Utility.getOnlinePlayers()) {
+                    for (Player p : Bukkit.getOnlinePlayers()) {
                         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
                         if (p.getWorld().equals(w) && !getHided().contains(cp)) {
                             recipients.add(ChannelPlayer.getChannelPlayer(p));
@@ -384,7 +384,7 @@ public class ChannelImpl extends Channel {
             } else {
                 // 通常ブロードキャスト（全員へ送信）
 
-                for (Player p : Utility.getOnlinePlayers()) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
                     ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
                     if (!getHided().contains(cp)) {
                         recipients.add(cp);
@@ -406,7 +406,7 @@ public class ChannelImpl extends Channel {
         // パーミッション lunachat-admin.listen-all-channels を持つプレイヤーを
         // 受信者に加える。
         if (config.isOpListenAllChannel()) {
-            for (Player p : Utility.getOnlinePlayers()) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
                 ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
                 if (cp.hasPermission("lunachat-admin.listen-all-channels")
                         && !recipients.contains(cp)) {

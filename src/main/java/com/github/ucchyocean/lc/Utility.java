@@ -114,45 +114,7 @@ public class Utility {
         }
         return code.matches("&[0-9a-f]");
     }
-
-    /**
-     * 現在接続中のプレイヤーを全て取得する
-     *
-     * @return 接続中の全てのプレイヤー
-     */
-
-    @SuppressWarnings("unchecked")
-    public static ArrayList<Player> getOnlinePlayers() {
-        // CB179以前と、CB1710以降で戻り値が異なるため、
-        // リフレクションを使って互換性を（無理やり）保つ。
-        try {
-            if (Bukkit.class.getMethod("getOnlinePlayers").getReturnType() == Collection.class) {
-                Collection<?> temp =
-                        ((Collection<?>) Bukkit.class.getMethod("getOnlinePlayers")
-                                .invoke(null, new Object[0]));
-                return new ArrayList<>((Collection<? extends Player>) temp);
-            } else {
-                Player[] temp =
-                        ((Player[]) Bukkit.class.getMethod("getOnlinePlayers")
-                                .invoke(null, new Object[0]));
-                return new ArrayList<>(Arrays.asList(temp));
-            }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
-        } // never happen
-        // never happen
-        // never happen
-        return new ArrayList<>();
-    }
-
-    /**
-     * 現在のサーバー接続人数を返します。
-     *
-     * @return サーバー接続人数
-     */
-    public static int getOnlinePlayersCount() {
-        return getOnlinePlayers().size();
-    }
-
+    
     /**
      * 指定された名前のオフラインプレイヤーを取得する
      *
