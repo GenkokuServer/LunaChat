@@ -8,7 +8,6 @@ package com.github.ucchyocean.lc.channel;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
-import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 import org.bukkit.Bukkit;
@@ -230,8 +229,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return グローバルチャンネルかどうか
      */
     public boolean isGlobalChannel() {
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        return getName().equals(config.getGlobalChannel());
+        return getName().equals(LunaChat.getInstance().getLunaChatConfig().getGlobalChannel());
     }
 
     /**
@@ -240,8 +238,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return 強制参加チャンネルかどうか
      */
     public boolean isForceJoinChannel() {
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        return config.getForceJoinChannels().contains(getName());
+        return LunaChat.getInstance().getLunaChatConfig().getForceJoinChannels().contains(getName());
     }
 
     /**
@@ -251,12 +248,10 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return チャンネルのモデレータ権限を持っているかどうか
      */
     public boolean hasModeratorPermission(CommandSender sender) {
-        if (sender.isOp() ||
-                sender.hasPermission("lunachat-admin.mod-all-channels")) {
+        if (sender.isOp() || sender.hasPermission("lunachat-admin.mod-all-channels")) {
             return true;
         }
-        ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
-        return moderator.contains(player);
+        return moderator.contains(ChannelPlayer.getChannelPlayer(sender));
     }
 
     /**
@@ -283,11 +278,8 @@ public abstract class Channel implements ConfigurationSerializable {
      * @param player 追加するプレイヤー
      */
     public void addMember(ChannelPlayer player) {
-
         // 既に参加しているなら、何もしない
-        if (members.contains(player)) {
-            return;
-        }
+        if (members.contains(player)) return;
 
         // 変更後のメンバーリストを作成
         ArrayList<ChannelPlayer> after = new ArrayList<>(members);
@@ -297,18 +289,16 @@ public abstract class Channel implements ConfigurationSerializable {
         LunaChatChannelMemberChangedEvent event =
                 new LunaChatChannelMemberChangedEvent(this.name, this.members, after, false);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
-            return;
-        }
+
+        if (event.isCancelled()) return;
 
         // メンバー更新
-        if (members.size() == 0 && moderator.size() == 0) {
+        if (members.isEmpty() && moderator.isEmpty()) {
             moderator.add(player);
         }
+
         members = after;
-
         sendSystemMessage("joinMessage", player, false);
-
         save();
     }
 
@@ -318,11 +308,8 @@ public abstract class Channel implements ConfigurationSerializable {
      * @param player 削除するプレイヤー
      */
     public void removeMember(ChannelPlayer player, boolean isAsync) {
-
         // 既に削除しているなら、何もしない
-        if (!members.contains(player)) {
-            return;
-        }
+        if (!members.contains(player)) return;
 
         // 変更後のメンバーリストを作成
         ArrayList<ChannelPlayer> after = new ArrayList<>(members);
@@ -332,13 +319,13 @@ public abstract class Channel implements ConfigurationSerializable {
         LunaChatChannelMemberChangedEvent event =
                 new LunaChatChannelMemberChangedEvent(this.name, this.members, after, isAsync);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
-            return;
-        }
+
+        if (event.isCancelled()) return;
 
         // デフォルト発言先が退出するチャンネルと一致する場合、
         // デフォルト発言先を削除する
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+
         Channel def = api.getDefaultChannel(player.getName());
         if (def != null && def.getName().equals(getName())) {
             api.removeDefaultChannel(player.getName());
@@ -350,8 +337,7 @@ public abstract class Channel implements ConfigurationSerializable {
         sendSystemMessage("quitMessage", player, isAsync);
 
         // 0人で削除する設定がオンで、0人になったなら、チャンネルを削除する
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        if (config.isZeroMemberRemove() && members.size() <= 0) {
+        if (LunaChat.getInstance().getLunaChatConfig().isZeroMemberRemove() && members.isEmpty()) {
             api.removeChannel(this.name);
             return;
         }
@@ -373,9 +359,7 @@ public abstract class Channel implements ConfigurationSerializable {
     public void addModerator(ChannelPlayer player) {
 
         // 既にモデレータなら何もしない
-        if (moderator.contains(player)) {
-            return;
-        }
+        if (moderator.contains(player)) return;
 
         // モデレータへ追加
         moderator.add(player);
@@ -392,11 +376,8 @@ public abstract class Channel implements ConfigurationSerializable {
      * @param player 削除するプレイヤー
      */
     public void removeModerator(ChannelPlayer player) {
-
         // 既にモデレータでないなら何もしない
-        if (!moderator.contains(player)) {
-            return;
-        }
+        if (!moderator.contains(player)) return;
 
         // モデレータから削除
         moderator.remove(player);
@@ -467,20 +448,11 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return オンライン人数
      */
     public int getOnlineNum() {
-
         // ブロードキャストチャンネルならサーバー接続人数を返す
-        if (isBroadcastChannel()) {
-            return Bukkit.getOnlinePlayers().size();
-        }
+        if (isBroadcastChannel()) return Bukkit.getOnlinePlayers().size();
 
-        // メンバーの人数を数える
-        int onlineNum = 0;
-        for (ChannelPlayer player : members) {
-            if (player.isOnline()) {
-                onlineNum++;
-            }
-        }
-        return onlineNum;
+        // メンバーの人数を返す
+        return (int) members.stream().filter(ChannelPlayer::isOnline).count();
     }
 
     /**
@@ -489,7 +461,6 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return 総参加人数
      */
     public int getTotalNum() {
-
         // ブロードキャストチャンネルならサーバー接続人数を返す
         if (isBroadcastChannel()) {
             return Bukkit.getOnlinePlayers().size();
@@ -575,32 +546,26 @@ public abstract class Channel implements ConfigurationSerializable {
     }
 
     /**
-     * List&lt;ChannelPlayer&gt;を、List&lt;String&gt;に変換する。
+     * List<ChannelPlayer>を、List<String>に変換する。
      *
      * @param org 変換元
      * @return 変換後
      */
     private static List<String> getStringList(List<ChannelPlayer> org) {
-
         ArrayList<String> result = new ArrayList<>();
-        for (ChannelPlayer cp : org) {
-            result.add(cp.toString());
-        }
+        org.forEach(cp -> result.add(cp.toString()));
         return result;
     }
 
     /**
-     * Map&lt;ChannelPlayer, Long&gt;を、Map&lt;String, Long&gt;に変換する。
+     * Map<ChannelPlayer, Long>を、Map<String, Long>に変換する。
      *
      * @param org 変換元
      * @return 変換後
      */
     private static Map<String, Long> getStringLongMap(Map<ChannelPlayer, Long> org) {
-
         HashMap<String, Long> result = new HashMap<>();
-        for (ChannelPlayer cp : org.keySet()) {
-            result.put(cp.toString(), org.get(cp));
-        }
+        org.keySet().forEach(cp -> result.put(cp.toString(), org.get(cp)));
         return result;
     }
 
@@ -613,7 +578,6 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     @SuppressWarnings("unchecked")
     private static <T> T castWithDefault(Object obj, T def) {
-
         if (obj == null) {
             return def;
         }
@@ -627,14 +591,9 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return 変換後
      */
     private static List<ChannelPlayer> castToChannelPlayerList(Object obj) {
-
         List<String> entries = castToStringList(obj);
         ArrayList<ChannelPlayer> players = new ArrayList<>();
-
-        for (String entry : entries) {
-            players.add(ChannelPlayer.getChannelPlayer(entry));
-        }
-
+        entries.forEach(entry -> players.add(ChannelPlayer.getChannelPlayer(entry)));
         return players;
     }
 
@@ -646,7 +605,6 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     @SuppressWarnings("unchecked")
     private static List<String> castToStringList(Object obj) {
-
         if (obj == null) {
             return new ArrayList<>();
         }
@@ -663,15 +621,9 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return 変換後
      */
     private static Map<ChannelPlayer, Long> castToChannelPlayerLongMap(Object obj) {
-
         Map<String, Long> entries = castToStringLongMap(obj);
         HashMap<ChannelPlayer, Long> map = new HashMap<>();
-
-        for (String key : entries.keySet()) {
-            ChannelPlayer cp = ChannelPlayer.getChannelPlayer(key);
-            map.put(cp, entries.get(key));
-        }
-
+        entries.keySet().forEach(key -> map.put(ChannelPlayer.getChannelPlayer(key), entries.get(key)));
         return map;
     }
 
@@ -683,7 +635,6 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     @SuppressWarnings("unchecked")
     private static Map<String, Long> castToStringLongMap(Object obj) {
-
         if (obj == null) {
             return new HashMap<>();
         }
@@ -700,16 +651,13 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     private static boolean isNeedToSaveForUUIDUpdate(Map<String, Object> data) {
         List<String> members = castToStringList(data.get(KEY_MEMBERS));
-        if (members.size() == 0) {
-            return false;
-        }
+        if (members.isEmpty()) return false;
 
         for (String member : members) {
             if (member.startsWith("$")) {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -1068,7 +1016,6 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return 全てのチャンネル
      */
     static HashMap<String, Channel> loadAllChannels() {
-
         // フォルダーの取得
         Path folder = LunaChat.getInstance().getDataFolder().toPath().resolve(FOLDER_NAME_CHANNELS);
 
@@ -1096,7 +1043,6 @@ public abstract class Channel implements ConfigurationSerializable {
 
             if (channel != null) result.put(channel.name.toLowerCase(), channel);
         }
-
         return result;
     }
 }
