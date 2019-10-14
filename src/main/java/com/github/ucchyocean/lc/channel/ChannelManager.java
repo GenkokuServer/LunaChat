@@ -12,6 +12,7 @@ import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatChannelCreateEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelRemoveEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -49,7 +50,7 @@ public class ChannelManager implements LunaChatAPI {
      * コンストラクタ
      */
     public ChannelManager() {
-        reloadAllData();
+        this.reloadAllData();
     }
 
     /**

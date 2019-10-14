@@ -290,7 +290,6 @@ public abstract class Channel implements ConfigurationSerializable {
         LunaChatChannelMemberChangedEvent event =
                 new LunaChatChannelMemberChangedEvent(this.name, this.members, after, false);
         Utility.callEventSync(event);
-
         if (event.isCancelled()) return;
 
         // メンバー更新
@@ -320,7 +319,6 @@ public abstract class Channel implements ConfigurationSerializable {
         LunaChatChannelMemberChangedEvent event =
                 new LunaChatChannelMemberChangedEvent(this.name, this.members, after, isAsync);
         Utility.callEventSync(event);
-
         if (event.isCancelled()) return;
 
         // デフォルト発言先が退出するチャンネルと一致する場合、
@@ -519,9 +517,7 @@ public abstract class Channel implements ConfigurationSerializable {
     private static Channel deserialize(Map<String, Object> data) {
 
         String name = castWithDefault(data.get(KEY_NAME), null);
-        if (name == null) {
-            return null;
-        }
+        if (name == null) return null;
 
         Channel channel = new ChannelImpl(name);
         channel.alias = castWithDefault(data.get(KEY_ALIAS), "");
@@ -1038,9 +1034,7 @@ public abstract class Channel implements ConfigurationSerializable {
             Channel channel = deserialize(data);
 
             // 自動アップデート
-            if (channel != null && isNeedToSaveForUUIDUpdate(data)) {
-                channel.save();
-            }
+            if (channel != null && isNeedToSaveForUUIDUpdate(data)) channel.save();
 
             if (channel != null) result.put(channel.name.toLowerCase(), channel);
         }

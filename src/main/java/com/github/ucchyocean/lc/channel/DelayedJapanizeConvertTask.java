@@ -119,6 +119,7 @@ class DelayedJapanizeConvertTask extends BukkitRunnable {
         // イベントコール
         String channelName = (channel == null) ? "" : channel.getName();
         LunaChatPostJapanizeEvent event = new LunaChatPostJapanizeEvent(channelName, player, org, japanized);
+
         Utility.callEventSync(event);
         if (event.isCancelled()) return false;
 

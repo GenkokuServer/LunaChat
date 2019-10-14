@@ -134,10 +134,7 @@ public class OptionCommand extends SubCommandAbst {
         // イベントコール
         LunaChatChannelOptionChangedEvent event = new LunaChatChannelOptionChangedEvent(cname, sender, options);
         Utility.callEventSync(event);
-
-        if (event.isCancelled()) {
-            return true;
-        }
+        if (event.isCancelled()) return true;
 
         options = event.getOptions();
 

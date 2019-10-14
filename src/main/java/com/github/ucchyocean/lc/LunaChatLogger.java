@@ -64,11 +64,11 @@ public class LunaChatLogger {
             @Override
             public void run() {
                 try {
+                    if (!Files.exists(file)) Files.createFile(file);
                     Files.write(file, formatLog(player, ChatColor.stripColor(message)).getBytes(), StandardOpenOption.APPEND);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
         }.runTaskAsynchronously(LunaChat.getInstance());
     }

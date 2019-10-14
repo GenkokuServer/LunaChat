@@ -231,7 +231,7 @@ public class LunaChatConfig {
      * config.yml を再読み込みする
      */
     public void reloadConfig() {
-        Path configFile = LunaChat.getInstance().getDataFolder().toPath().resolve("config.yml");
+        Path configFile = LunaChat.getInstance().getDataFolder().toPath().resolve("config_ja.yml");
         if (!Files.exists(configFile)) LunaChat.getInstance().saveResource("config_ja.yml", false);
 
         LunaChat.getInstance().reloadConfig();
