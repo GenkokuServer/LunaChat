@@ -77,7 +77,6 @@ public class KanaConverter {
     }
 
     private static String getKanaFromTable(String s, int n) {
-
         if (TABLE.containsKey(s)) {
             return TABLE.get(s)[n];
         }
@@ -91,46 +90,43 @@ public class KanaConverter {
      * @return 変換後の文字列
      */
     public static String conv(String org) {
-
         StringBuilder last = new StringBuilder();
         StringBuilder line = new StringBuilder();
 
-        for (int i = 0; i < org.length(); i++) {
+        for (int i = 0, l = org.length(); i < l; i++) {
             String tmp = org.substring(i, i + 1);
 
             switch (tmp) {
                 case "a":
                     line.append(getKanaFromTable(last.toString(), 0));
-                    last = new StringBuilder();
+                    last.setLength(0);
                     break;
                 case "i":
                     line.append(getKanaFromTable(last.toString(), 1));
-                    last = new StringBuilder();
+                    last.setLength(0);
                     break;
                 case "u":
                     line.append(getKanaFromTable(last.toString(), 2));
-                    last = new StringBuilder();
+                    last.setLength(0);
                     break;
                 case "e":
                     line.append(getKanaFromTable(last.toString(), 3));
-                    last = new StringBuilder();
+                    last.setLength(0);
                     break;
                 case "o":
                     line.append(getKanaFromTable(last.toString(), 4));
-                    last = new StringBuilder();
+                    last.setLength(0);
                     break;
                 default:
                     if (last.toString().equals("n") && !(tmp.equals("y"))) {
                         line.append("ん");
-                        last = new StringBuilder();
-                        if (tmp.equals("n")) {
-                            continue;
-                        }
+                        last.setLength(0);
+                        if (tmp.equals("n")) continue;
                     }
                     if (Character.isLetter(tmp.charAt(0))) {
                         if (Character.isUpperCase(tmp.charAt(0))) {
                             line.append(last).append(tmp);
-                            last = new StringBuilder();
+                            last.setLength(0);
                         } else if (last.toString().equals(tmp)) {
                             line.append("っ");
                             last = new StringBuilder(tmp);
@@ -141,56 +137,56 @@ public class KanaConverter {
                         switch (tmp) {
                             case "-":
                                 line.append(last).append("ー");
-                                last = new StringBuilder();
+                                last.setLength(0);
                                 break;
                             case ".":
                                 line.append(last).append("。");
-                                last = new StringBuilder();
+                                last.setLength(0);
                                 break;
                             case ",":
                                 line.append(last).append("、");
-                                last = new StringBuilder();
+                                last.setLength(0);
                                 break;
                             case "?":
                                 line.append(last).append("？");
-                                last = new StringBuilder();
+                                last.setLength(0);
                                 break;
                             case "!":
                                 line.append(last).append("！");
-                                last = new StringBuilder();
+                                last.setLength(0);
                                 break;
                             case "[":
                                 line.append(last).append("「");
-                                last = new StringBuilder();
+                                last.setLength(0);
                                 break;
                             case "]":
                                 line.append(last).append("」");
-                                last = new StringBuilder();
+                                last.setLength(0);
                                 break;
                             case "<":
                                 line.append(last).append("＜");
-                                last = new StringBuilder();
+                                last.setLength(0);
                                 break;
                             case ">":
                                 line.append(last).append("＞");
-                                last = new StringBuilder();
+                                last.setLength(0);
                                 break;
                             case "&":
                                 line.append(last).append("＆");
-                                last = new StringBuilder();
+                                last.setLength(0);
                                 break;
                             case "\"":
                                 line.append(last).append("”");
-                                last = new StringBuilder();
+                                last.setLength(0);
                                 break;
                             case "(":
                             case ")":
                                 line.append(last);
-                                last = new StringBuilder();
+                                last.setLength(0);
                                 break;
                             default:
                                 line.append(last).append(tmp);
-                                last = new StringBuilder();
+                                last.setLength(0);
                                 break;
                         }
                     }

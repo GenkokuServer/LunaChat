@@ -21,8 +21,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class IMEConverter {
 
-    private static final String GOOGLE_IME_URL =
-            "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=";
+    private static final String GOOGLE_IME_URL = "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=";
 
     /**
      * GoogleIMEを使って変換する
@@ -36,26 +35,20 @@ public class IMEConverter {
 
     // 変換の実行
     private static String conv(String org) {
-
-        if (org.length() == 0) {
-            return "";
-        }
+        if (org.length() == 0) return "";
 
         HttpURLConnection urlconn = null;
         BufferedReader reader = null;
-        try {
-            String baseurl;
-            String encode;
-            baseurl = GOOGLE_IME_URL + URLEncoder.encode(org, StandardCharsets.UTF_8);
-            encode = "UTF-8";
-            URL url = new URL(baseurl);
 
-            urlconn = (HttpURLConnection) url.openConnection();
+        try {
+            String baseurl = GOOGLE_IME_URL + URLEncoder.encode(org, StandardCharsets.UTF_8);
+
+            urlconn = (HttpURLConnection) new URL(baseurl).openConnection();
             urlconn.setRequestMethod("GET");
             urlconn.setInstanceFollowRedirects(false);
             urlconn.connect();
 
-            reader = new BufferedReader(new InputStreamReader(urlconn.getInputStream(), encode));
+            reader = new BufferedReader(new InputStreamReader(urlconn.getInputStream(), StandardCharsets.UTF_8));
             String line;
             StringBuilder result = new StringBuilder();
             while ((line = reader.readLine()) != null) {
@@ -63,21 +56,19 @@ public class IMEConverter {
             }
 
             return result.toString();
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (urlconn != null) {
-                urlconn.disconnect();
-            }
+            if (urlconn != null) urlconn.disconnect();
+
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (IOException ignored) { // do nothing.
+                } catch (IOException ignored) {
+                    // do nothing.
                 }
             }
         }
-
         return "";
     }
 
