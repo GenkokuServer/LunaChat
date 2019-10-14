@@ -83,12 +83,9 @@ public class LunaChatLogger {
      * @return ログデータ
      */
     public ArrayList<String> getLog(String player, String filter, String date, boolean reverse) {
-
         // 指定された日付のログを取得する
         Path f = getLogFile(date);
-        if (f == null) {
-            return new ArrayList<>();
-        }
+        if (f == null) return new ArrayList<>();
 
         // ログファイルの読み込み
         ArrayList<String> data = readAllLines(f);
@@ -111,16 +108,13 @@ public class LunaChatLogger {
             data = new ArrayList<>();
             for (String t : temp) {
                 String[] line = t.split(",");
-                if (line.length >= 2 && line[1].contains(filter)) {
-                    data.add(t);
-                }
+                if (line.length >= 2 && line[1].contains(filter)) data.add(t);
+
             }
         }
 
         // 逆順が指定されているなら、逆順に並び替える
-        if (reverse) {
-            Collections.reverse(data);
-        }
+        if (reverse) Collections.reverse(data);
 
         return data;
     }
@@ -148,21 +142,16 @@ public class LunaChatLogger {
      * @return 指定された日付のログファイル
      */
     private Path getLogFile(String date) {
-        if (date == null) {
-            return file;
-        }
+        if (date == null) return file;
 
         LocalDate d;
 
-        if (date.matches("[0-9]{4}")) {
-            date = LocalDate.now().getYear() + date;
-        }
+        if (date.matches("[0-9]{4}")) date = LocalDate.now().getYear() + date;
 
-        if (date.matches("[0-9]{8}")) {
-            d = LocalDate.parse(date, logYearDateFormat);
-        } else {
-            return null;
-        }
+
+        if (date.matches("[0-9]{8}")) d = LocalDate.parse(date, logYearDateFormat);
+        else return null;
+
 
         Path folder = Paths.get(getFolderPath(d));
         if (!Files.isDirectory(folder) || !Files.exists(folder)) return null;
@@ -179,7 +168,6 @@ public class LunaChatLogger {
     private void checkDir() {
 
         String temp = getFolderPath(LocalDate.now());
-
         if (temp.equals(dirPath)) return;
 
         dirPath = temp;

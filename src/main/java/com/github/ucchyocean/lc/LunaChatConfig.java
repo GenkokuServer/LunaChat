@@ -231,18 +231,14 @@ public class LunaChatConfig {
      * config.yml を再読み込みする
      */
     public void reloadConfig() {
-
         Path configFile = LunaChat.getInstance().getDataFolder().toPath().resolve("config.yml");
-        if (!Files.exists(configFile)) {
-            LunaChat.getInstance().saveResource("config_ja.yml", false);
-        }
+        if (!Files.exists(configFile)) LunaChat.getInstance().saveResource("config_ja.yml", false);
 
         LunaChat.getInstance().reloadConfig();
         FileConfiguration config = LunaChat.getInstance().getConfig();
 
         enableChannelChat = config.getBoolean("enableChannelChat", true);
-        playerChatEventListenerPriority
-                = getEventPriority(config.getString("playerChatEventListenerPriority"));
+        playerChatEventListenerPriority = getEventPriority(config.getString("playerChatEventListenerPriority"));
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
         loggingChatToHawkEye = config.getBoolean("loggingChatToHawkEye", true);
@@ -251,23 +247,17 @@ public class LunaChatConfig {
         globalMarker = config.getString("globalMarker", "!");
         zeroMemberRemove = config.getBoolean("zeroMemberRemove", false);
         showListOnJoin = config.getBoolean("showListOnJoin", false);
-        createChannelOnJoinCommand =
-                config.getBoolean("createChannelOnJoinCommand", false);
+        createChannelOnJoinCommand = config.getBoolean("createChannelOnJoinCommand", false);
 
         // チャンネルチャット有効のときだけ、globalChannel設定を読み込む
         // (see issue #58)
-        if (enableChannelChat) {
-            globalChannel = config.getString("globalChannel", "");
-        } else {
-            globalChannel = "";
-        }
+        if (enableChannelChat) globalChannel = config.getString("globalChannel", "");
+        else globalChannel = "";
+
         // チャンネルチャット有効のときだけ、forceJoinChannels設定を読み込む
         // (see issue #58)
-        if (enableChannelChat) {
-            forceJoinChannels = config.getStringList("forceJoinChannels");
-        } else {
-            forceJoinChannels = new ArrayList<>();
-        }
+        if (enableChannelChat) forceJoinChannels = config.getStringList("forceJoinChannels");
+        else forceJoinChannels = new ArrayList<>();
 
         if (config.contains("formatConstraint")) {
             formatConstraint = config.getStringList("formatConstraint");
@@ -277,11 +267,8 @@ public class LunaChatConfig {
             formatConstraint.add("%msg");
         }
 
-        defaultFormat = config.getString("defaultFormat",
-                "&f[%color%ch&f]%prefix%username%suffix&a:&f %msg");
-        defaultFormatForPrivateMessage =
-                config.getString("defaultFormatForPrivateMessage",
-                        "&7[%player -> %to]&f %msg");
+        defaultFormat = config.getString("defaultFormat", "&f[%color%ch&f]%prefix%username%suffix&a:&f %msg");
+        defaultFormatForPrivateMessage = config.getString("defaultFormatForPrivateMessage", "&7[%player -> %to]&f %msg");
 
         opListenAllChannel = config.getBoolean("opListenAllChannel", false);
 
@@ -291,31 +278,24 @@ public class LunaChatConfig {
         enableQuickChannelChat = config.getBoolean("enableQuickChannelChat", true);
         quickChannelChatSeparator = config.getString("quickChannelChatSeparator", ":");
 
-        sendBroadcastChannelChatToDynmap =
-                config.getBoolean("sendBroadcastChannelChatToDynmap", true);
-        sendFormattedMessageToDynmap =
-                config.getBoolean("sendFormattedMessageToDynmap", false);
+        sendBroadcastChannelChatToDynmap = config.getBoolean("sendBroadcastChannelChatToDynmap", true);
+        sendFormattedMessageToDynmap = config.getBoolean("sendFormattedMessageToDynmap", false);
         dynmapChannel = config.getString("dynmapChannel", "");
         ngword = config.getStringList("ngword");
         ngwordAction = NGWordAction.fromID(config.getString("ngwordAction", "mask"));
 
         ngwordCompiled = new ArrayList<>();
-        for (String word : ngword) {
-            ngwordCompiled.add(Pattern.compile(word));
-        }
+        for (String word : ngword) ngwordCompiled.add(Pattern.compile(word));
 
-        enableNormalChatMessageFormat =
-                config.getBoolean("enableNormalChatMessageFormat", true);
-        normalChatMessageFormat =
-                config.getString("normalChatMessageFormat", "&f%prefix%username%suffix&a:&f %msg");
-        enableNormalChatColorCode =
-                config.getBoolean("enableNormalChatColorCode", true);
+        enableNormalChatMessageFormat = config.getBoolean("enableNormalChatMessageFormat", true);
+        normalChatMessageFormat = config.getString("normalChatMessageFormat", "&f%prefix%username%suffix&a:&f %msg");
+        enableNormalChatColorCode = config.getBoolean("enableNormalChatColorCode", true);
 
         japanizeType = JapanizeType.fromID(config.getString("japanizeType"), JapanizeType.KANA);
         japanizeDisplayLine = config.getInt("japanizeDisplayLine", 2);
-        if (japanizeDisplayLine != 1 && japanizeDisplayLine != 2) {
-            japanizeDisplayLine = 2;
-        }
+
+        if (japanizeDisplayLine != 1 && japanizeDisplayLine != 2) japanizeDisplayLine = 2;
+
         japanizeLine1Format = config.getString("japanizeLine1Format", "%msg &6(%japanize)");
         japanizeLine2Format = config.getString("japanizeLine2Format", "&6[JP] %japanize");
         japanizeIgnorePlayerName = config.getBoolean("japanizeIgnorePlayerName", true);
@@ -323,11 +303,8 @@ public class LunaChatConfig {
         japanizeWait = config.getInt("japanizeWait", 1);
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
-        if (!globalChannel.equals("") &&
-                !globalChannel.matches("[0-9a-zA-Z\\-_]{1,20}")) {
-            String msg = String.format(
-                    Resources.get("errmsgCannotUseForGlobal"), globalChannel);
-            LunaChat.getInstance().getLogger().warning(msg);
+        if (!globalChannel.equals("") && !globalChannel.matches("[0-9a-zA-Z\\-_]{1,20}")) {
+            LunaChat.getInstance().getLogger().warning(String.format(Resources.get("errmsgCannotUseForGlobal"), globalChannel));
             globalChannel = "";
         }
     }
@@ -685,7 +662,6 @@ public class LunaChatConfig {
      * @return EventPriority
      */
     private static EventPriority getEventPriority(String value) {
-
         if (value == null) return EventPriority.HIGH;
 
         if (value.equalsIgnoreCase("LOWEST")) {

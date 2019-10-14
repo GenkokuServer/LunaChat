@@ -57,9 +57,8 @@ class PlayerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onAsyncPlayerChatLowest(AsyncPlayerChatEvent event) {
-        if (LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.LOWEST) {
+        if (LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.LOWEST)
             processChatEvent(event);
-        }
     }
 
     /**
@@ -69,9 +68,8 @@ class PlayerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onAsyncPlayerChatLow(AsyncPlayerChatEvent event) {
-        if (LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.LOW) {
+        if (LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.LOW)
             processChatEvent(event);
-        }
     }
 
     /**
@@ -81,9 +79,8 @@ class PlayerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onAsyncPlayerChatNormal(AsyncPlayerChatEvent event) {
-        if (LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.NORMAL) {
+        if (LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.NORMAL)
             processChatEvent(event);
-        }
     }
 
     /**
@@ -93,9 +90,8 @@ class PlayerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onAsyncPlayerChatHigh(AsyncPlayerChatEvent event) {
-        if (LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.HIGH) {
+        if (LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.HIGH)
             processChatEvent(event);
-        }
     }
 
     /**
@@ -105,9 +101,8 @@ class PlayerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onAsyncPlayerChatHighest(AsyncPlayerChatEvent event) {
-        if (LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.HIGHEST) {
+        if (LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.HIGHEST)
             processChatEvent(event);
-        }
     }
 
     /**
@@ -117,7 +112,6 @@ class PlayerListener implements Listener {
      */
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
         Player player = event.getPlayer();
 
@@ -130,12 +124,7 @@ class PlayerListener implements Listener {
         }
 
         // チャンネルチャット情報を表示する
-        if (config.isShowListOnJoin()) {
-            ArrayList<String> list = getListForMotd(player);
-            for (String msg : list) {
-                player.sendMessage(msg);
-            }
-        }
+        if (config.isShowListOnJoin()) getListForMotd(player).forEach(player::sendMessage);
     }
 
     /**
@@ -145,7 +134,6 @@ class PlayerListener implements Listener {
      */
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-
         Player player = event.getPlayer();
 
         // お互いがオフラインになるPMチャンネルがある場合は
@@ -157,20 +145,14 @@ class PlayerListener implements Listener {
             if (channel.isPersonalChat() && cname.contains(player.getName())) {
                 boolean isAllOffline = true;
                 for (ChannelPlayer cp : channel.getMembers()) {
-                    if (!cp.equals(player) && cp.isOnline() &&
-                            (cp instanceof ChannelPlayerName || cp instanceof ChannelPlayerUUID)) {
+                    if (!cp.equals(player) && cp.isOnline() && (cp instanceof ChannelPlayerName || cp instanceof ChannelPlayerUUID))
                         isAllOffline = false;
-                    }
                 }
-                if (isAllOffline) {
-                    deleteList.add(channel);
-                }
+                if (isAllOffline) deleteList.add(channel);
             }
         }
 
-        for (Channel channel : deleteList) {
-            LunaChat.getInstance().getLunaChatAPI().removeChannel(channel.getName());
-        }
+        deleteList.forEach(ch -> LunaChat.getInstance().getLunaChatAPI().removeChannel(ch.getName()));
     }
 
     /**
@@ -179,16 +161,12 @@ class PlayerListener implements Listener {
      * @param event チャットイベント
      */
     private void processChatEvent(AsyncPlayerChatEvent event) {
-
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
 
         // 頭にglobalMarkerが付いている場合は、グローバル発言にする
-        if (config.getGlobalMarker() != null &&
-                !config.getGlobalMarker().equals("") &&
-                event.getMessage().startsWith(config.getGlobalMarker()) &&
-                event.getMessage().length() > config.getGlobalMarker().length()) {
-
+        if (config.getGlobalMarker() != null && !config.getGlobalMarker().equals("") &&
+                event.getMessage().startsWith(config.getGlobalMarker()) && event.getMessage().length() > config.getGlobalMarker().length()) {
             int offset = config.getGlobalMarker().length();
             event.setMessage(event.getMessage().substring(offset));
             chatGlobal(event);
@@ -201,14 +179,10 @@ class PlayerListener implements Listener {
             String separator = config.getQuickChannelChatSeparator();
             if (event.getMessage().contains(separator)) {
                 String[] temp = event.getMessage().split(separator, 2);
-                String name = temp[0];
-                String value;
-                value = temp[1];
 
-                Channel channel = api.getChannel(name);
+                Channel channel = api.getChannel(temp[0]);
                 if (channel != null && !channel.isPersonalChat()) {
-                    ChannelPlayer player =
-                            ChannelPlayer.getChannelPlayer(event.getPlayer());
+                    ChannelPlayer player = ChannelPlayer.getChannelPlayer(event.getPlayer());
                     if (!channel.getMembers().contains(player)) {
                         // 指定されたチャンネルに参加していないなら、エラーを表示して何も発言せずに終了する。
                         sendResourceMessage(event.getPlayer());
@@ -217,15 +191,14 @@ class PlayerListener implements Listener {
                     }
 
                     // 指定されたチャンネルに発言して終了する。
-                    chatToChannelWithEvent(player, channel, value, event.isAsynchronous());
+                    chatToChannelWithEvent(player, channel, temp[1], event.isAsynchronous());
                     event.setCancelled(true);
                     return;
                 }
             }
         }
 
-        ChannelPlayer player =
-                ChannelPlayer.getChannelPlayer(event.getPlayer());
+        ChannelPlayer player = ChannelPlayer.getChannelPlayer(event.getPlayer());
         Channel channel = api.getDefaultChannel(player.getName());
 
         // デフォルトの発言先が無い場合
@@ -234,14 +207,12 @@ class PlayerListener implements Listener {
                 // グローバル発言にする
                 chatGlobal(event);
                 return;
-
             } else {
                 // 発言をキャンセルして終了する
                 event.setCancelled(true);
                 return;
             }
         }
-
         chatToChannelWithEvent(player, channel, event.getMessage(), event.isAsynchronous());
 
         // もとのイベントをキャンセル
@@ -254,80 +225,65 @@ class PlayerListener implements Listener {
      * @param event 処理するイベント
      */
     private void chatGlobal(AsyncPlayerChatEvent event) {
-
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
-        ChannelPlayer player =
-                ChannelPlayer.getChannelPlayer(event.getPlayer());
+        ChannelPlayer player = ChannelPlayer.getChannelPlayer(event.getPlayer());
 
         if (!config.getGlobalChannel().equals("")) {
             // グローバルチャンネル設定がある場合
-
             // グローバルチャンネルの取得、無ければ作成
             Channel global = api.getChannel(config.getGlobalChannel());
-            if (global == null) {
-                global = api.createChannel(config.getGlobalChannel());
-            }
+            if (global == null) global = api.createChannel(config.getGlobalChannel());
 
             // LunaChatPreChatEvent イベントコール
-            LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
-                    global.getName(), player, event.getMessage(), event.isAsynchronous());
+            LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(global.getName(), player, event.getMessage(), event.isAsynchronous());
             Bukkit.getPluginManager().callEvent(preChatEvent);
+
             if (preChatEvent.isCancelled()) {
                 event.setCancelled(true);
                 return;
             }
+
             Channel alt = preChatEvent.getChannel();
-            if (alt != null) {
-                global = alt;
-            }
+            if (alt != null) global = alt;
+
             String message = preChatEvent.getMessage();
 
             // デフォルト発言先が無いなら、グローバルチャンネルに設定する
             Channel dchannel = api.getDefaultChannel(player.getName());
-            if (dchannel == null) {
-                api.setDefaultChannel(player.getName(), global.getName());
-            }
+            if (dchannel == null) api.setDefaultChannel(player.getName(), global.getName());
 
             // チャンネルチャット発言
             chatToChannelWithEvent(player, global, message, event.isAsynchronous());
 
             // もとのイベントをキャンセル
             event.setCancelled(true);
-
         } else {
             // グローバルチャンネル設定が無い場合
-
             String message = event.getMessage();
+
             // NGワード発言をマスク
             for (Pattern pattern : config.getNgwordCompiled()) {
                 Matcher matcher = pattern.matcher(message);
-                if (matcher.find()) {
-                    message = matcher.replaceAll(
-                            Utility.getAstariskString(matcher.group(0).length()));
-                }
+                if (matcher.find()) message = matcher.replaceAll(Utility.getAstariskString(matcher.group(0).length()));
+
             }
 
             // チャットフォーマット装飾の適用
             if (config.isEnableNormalChatMessageFormat()) {
-                String format = config.getNormalChatMessageFormat();
-                format = replaceNormalChatFormatKeywords(format, event.getPlayer());
+                String format = replaceNormalChatFormatKeywords(config.getNormalChatMessageFormat(), event.getPlayer());
                 event.setFormat(format);
             }
 
             // カラーコード置き換え
             // 置き換え設定になっていて、発言者がパーミッションを持っているなら、置き換えする
-            if (config.isEnableNormalChatColorCode() &&
-                    event.getPlayer().hasPermission("lunachat.allowcc")) {
+            if (config.isEnableNormalChatColorCode() && event.getPlayer().hasPermission("lunachat.allowcc"))
                 message = ChatColor.translateAlternateColorCodes('&', message);
-            }
 
             // hideされているプレイヤーを、recipientから抜く
             for (ChannelPlayer cp : api.getHidelist(player)) {
                 Player p = cp.getPlayer();
-                if (p != null) {
-                    event.getRecipients().remove(p);
-                }
+                if (p != null) event.getRecipients().remove(p);
             }
 
             // 一時的にJapanizeスキップ設定かどうかを確認する
@@ -340,34 +296,23 @@ class PlayerListener implements Listener {
 
             // 2byteコードを含むなら、Japanize変換は行わない
             String kanaTemp = ChatColor.stripColor(message);
-            if (!skipJapanize &&
-                    (kanaTemp.getBytes().length > kanaTemp.length() ||
-                            kanaTemp.matches("[ \\uFF61-\\uFF9F]+"))) {
+            if (!skipJapanize && (kanaTemp.getBytes().length > kanaTemp.length() || kanaTemp.matches("[ \\uFF61-\\uFF9F]+")))
                 skipJapanize = true;
-            }
 
             // Japanize変換と、発言処理
-            if (!skipJapanize &&
-                    LunaChat.getInstance().getLunaChatAPI().isPlayerJapanize(player.getName()) &&
-                    config.getJapanizeType() != JapanizeType.NONE) {
-
+            if (!skipJapanize && config.getJapanizeType() != JapanizeType.NONE
+                    && LunaChat.getInstance().getLunaChatAPI().isPlayerJapanize(player.getName())) {
                 int lineType = config.getJapanizeDisplayLine();
 
                 if (lineType == 1) {
-
                     String taskFormat = ChatColor.translateAlternateColorCodes('&', config.getJapanizeLine1Format());
-
-                    String japanized = api.japanize(
-                            kanaTemp, config.getJapanizeType());
+                    String japanized = api.japanize(kanaTemp, config.getJapanizeType());
                     if (japanized != null) {
                         String temp = taskFormat.replace("%msg", message);
                         message = temp.replace("%japanize", japanized);
                     }
-
                 } else {
-
                     String taskFormat = ChatColor.translateAlternateColorCodes('&', config.getJapanizeLine2Format());
-
                     DelayedJapanizeNormalChatTask task = new DelayedJapanizeNormalChatTask(
                             message, config.getJapanizeType(), player, taskFormat, event);
 
@@ -376,13 +321,10 @@ class PlayerListener implements Listener {
                     task.runTaskLater(LunaChat.getInstance(), wait);
                 }
             }
-
             // 発言内容の設定
             event.setMessage(message);
-
             // ロギング
             logNormalChat(message, player.getName());
-
         }
     }
 
@@ -392,7 +334,6 @@ class PlayerListener implements Listener {
      * @param player プレイヤー
      */
     private void tryJoinToGlobalChannel(Player player) {
-
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
 
@@ -400,16 +341,11 @@ class PlayerListener implements Listener {
 
         // チャンネルが存在しない場合は作成する
         Channel global = api.getChannel(gcName);
-        if (global == null) {
-            api.createChannel(gcName);
-        }
+        if (global == null) api.createChannel(gcName);
 
         // デフォルト発言先が無いなら、グローバルチャンネルに設定する
         Channel dchannel = api.getDefaultChannel(player.getName());
-        if (dchannel == null) {
-            api.setDefaultChannel(player.getName(), gcName);
-        }
-
+        if (dchannel == null) api.setDefaultChannel(player.getName(), gcName);
     }
 
     /**
@@ -418,31 +354,23 @@ class PlayerListener implements Listener {
      * @param player プレイヤー
      */
     private void forceJoinToForceJoinChannels(Player player) {
-
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
 
         List<String> forceJoinChannels = config.getForceJoinChannels();
 
         for (String cname : forceJoinChannels) {
-
             // チャンネルが存在しない場合は作成する
             Channel channel = api.getChannel(cname);
-            if (channel == null) {
-                channel = api.createChannel(cname);
-            }
+            if (channel == null) channel = api.createChannel(cname);
 
             // チャンネルのメンバーでないなら、参加する
             ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
-            if (!channel.getMembers().contains(cp)) {
-                channel.addMember(cp);
-            }
+            if (!channel.getMembers().contains(cp)) channel.addMember(cp);
 
             // デフォルト発言先が無いなら、グローバルチャンネルに設定する
             Channel dchannel = api.getDefaultChannel(player.getName());
-            if (dchannel == null) {
-                api.setDefaultChannel(player.getName(), cname);
-            }
+            if (dchannel == null) api.setDefaultChannel(player.getName(), cname);
         }
     }
 
@@ -454,22 +382,18 @@ class PlayerListener implements Listener {
      * @return キーワード置き換え済みの文字列
      */
     private String replaceNormalChatFormatKeywords(String org, Player player) {
-
         String format = org;
         format = format.replace("%username", "%1$s");
         format = format.replace("%msg", "%2$s");
 
-        if (format.contains("%date")) {
-            format = format.replace("%date", dateFormat.format(LocalDateTime.now()));
-        }
-        if (format.contains("%time")) {
-            format = format.replace("%time", timeFormat.format(LocalDateTime.now()));
-        }
+        if (format.contains("%date")) format = format.replace("%date", dateFormat.format(LocalDateTime.now()));
+
+        if (format.contains("%time")) format = format.replace("%time", timeFormat.format(LocalDateTime.now()));
 
         if (format.contains("%prefix") || format.contains("%suffix")) {
-
             String prefix = "";
             String suffix = "";
+
             VaultChatBridge vaultchat = LunaChat.getInstance().getVaultChat();
             if (vaultchat != null) {
                 prefix = vaultchat.getPlayerPrefix(player);
@@ -480,14 +404,12 @@ class PlayerListener implements Listener {
         }
 
         if (format.contains("%world")) {
-
             String worldname = null;
-            if (LunaChat.getInstance().getMultiverseCore() != null) {
+            if (LunaChat.getInstance().getMultiverseCore() != null)
                 worldname = LunaChat.getInstance().getMultiverseCore().getWorldAlias(player.getWorld());
-            }
-            if (worldname == null || worldname.equals("")) {
+            if (worldname == null || worldname.equals(""))
                 worldname = player.getWorld().getName();
-            }
+
             format = format.replace("%world", worldname);
         }
 
@@ -501,48 +423,31 @@ class PlayerListener implements Listener {
      * @return リスト
      */
     private ArrayList<String> getListForMotd(Player player) {
-
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
         Channel dc = api.getDefaultChannel(cp.getName());
         String dchannel = "";
-        if (dc != null) {
-            dchannel = dc.getName().toLowerCase();
-        }
+        if (dc != null) dchannel = dc.getName().toLowerCase();
 
         ArrayList<String> items = new ArrayList<>();
         items.add(MOTD_FIRSTLINE);
         for (Channel channel : api.getChannels()) {
-
             // BANされているチャンネルは表示しない
-            if (channel.getBanned().contains(cp)) {
-                continue;
-            }
+            if (channel.getBanned().contains(cp)) continue;
 
             // 個人チャットはリストに表示しない
-            if (channel.isPersonalChat()) {
-                continue;
-            }
+            if (channel.isPersonalChat()) continue;
 
             // 参加していないチャンネルは、グローバルチャンネルを除き表示しない
-            if (!channel.getMembers().contains(cp) &&
-                    !channel.isGlobalChannel()) {
-                continue;
-            }
+            if (!channel.getMembers().contains(cp) && !channel.isGlobalChannel()) continue;
 
             String disp = ChatColor.WHITE + channel.getName();
-            if (channel.getName().equals(dchannel)) {
-                disp = ChatColor.RED + channel.getName();
-            }
-            String desc = channel.getDescription();
-            int onlineNum = channel.getOnlineNum();
-            int memberNum = channel.getTotalNum();
-            String item = String.format(
-                    LIST_FORMAT, disp, onlineNum, memberNum, desc);
+            if (channel.getName().equals(dchannel)) disp = ChatColor.RED + channel.getName();
+
+            String item = String.format(LIST_FORMAT, disp, channel.getOnlineNum(), channel.getTotalNum(), channel.getDescription());
             items.add(item);
         }
         items.add(LIST_ENDLINE);
-
         return items;
     }
 
@@ -554,23 +459,19 @@ class PlayerListener implements Listener {
      * @param message 発言内容
      */
     private void chatToChannelWithEvent(ChannelPlayer player, Channel channel, String message, boolean async) {
-
         // LunaChatPreChatEvent イベントコール
         LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
                 channel.getName(), player, message, async);
         Bukkit.getPluginManager().callEvent(preChatEvent);
-        if (preChatEvent.isCancelled()) {
-            return;
-        }
+        if (preChatEvent.isCancelled()) return;
+
         Channel alt = preChatEvent.getChannel();
-        if (alt != null) {
-            channel = alt;
-        }
+        if (alt != null) channel = alt;
+
         message = preChatEvent.getMessage();
 
         // チャンネルチャット発言
         channel.chat(player, message, async);
-
     }
 
     /**
@@ -589,14 +490,9 @@ class PlayerListener implements Listener {
      * @param sender メッセージの送り先
      * @param args   リソース内の置き換え対象キーワード
      */
-    private void sendResourceMessage(
-            CommandSender sender, Object... args) {
-
+    private void sendResourceMessage(CommandSender sender, Object... args) {
         String org = Resources.get("errmsgNomember");
-        if (org == null || org.equals("")) {
-            return;
-        }
-        String msg = String.format(PlayerListener.PREERR + org, args);
-        sender.sendMessage(msg);
+        if (org == null || org.equals("")) return;
+        sender.sendMessage(String.format(PlayerListener.PREERR + org, args));
     }
 }

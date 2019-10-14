@@ -9,8 +9,6 @@ import java.io.*;
 
 public class PluginMessageChannelManager implements PluginMessageListener {
 
-    private static final LunaChat lunaChat = LunaChat.getInstance();
-
     @Override
     public void onPluginMessageReceived(String channel, @NotNull Player player, @NotNull byte[] message) {
         if (!channel.equalsIgnoreCase("lunachat:out")) return;
@@ -18,7 +16,7 @@ public class PluginMessageChannelManager implements PluginMessageListener {
         DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
 
         try {
-            Channel lunaChatChannel = lunaChat.getLunaChatAPI().getChannel(in.readUTF());
+            Channel lunaChatChannel = LunaChat.getInstance().getLunaChatAPI().getChannel(in.readUTF());
             if (lunaChatChannel == null) return;
 
             String sender = in.readUTF();
@@ -39,7 +37,6 @@ public class PluginMessageChannelManager implements PluginMessageListener {
     }
 
     public void sendBungeeMessage(String channel, Player player, String message, String lineFormat) {
-
         Channel lunaChatChannel = LunaChat.getInstance().getLunaChatAPI().getChannel(channel);
         if (lunaChatChannel == null) return;
 
@@ -59,7 +56,6 @@ public class PluginMessageChannelManager implements PluginMessageListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     }
 }

@@ -22,9 +22,7 @@ public class Utility {
      */
     public static String getAstariskString(int length) {
         StringBuilder buf = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            buf.append("*");
-        }
+        for (int i = 0; i < length; i++) buf.append("*");
         return buf.toString();
     }
 
@@ -35,10 +33,7 @@ public class Utility {
      * @return ChatColorクラス
      */
     private static ChatColor changeToChatColor(String color) {
-
-        if (isValidColor(color)) {
-            return ChatColor.valueOf(color.toUpperCase());
-        }
+        if (isValidColor(color)) return ChatColor.valueOf(color.toUpperCase());
         return ChatColor.WHITE;
     }
 
@@ -49,7 +44,6 @@ public class Utility {
      * @return カラーコード
      */
     public static String changeToColorCode(String color) {
-
         return "&" + changeToChatColor(color).getChar();
     }
 
@@ -60,12 +54,8 @@ public class Utility {
      * @return 指定可能かどうか
      */
     public static boolean isValidColor(String color) {
-
-        for (ChatColor c : ChatColor.values()) {
-            if (c.name().equals(color.toUpperCase())) {
-                return true;
-            }
-        }
+        for (ChatColor c : ChatColor.values())
+            if (c.name().equals(color.toUpperCase())) return true;
         return false;
     }
 
@@ -76,10 +66,7 @@ public class Utility {
      * @return 指定可能かどうか
      */
     public static boolean isValidColorCode(String code) {
-
-        if (code == null) {
-            return false;
-        }
+        if (code == null) return false;
         return code.matches("&[0-9a-f]");
     }
 }

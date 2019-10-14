@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.BufferedReader;
@@ -49,12 +50,10 @@ public class Resources {
      * @return リソース
      */
     public static String get(String key) {
-        if (resources == null) {
-            initialize();
-        }
-
-        String def = defaultMessages.getString(key);
-        return ChatColor.translateAlternateColorCodes('&', resources.getString(key, def));
+        if (resources == null) initialize();
+        String resource = resources.getString(key, defaultMessages.getString(key));
+        if (resource == null) return defaultMessages.getString(key);
+        return ChatColor.translateAlternateColorCodes('&', resource);
     }
 
     /**
@@ -63,7 +62,6 @@ public class Resources {
      * @return YamlConfiguration
      */
     private static YamlConfiguration loadDefaultMessages() {
-
         YamlConfiguration messages = new YamlConfiguration();
         try {
             InputStream inputStream = LunaChat.getInstance().getResource(FILE_NAME);
@@ -79,7 +77,6 @@ public class Resources {
                         messages.set(key, value);
                     }
                 }
-
             }
         } catch (IOException e) {
             e.printStackTrace();
