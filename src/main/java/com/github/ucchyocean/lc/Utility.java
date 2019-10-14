@@ -13,17 +13,6 @@ import org.bukkit.ChatColor;
  * @author ucchy
  */
 public class Utility {
-    /**
-     * 文字列に含まれているカラーコード（§a）を除去して返す
-     *
-     * @param source 置き換え元の文字列
-     * @return 置き換え後の文字列
-     */
-    public static String stripColor(String source) {
-        if (source == null)
-            return null;
-        return ChatColor.stripColor(source);
-    }
 
     /**
      * 指定された文字数のアスタリスクの文字列を返す
