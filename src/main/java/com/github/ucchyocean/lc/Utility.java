@@ -114,18 +114,4 @@ public class Utility {
         }
         return code.matches("&[0-9a-f]");
     }
-    
-    /**
-     * 指定された名前のオフラインプレイヤーを取得する
-     *
-     * @param name プレイヤー名
-     * @return オフラインプレイヤー
-     */
-    @SuppressWarnings("deprecation")
-    public static OfflinePlayer getOfflinePlayer(String name) {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(name);
-        if (!player.hasPlayedBefore() && !player.isOnline())
-            return null;
-        return player;
-    }
 }

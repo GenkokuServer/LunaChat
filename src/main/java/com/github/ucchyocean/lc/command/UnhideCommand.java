@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc.command;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -106,7 +107,7 @@ public class UnhideCommand extends SubCommandAbst {
         Channel channel = api.getChannel(cname);
         if (channel != null) {
             isChannelCommand = true;
-        } else if (Utility.getOfflinePlayer(cname) == null) {
+        } else if (cname != null && Bukkit.getPlayer(cname) == null) {
             sendResourceMessage(sender, PREERR, "errmsgNotExistChannelAndPlayer");
             return true;
         }
