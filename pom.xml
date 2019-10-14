@@ -64,19 +64,13 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <finalName>${project.artifactId}-${project.version}</finalName>
-                    <descriptors>
-                        <descriptor>distribution.xml</descriptor>
-                    </descriptors>
-                </configuration>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
-                        <phase>deploy</phase>
+                        <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>shade</goal>
                         </goals>
                     </execution>
                 </executions>
