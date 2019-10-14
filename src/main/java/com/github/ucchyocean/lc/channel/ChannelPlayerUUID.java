@@ -55,7 +55,6 @@ public class ChannelPlayerUUID extends ChannelPlayer {
         }
         @SuppressWarnings("deprecation")
         OfflinePlayer offline = Bukkit.getOfflinePlayer(name);
-        offline.getUniqueId();
         return new ChannelPlayerUUID(offline.getUniqueId());
     }
 
@@ -66,9 +65,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      * @return ChannelPlayer
      */
     public static ChannelPlayer getChannelPlayer(CommandSender sender) {
-        if (sender instanceof Player) {
-            return new ChannelPlayerUUID(((Player) sender).getUniqueId());
-        }
+        if (sender instanceof Player) return new ChannelPlayerUUID(((Player) sender).getUniqueId());
         return new ChannelPlayerName(sender.getName());
     }
 
@@ -92,9 +89,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
     @Override
     public String getName() {
         Player player = Bukkit.getPlayer(id);
-        if (player != null) {
-            return player.getName();
-        }
+        if (player != null) return player.getName();
         OfflinePlayer offlineplayer = Bukkit.getOfflinePlayer(id);
         return offlineplayer.getName();
     }
@@ -108,9 +103,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
     @Override
     public String getDisplayName() {
         Player player = getPlayer();
-        if (player != null) {
-            return player.getDisplayName();
-        }
+        if (player != null) return player.getDisplayName();
         return getName();
     }
 
@@ -123,13 +116,10 @@ public class ChannelPlayerUUID extends ChannelPlayer {
     @Override
     public String getPrefix() {
         VaultChatBridge vault = LunaChat.getInstance().getVaultChat();
-        if (vault == null) {
-            return "";
-        }
+        if (vault == null) return "";
+
         Player player = getPlayer();
-        if (player != null) {
-            return vault.getPlayerPrefix(player);
-        }
+        if (player != null) return vault.getPlayerPrefix(player);
         return "";
     }
 
@@ -142,13 +132,10 @@ public class ChannelPlayerUUID extends ChannelPlayer {
     @Override
     public String getSuffix() {
         VaultChatBridge vault = LunaChat.getInstance().getVaultChat();
-        if (vault == null) {
-            return "";
-        }
+        if (vault == null) return "";
+
         Player player = getPlayer();
-        if (player != null) {
-            return vault.getPlayerSuffix(player);
-        }
+        if (player != null) return vault.getPlayerSuffix(player);
         return "";
     }
 
@@ -161,9 +148,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
     @Override
     public void sendMessage(String message) {
         Player player = getPlayer();
-        if (player != null) {
-            player.sendMessage(message);
-        }
+        if (player != null) player.sendMessage(message);
     }
 
     /**
@@ -186,9 +171,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
     @Override
     public String getWorldName() {
         Player player = getPlayer();
-        if (player != null) {
-            return player.getWorld().getName();
-        }
+        if (player != null) return player.getWorld().getName();
         return "-";
     }
 
@@ -201,9 +184,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
     @Override
     public Location getLocation() {
         Player player = getPlayer();
-        if (player != null) {
-            return player.getLocation();
-        }
+        if (player != null) return player.getLocation();
         return null;
     }
 
@@ -250,11 +231,8 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      */
     @Override
     public boolean equals(CommandSender sender) {
-        if (!(sender instanceof Player)) {
-            return false;
-        }
-        Player player = (Player) sender;
-        return id.equals(player.getUniqueId());
+        if (!(sender instanceof Player)) return false;
+        return id.equals(((Player) sender).getUniqueId());
     }
 
     /**
