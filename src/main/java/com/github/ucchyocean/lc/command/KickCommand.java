@@ -77,12 +77,6 @@ public class KickCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(CommandSender sender, String label, String[] args) {
-        // プレイヤーでなければ終了する
-        if (!(sender instanceof Player)) {
-            sendResourceMessage(sender, PREERR, "errmsgIngame");
-            return true;
-        }
-
         // 実行引数から、キックするユーザーを取得する
         String kickedName;
         if (args.length >= 2) {
@@ -93,8 +87,10 @@ public class KickCommand extends SubCommandAbst {
         }
 
         // デフォルト参加チャンネルを取得、取得できない場合はエラー表示して終了する
-        Player kicker = (Player) sender;
-        Channel channel = api.getDefaultChannel(kicker.getName());
+        Channel channel = null;
+        if (args.length >= 3) channel = api.getChannel(args[2]);
+        else if (sender instanceof Player) channel = api.getDefaultChannel(sender.getName());
+
         if (channel == null) {
             sendResourceMessage(sender, PREERR, "errmsgNoJoin");
             return true;
