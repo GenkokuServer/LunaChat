@@ -49,14 +49,14 @@ class PlayerListener implements Listener {
     /**
      * コンストラクタ
      */
-    public PlayerListener() {
+    PlayerListener() {
         dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         timeFormat = new SimpleDateFormat("HH:mm:ss");
     }
 
     /**
      * プレイヤーがチャット発言したときに呼び出されるメソッド
-     * @param event
+     * @param event AsyncPlayerChatEvent
      */
     @EventHandler(priority=EventPriority.LOWEST, ignoreCancelled=true)
     public void onAsyncPlayerChatLowest(AsyncPlayerChatEvent event) {
@@ -67,7 +67,7 @@ class PlayerListener implements Listener {
 
     /**
      * プレイヤーがチャット発言したときに呼び出されるメソッド
-     * @param event
+     * @param event AsyncPlayerChatEvent
      */
     @EventHandler(priority=EventPriority.LOW, ignoreCancelled=true)
     public void onAsyncPlayerChatLow(AsyncPlayerChatEvent event) {
@@ -78,7 +78,7 @@ class PlayerListener implements Listener {
 
     /**
      * プレイヤーがチャット発言したときに呼び出されるメソッド
-     * @param event
+     * @param event AsyncPlayerChatEvent
      */
     @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
     public void onAsyncPlayerChatNormal(AsyncPlayerChatEvent event) {
@@ -89,7 +89,7 @@ class PlayerListener implements Listener {
 
     /**
      * プレイヤーがチャット発言したときに呼び出されるメソッド
-     * @param event
+     * @param event AsyncPlayerChatEvent
      */
     @EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
     public void onAsyncPlayerChatHigh(AsyncPlayerChatEvent event) {
@@ -100,7 +100,7 @@ class PlayerListener implements Listener {
 
     /**
      * プレイヤーがチャット発言したときに呼び出されるメソッド
-     * @param event
+     * @param event AsyncPlayerChatEvent
      */
     @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
     public void onAsyncPlayerChatHighest(AsyncPlayerChatEvent event) {
@@ -198,10 +198,8 @@ class PlayerListener implements Listener {
             if ( event.getMessage().contains(separator) ) {
                 String[] temp = event.getMessage().split(separator, 2);
                 String name = temp[0];
-                String value = "";
-                if ( temp.length > 0 ) {
-                    value = temp[1];
-                }
+                String value;
+                value = temp[1];
 
                 Channel channel = api.getChannel(name);
                 if ( channel != null && !channel.isPersonalChat() ) {
@@ -209,7 +207,7 @@ class PlayerListener implements Listener {
                             ChannelPlayer.getChannelPlayer(event.getPlayer());
                     if ( !channel.getMembers().contains(player) ) {
                         // 指定されたチャンネルに参加していないなら、エラーを表示して何も発言せずに終了する。
-                        sendResourceMessage(event.getPlayer(), PREERR, "errmsgNomember");
+                        sendResourceMessage(event.getPlayer());
                         event.setCancelled(true);
                         return;
                     }
@@ -397,7 +395,7 @@ class PlayerListener implements Listener {
         // チャンネルが存在しない場合は作成する
         Channel global = api.getChannel(gcName);
         if ( global == null ) {
-            global = api.createChannel(gcName);
+            api.createChannel(gcName);
         }
 
         // デフォルト発言先が無いなら、グローバルチャンネルに設定する
@@ -578,18 +576,16 @@ class PlayerListener implements Listener {
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
      * @param sender メッセージの送り先
-     * @param pre プレフィックス
-     * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
     private void sendResourceMessage(
-            CommandSender sender, String pre, String key, Object... args) {
+            CommandSender sender, Object... args) {
 
-        String org = Resources.get(key);
+        String org = Resources.get("errmsgNomember");
         if ( org == null || org.equals("") ) {
             return;
         }
-        String msg = String.format(pre + org, args);
+        String msg = String.format(PlayerListener.PREERR + org, args);
         sender.sendMessage(msg);
     }
 }
