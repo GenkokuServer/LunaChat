@@ -36,8 +36,7 @@ public class DicCommand extends DictionaryCommand {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 }

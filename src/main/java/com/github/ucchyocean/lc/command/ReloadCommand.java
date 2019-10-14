@@ -59,8 +59,7 @@ public class ReloadCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -74,9 +73,7 @@ public class ReloadCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
-    public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
+    public boolean runCommand(CommandSender sender, String label, String[] args) {
         api.reloadAllData();
         config.reloadConfig();
         sendResourceMessage(sender, PREINFO, "cmdmsgReload");

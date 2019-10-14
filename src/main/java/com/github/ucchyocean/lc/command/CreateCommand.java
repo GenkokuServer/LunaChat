@@ -60,8 +60,7 @@ public class CreateCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -75,12 +74,11 @@ public class CreateCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
-    public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
+    public boolean runCommand(CommandSender sender, String label, String[] args) {
         // 実行引数から、作成するチャンネルを取得する
         String name;
         String desc = "";
+
         if (args.length >= 2) {
             name = args[1];
             if (args.length >= 3) {
@@ -100,24 +98,19 @@ public class CreateCommand extends SubCommandAbst {
 
         // 使用可能なチャンネル名かどうかをチェックする
         if (!name.matches("[0-9a-zA-Z\\-_]+")) {
-            sendResourceMessage(sender, PREERR,
-                    "errmsgCannotUseForChannel", name);
+            sendResourceMessage(sender, PREERR, "errmsgCannotUseForChannel", name);
             return true;
         }
 
         // 最低文字列長を上回っているかをチェックする
         if (name.length() < config.getMinChannelNameLength()) {
-            sendResourceMessage(sender, PREERR,
-                    "errmsgCannotUseForChannelTooShort",
-                    name, config.getMinChannelNameLength());
+            sendResourceMessage(sender, PREERR, "errmsgCannotUseForChannelTooShort", name, config.getMinChannelNameLength());
             return true;
         }
 
         // 最大文字列長を下回っているかをチェックする
         if (name.length() > config.getMaxChannelNameLength()) {
-            sendResourceMessage(sender, PREERR,
-                    "errmsgCannotUseForChannelTooLong",
-                    name, config.getMaxChannelNameLength());
+            sendResourceMessage(sender, PREERR, "errmsgCannotUseForChannelTooLong", name, config.getMaxChannelNameLength());
             return true;
         }
 

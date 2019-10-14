@@ -71,8 +71,7 @@ public class LogCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -87,7 +86,6 @@ public class LogCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(CommandSender sender, String label, String[] args) {
-
         Player player = null;
         if (sender instanceof Player) {
             player = (Player) sender;
@@ -106,7 +104,7 @@ public class LogCommand extends SubCommandAbst {
             index = 2;
         }
 
-        for (int i = index; i < args.length; i++) {
+        for (int i = index, length = args.length; i < length; i++) {
             String arg = args[i];
             if (arg.startsWith("p=")) {
                 argsPlayer = arg.substring(2);
@@ -121,34 +119,26 @@ public class LogCommand extends SubCommandAbst {
 
         if (player != null && cname == null) {
             Channel def = api.getDefaultChannel(player.getName());
-            if (def != null) {
-                cname = def.getName();
-            }
+            if (def != null) cname = def.getName();
         }
 
         // 参照権限を確認する
         String node = PERMISSION_NODE + "." + cname;
         if (sender.isPermissionSet(node) && !sender.hasPermission(node)) {
-            sendResourceMessage(sender, PREERR, "errmsgPermission",
-                    PERMISSION_NODE + "." + cname);
+            sendResourceMessage(sender, PREERR, "errmsgPermission", PERMISSION_NODE + "." + cname);
             return true;
         }
 
         // ログの取得
         ArrayList<String> logs;
 
-        if (config.getGlobalChannel().equals("") &&
-                (cname == null || cname.equals(config.getGlobalMarker()))) {
-
+        if (config.getGlobalChannel().equals("") && (cname == null || cname.equals(config.getGlobalMarker()))) {
             // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
             // 通常チャットのログを取得する
             LunaChatLogger logger = LunaChat.getInstance().getNormalChatLogger();
             logs = logger.getLog(argsPlayer, argsFilter, argsDate, reverse);
-
             cname = "グローバルチャット";
-
         } else {
-
             // チャンネルが存在するかどうか確認する
             Channel channel = api.getChannel(cname);
             if (channel == null) {
@@ -176,21 +166,13 @@ public class LogCommand extends SubCommandAbst {
         sender.sendMessage(String.format(LOGDISPLAY_FIRSTLINE, cname));
 
         for (String log : logs) {
-
             String[] temp = log.split(",");
-            String date = temp[0];
-            String message = temp[1];
             String playerName = "";
-            if (temp.length >= 3) {
-                playerName = temp[2];
-            }
-            sender.sendMessage(String.format(
-                    LOGDISPLAY_FORMAT, date, playerName, message));
+            if (temp.length >= 3) playerName = temp[2];
+            sender.sendMessage(String.format(LOGDISPLAY_FORMAT, temp[0], playerName, temp[1]));
         }
 
         sender.sendMessage(LOGDISPLAY_ENDLINE);
-
         return true;
     }
-
 }

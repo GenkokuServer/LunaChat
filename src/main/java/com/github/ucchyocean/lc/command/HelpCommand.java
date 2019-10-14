@@ -75,8 +75,7 @@ public class HelpCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -91,13 +90,10 @@ public class HelpCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(CommandSender sender, String label, String[] args) {
-
         CommandType type = CommandType.USER;
         int page = 1;
 
-        if (args.length >= 2 &&
-                (args[1].equalsIgnoreCase("mod")
-                        || args[1].equalsIgnoreCase("moderator"))) {
+        if (args.length >= 2 && (args[1].equalsIgnoreCase("mod") || args[1].equalsIgnoreCase("moderator"))) {
             type = CommandType.MODERATOR;
         } else if (args.length >= 2 && args[1].equalsIgnoreCase("admin")) {
             type = CommandType.ADMIN;
@@ -110,7 +106,6 @@ public class HelpCommand extends SubCommandAbst {
         }
 
         printUsage(sender, label, type, page);
-
         return true;
     }
 
@@ -122,9 +117,7 @@ public class HelpCommand extends SubCommandAbst {
      * @param type   コマンド種別
      * @param page   ページ
      */
-    private void printUsage(CommandSender sender, String label,
-                            CommandType type, int page) {
-
+    private void printUsage(CommandSender sender, String label, CommandType type, int page) {
         String typeDesc;
         switch (type) {
             case MODERATOR:
@@ -163,5 +156,4 @@ public class HelpCommand extends SubCommandAbst {
             }
         }
     }
-
 }

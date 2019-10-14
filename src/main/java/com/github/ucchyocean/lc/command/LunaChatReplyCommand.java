@@ -25,9 +25,7 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
-                             @NotNull String label, String[] args) {
-
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         // senderからChannelPlayerを作成する
         ChannelPlayer inviter = ChannelPlayer.getChannelPlayer(sender);
 
@@ -36,13 +34,9 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
 
         // 引数が無ければ、現在の会話相手を表示して終了する
         if (args.length == 0) {
-            if (invitedName == null) {
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgReplyInviterNone", inviter.getName());
-            } else {
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgReplyInviter", inviter.getName(), invitedName);
-            }
+            if (invitedName == null) sendResourceMessage(sender, PREINFO, "cmdmsgReplyInviterNone", inviter.getName());
+            else sendResourceMessage(sender, PREINFO, "cmdmsgReplyInviter", inviter.getName(), invitedName);
+
             return true;
         }
 
@@ -54,12 +48,9 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
 
         // メッセージを取得する
         StringBuilder message = new StringBuilder();
-        for (String arg : args) {
-            message.append(arg).append(" ");
-        }
+        for (String arg : args) message.append(arg).append(" ");
 
         sendTellMessage(inviter, invitedName, message.toString().trim());
-
         return true;
     }
 }

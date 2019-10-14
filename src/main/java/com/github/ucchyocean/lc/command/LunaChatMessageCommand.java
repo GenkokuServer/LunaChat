@@ -28,9 +28,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
-                             @NotNull String label, String[] args) {
-
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         // senderからChannelPlayerを作成する
         ChannelPlayer inviter = ChannelPlayer.getChannelPlayer(sender);
 
@@ -44,11 +42,8 @@ public class LunaChatMessageCommand implements CommandExecutor {
         String invitedName;
         StringBuilder message = new StringBuilder();
         invitedName = args[0];
-        if (args.length >= 2) {
-            for (int i = 1; i < args.length; i++) {
-                message.append(args[i]).append(" ");
-            }
-        }
+        if (args.length >= 2)
+            for (int i = 1, l = args.length; i < l; i++) message.append(args[i]).append(" ");
 
         // メッセージを送信する
         sendTellMessage(inviter, invitedName, message.toString().trim());
@@ -63,19 +58,16 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @param message     メッセージ
      */
     void sendTellMessage(ChannelPlayer inviter, String invitedName, String message) {
-
         // 招待相手が存在するかどうかを確認する
         ChannelPlayer invited = ChannelPlayer.getChannelPlayer(invitedName);
         if (!invited.isOnline()) {
-            sendResourceMessage(inviter,
-                    "errmsgNotfoundPlayer", invitedName);
+            sendResourceMessage(inviter, "errmsgNotfoundPlayer", invitedName);
             return;
         }
 
         // 招待相手が自分自身でないか確認する
         if (inviter.getName().equals(invited.getName())) {
-            sendResourceMessage(inviter,
-                    "errmsgCannotSendPMSelf");
+            sendResourceMessage(inviter, "errmsgCannotSendPMSelf");
             return;
         }
 
@@ -93,16 +85,11 @@ public class LunaChatMessageCommand implements CommandExecutor {
         }
 
         // メッセージがあるなら送信する
-        if (message.trim().length() > 0) {
-            channel.chat(inviter, message, false);
-        }
+        if (message.trim().length() > 0) channel.chat(inviter, message, false);
 
         // 送信履歴を残す
-        DataMaps.privateMessageMap.put(
-                invited.getName(), inviter.getName());
-        DataMaps.privateMessageMap.put(
-                inviter.getName(), invited.getName());
-
+        DataMaps.privateMessageMap.put(invited.getName(), inviter.getName());
+        DataMaps.privateMessageMap.put(inviter.getName(), invited.getName());
     }
 
     /**
@@ -123,15 +110,10 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @param key    リソースキー
      * @param args   リソース内の置き換え対象キーワード
      */
-    void sendResourceMessage(CommandSender sender, String pre,
-                             String key, Object... args) {
-
+    void sendResourceMessage(CommandSender sender, String pre, String key, Object... args) {
         String org = Resources.get(key);
-        if (org == null || org.equals("")) {
-            return;
-        }
-        String msg = String.format(pre + org, args);
-        sender.sendMessage(msg);
+        if (org == null || org.equals("")) return;
+        sender.sendMessage(String.format(pre + org, args));
     }
 
     /**
@@ -140,14 +122,9 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @param key  リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    private void sendResourceMessage(ChannelPlayer cp,
-                                     String key, Object... args) {
-
+    private void sendResourceMessage(ChannelPlayer cp, String key, Object... args) {
         String org = Resources.get(key);
-        if (org == null || org.equals("")) {
-            return;
-        }
-        String msg = String.format(LunaChatMessageCommand.PREERR + org, args);
-        cp.sendMessage(msg);
+        if (org == null || org.equals("")) return;
+        cp.sendMessage(String.format(LunaChatMessageCommand.PREERR + org, args));
     }
 }

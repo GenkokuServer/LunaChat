@@ -5,7 +5,6 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import org.bukkit.Bukkit;
@@ -65,8 +64,7 @@ public class UnhideCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY1, label);
         sendResourceMessage(sender, "", USAGE_KEY2, label);
     }
@@ -81,23 +79,21 @@ public class UnhideCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
-    public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
+    public boolean runCommand(CommandSender sender, String label, String[] args) {
         // プレイヤーでなければ終了する
         if (!(sender instanceof Player)) {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
             return true;
         }
+
         ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
 
         // 引数チェック
         String cname = null;
         if (args.length <= 1) {
             Channel def = api.getDefaultChannel(player.getName());
-            if (def != null) {
-                cname = def.getName();
-            }
+            if (def != null) cname = def.getName();
+
         } else {
             cname = args[1];
         }
@@ -114,7 +110,6 @@ public class UnhideCommand extends SubCommandAbst {
 
         if (isChannelCommand) {
             // チャンネルが対象の場合の処理
-
             // 非表示になっているかどうかをチェックする
             if (!channel.getHided().contains(player)) {
                 sendResourceMessage(sender, PREERR, "errmsgAlreadyUnhided");
@@ -127,10 +122,8 @@ public class UnhideCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREINFO, "cmdmsgUnhided", channel.getName());
 
             return true;
-
         } else {
             // プレイヤーが対象の場合の処理
-
             // 既に表示になっていないかどうかをチェックする
             if (cname != null) {
                 ChannelPlayer hided = ChannelPlayer.getChannelPlayer(cname);

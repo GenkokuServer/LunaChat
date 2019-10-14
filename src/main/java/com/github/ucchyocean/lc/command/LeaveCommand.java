@@ -62,8 +62,7 @@ public class LeaveCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -77,9 +76,7 @@ public class LeaveCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
-    public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
+    public boolean runCommand(CommandSender sender, String label, String[] args) {
         // プレイヤーでなければ終了する
         if (!(sender instanceof Player)) {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
@@ -91,12 +88,9 @@ public class LeaveCommand extends SubCommandAbst {
         ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
         Channel def = api.getDefaultChannel(player.getName());
         String channelName = null;
-        if (def != null) {
-            channelName = def.getName();
-        }
-        if (args.length >= 2) {
-            channelName = args[1];
-        }
+        if (def != null) channelName = def.getName();
+
+        if (args.length >= 2) channelName = args[1];
 
         Channel channel = api.getChannel(channelName);
 
@@ -111,8 +105,7 @@ public class LeaveCommand extends SubCommandAbst {
         // 退室権限を確認する
         String node = PERMISSION_NODE + "." + channelName;
         if (sender.isPermissionSet(node) && !sender.hasPermission(node)) {
-            sendResourceMessage(sender, PREERR, "errmsgPermission",
-                    PERMISSION_NODE + "." + channelName);
+            sendResourceMessage(sender, PREERR, "errmsgPermission", PERMISSION_NODE + "." + channelName);
             return true;
         }
 

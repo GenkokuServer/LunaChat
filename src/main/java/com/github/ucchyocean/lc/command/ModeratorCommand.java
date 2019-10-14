@@ -65,8 +65,7 @@ public class ModeratorCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -80,23 +79,18 @@ public class ModeratorCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
-    public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
+    public boolean runCommand(CommandSender sender, String label, String[] args) {
         Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
+        if (sender instanceof Player) player = (Player) sender;
 
         // 引数チェック
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
         String cname = null;
         ArrayList<String> moderator = new ArrayList<>();
+
         if (player != null && args.length >= 2) {
             Channel def = api.getDefaultChannel(player.getName());
-            if (def != null) {
-                cname = def.getName();
-            }
+            if (def != null) cname = def.getName();
             moderator.addAll(Arrays.asList(args).subList(1, args.length));
         } else if (args.length >= 3) {
             cname = args[1];
@@ -124,8 +118,7 @@ public class ModeratorCommand extends SubCommandAbst {
 
         // グローバルチャンネルなら設定できない
         if (channel.isGlobalChannel()) {
-            sendResourceMessage(sender, PREERR,
-                    "errmsgCannotModeratorGlobal", channel.getName());
+            sendResourceMessage(sender, PREERR, "errmsgCannotModeratorGlobal", channel.getName());
             return true;
         }
 
@@ -135,13 +128,11 @@ public class ModeratorCommand extends SubCommandAbst {
                 String name = mod.substring(1);
                 ChannelPlayer cp = ChannelPlayer.getChannelPlayer(name);
                 channel.removeModerator(cp);
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgModeratorMinus", name, cname);
+                sendResourceMessage(sender, PREINFO, "cmdmsgModeratorMinus", name, cname);
             } else {
                 ChannelPlayer cp = ChannelPlayer.getChannelPlayer(mod);
                 channel.addModerator(cp);
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgModerator", mod, cname);
+                sendResourceMessage(sender, PREINFO, "cmdmsgModerator", mod, cname);
             }
         }
 

@@ -77,8 +77,7 @@ public class CheckCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY1, label);
         sendResourceMessage(sender, "", USAGE_KEY2, label);
     }
@@ -93,9 +92,7 @@ public class CheckCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
-    public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
+    public boolean runCommand(CommandSender sender, String label, String[] args) {
         boolean isRemove = false;
 
         Player player = null;
@@ -151,7 +148,6 @@ public class CheckCommand extends SubCommandAbst {
                 }
             }
             sendResourceMessage(sender, PREINFO, "cmdmsgCheckRemove", counter);
-
             return true;
         }
     }
@@ -162,7 +158,6 @@ public class CheckCommand extends SubCommandAbst {
      * @return 削除対象のチャンネルのリスト
      */
     private ArrayList<Channel> getCheckList() {
-
         ArrayList<Channel> list = new ArrayList<>();
         for (Channel channel : api.getChannels()) {
             if (channel.getModerator().size() == 0 &&
@@ -180,16 +175,14 @@ public class CheckCommand extends SubCommandAbst {
      * @param list   対象チャンネル
      */
     private void sendCheckListMessages(CommandSender sender, ArrayList<Channel> list) {
-
         Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
+        if (sender instanceof Player) player = (Player) sender;
 
         ArrayList<String> items = new ArrayList<>();
         String dchannel = "";
         String playerName;
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
+
         if (player != null) {
             playerName = player.getName();
             Channel def = api.getDefaultChannel(playerName);
@@ -201,33 +194,26 @@ public class CheckCommand extends SubCommandAbst {
         // メッセージを作成する
         items.add(LIST_FIRSTLINE);
         for (Channel channel : list) {
-
             // デフォルト発言先なら赤にする。
             String disp = ChatColor.WHITE + channel.getName();
             if (channel.getName().equalsIgnoreCase(dchannel)) {
                 disp = ChatColor.RED + channel.getName();
             }
 
-            if (player != null &&
-                    !channel.getMembers().contains(cp) &&
-                    !channel.isGlobalChannel()) {
-
+            if (player != null && !channel.getMembers().contains(cp) && !channel.isGlobalChannel())
                 // 参加していないチャンネルならグレーにする
                 disp = ChatColor.GRAY + channel.getName();
-            }
 
             String desc = channel.getDescription();
             int onlineNum = channel.getOnlineNum();
             int memberNum = channel.getTotalNum();
-            String item = String.format(
-                    LIST_FORMAT, disp, onlineNum, memberNum, desc);
+            String item = String.format(LIST_FORMAT, disp, onlineNum, memberNum, desc);
             items.add(item);
         }
+
         items.add(LIST_ENDLINE);
 
         // メッセージを送信する
-        for (String msg : items) {
-            sender.sendMessage(msg);
-        }
+        items.forEach(sender::sendMessage);
     }
 }

@@ -61,8 +61,7 @@ public class RemoveCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -76,22 +75,16 @@ public class RemoveCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
-    public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
+    public boolean runCommand(CommandSender sender, String label, String[] args) {
         Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
+        if (sender instanceof Player) player = (Player) sender;
 
         // 引数チェック
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
         String cname = null;
         if (player != null && args.length <= 1) {
             Channel def = api.getDefaultChannel(player.getName());
-            if (def != null) {
-                cname = def.getName();
-            }
+            if (def != null) cname = def.getName();
         } else if (args.length >= 2) {
             cname = args[1];
         } else {

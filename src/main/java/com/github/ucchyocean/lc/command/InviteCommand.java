@@ -65,8 +65,7 @@ public class InviteCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -81,7 +80,6 @@ public class InviteCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(CommandSender sender, String label, String[] args) {
-
         if (args.length >= 3 && args[2].equalsIgnoreCase("force")) {
             return runForceInviteCommand(sender, args);
         }
@@ -97,7 +95,6 @@ public class InviteCommand extends SubCommandAbst {
      * @return コマンドが成功したかどうか
      */
     private boolean runNormalInviteCommand(CommandSender sender, String[] args) {
-
         // プレイヤーでなければ終了する
         if (!(sender instanceof Player)) {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
@@ -162,7 +159,6 @@ public class InviteCommand extends SubCommandAbst {
      * @return コマンドが成功したかどうか
      */
     private boolean runForceInviteCommand(CommandSender sender, String[] args) {
-
         // パーミッションチェック
         if (!sender.hasPermission(PERMISSION_NODE_FORCE_INVITE)) {
             sendResourceMessage(sender, PREERR, "errmsgPermission",

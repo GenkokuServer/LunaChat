@@ -70,8 +70,7 @@ public class ListCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -85,9 +84,7 @@ public class ListCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
-    public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
+    public boolean runCommand(CommandSender sender, String label, String[] args) {
         Player player = null;
         if (sender instanceof Player) {
             player = (Player) sender;
@@ -95,9 +92,7 @@ public class ListCommand extends SubCommandAbst {
 
         // リストを取得して表示する
         ArrayList<String> list = getList(player);
-        for (String msg : list) {
-            sender.sendMessage(msg);
-        }
+        list.forEach(sender::sendMessage);
         return true;
     }
 
@@ -108,61 +103,46 @@ public class ListCommand extends SubCommandAbst {
      * @return リスト
      */
     private ArrayList<String> getList(Player player) {
-
         ArrayList<String> items = new ArrayList<>();
         String dchannel = "";
         String playerName;
+
         if (player != null) {
             playerName = player.getName();
             Channel def = api.getDefaultChannel(playerName);
-            if (def == null) {
-                dchannel = "";
-            } else {
-                dchannel = def.getName();
-            }
+            if (def == null) dchannel = "";
+            else dchannel = def.getName();
         }
+
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
 
         items.add(LIST_FIRSTLINE);
         for (Channel channel : api.getChannels()) {
-
             // BANされているチャンネルは表示しない
-            if (channel.getBanned().contains(cp)) {
-                continue;
-            }
+            if (channel.getBanned().contains(cp)) continue;
 
             // 個人チャットはリストに表示しない
-            if (channel.isPersonalChat()) {
-                continue;
-            }
+            if (channel.isPersonalChat()) continue;
 
             // デフォルト発言先なら赤に、非表示中なら暗青にする。
             String disp = ChatColor.WHITE + channel.getName();
-            if (channel.getName().equalsIgnoreCase(dchannel)) {
-                disp = ChatColor.RED + channel.getName();
-            } else if (channel.getHided().contains(cp)) {
-                disp = ChatColor.DARK_AQUA + channel.getName();
-            }
+            if (channel.getName().equalsIgnoreCase(dchannel)) disp = ChatColor.RED + channel.getName();
+            else if (channel.getHided().contains(cp)) disp = ChatColor.DARK_AQUA + channel.getName();
 
-            if (player != null &&
-                    !channel.getMembers().contains(cp) &&
-                    !channel.isGlobalChannel()) {
-
+            if (player != null && !channel.getMembers().contains(cp) && !channel.isGlobalChannel()) {
                 // 未参加で visible=false のチャンネルは表示しない
-                if (!channel.isVisible()) {
-                    continue;
-                }
+                if (!channel.isVisible()) continue;
                 disp = ChatColor.GRAY + channel.getName();
             }
+
             String desc = channel.getDescription();
             int onlineNum = channel.getOnlineNum();
             int memberNum = channel.getTotalNum();
-            String item = String.format(
-                    LIST_FORMAT, disp, onlineNum, memberNum, desc);
+            String item = String.format(LIST_FORMAT, disp, onlineNum, memberNum, desc);
             items.add(item);
         }
-        items.add(LIST_ENDLINE);
 
+        items.add(LIST_ENDLINE);
         return items;
     }
 }

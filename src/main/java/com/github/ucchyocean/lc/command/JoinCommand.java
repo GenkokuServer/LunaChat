@@ -63,8 +63,7 @@ public class JoinCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -78,14 +77,13 @@ public class JoinCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
-    public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
+    public boolean runCommand(CommandSender sender, String label, String[] args) {
         // プレイヤーでなければ終了する
         if (!(sender instanceof Player)) {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
             return true;
         }
+
         ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
 
         // 実行引数から、参加するチャンネルを取得する
@@ -93,18 +91,16 @@ public class JoinCommand extends SubCommandAbst {
         StringBuilder message = new StringBuilder();
         if (!args[0].equalsIgnoreCase("join")) {
             channelName = args[0];
-            if (args.length >= 2) {
-                for (int i = 1; i < args.length; i++) {
-                    message.append(args[i]).append(" ");
-                }
-            }
+
+            if (args.length >= 2)
+                for (int i = 1, l = args.length; i < l; i++) message.append(args[i]).append(" ");
+
         } else if (args.length >= 2) {
             channelName = args[1];
-            if (args.length >= 3) {
-                for (int i = 2; i < args.length; i++) {
-                    message.append(args[i]).append(" ");
-                }
-            }
+
+            if (args.length >= 3)
+                for (int i = 2, l = args.length; i < l; i++) message.append(args[i]).append(" ");
+
         } else {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             return true;
@@ -115,8 +111,7 @@ public class JoinCommand extends SubCommandAbst {
 
         // チャンネルが存在するかどうかをチェックする
         if (channel == null) {
-            if (config.getGlobalChannel().equals("") &&
-                    channelName.equals(config.getGlobalMarker())) {
+            if (config.getGlobalChannel().equals("") && channelName.equals(config.getGlobalMarker())) {
                 // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
                 // 発言先を削除して、グローバルチャンネルにする
 
@@ -132,23 +127,20 @@ public class JoinCommand extends SubCommandAbst {
 
                 // 使用可能なチャンネル名かどうかをチェックする
                 if (!channelName.matches("[0-9a-zA-Z\\-_]+")) {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgCannotUseForChannel", channelName);
+                    sendResourceMessage(sender, PREERR, "errmsgCannotUseForChannel", channelName);
                     return true;
                 }
 
                 // 最低文字列長を上回っているかをチェックする
                 if (channelName.length() < config.getMinChannelNameLength()) {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgCannotUseForChannelTooShort",
+                    sendResourceMessage(sender, PREERR, "errmsgCannotUseForChannelTooShort",
                             channelName, config.getMinChannelNameLength());
                     return true;
                 }
 
                 // 最大文字列長を下回っているかをチェックする
                 if (channelName.length() > config.getMaxChannelNameLength()) {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgCannotUseForChannelTooLong",
+                    sendResourceMessage(sender, PREERR, "errmsgCannotUseForChannelTooLong",
                             channelName, config.getMaxChannelNameLength());
                     return true;
                 }
@@ -163,7 +155,6 @@ public class JoinCommand extends SubCommandAbst {
 
             } else {
                 // 存在しないチャットには入れない設定の場合
-
                 sendResourceMessage(sender, PREERR, "errmsgNotExist");
                 return true;
             }
@@ -174,8 +165,7 @@ public class JoinCommand extends SubCommandAbst {
         // 入室権限を確認する
         String node = PERMISSION_NODE + "." + channelName;
         if (sender.isPermissionSet(node) && !sender.hasPermission(node)) {
-            sendResourceMessage(sender, PREERR, "errmsgPermission",
-                    PERMISSION_NODE + "." + channelName);
+            sendResourceMessage(sender, PREERR, "errmsgPermission", PERMISSION_NODE + "." + channelName);
             return true;
         }
 
@@ -204,10 +194,8 @@ public class JoinCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
 
         } else {
-
             // グローバルチャンネルで、何かメッセージがあるなら、そのままチャット送信する
-            if (channel.getName().equals(config.getGlobalChannel()) &&
-                    message.length() > 0 && hasSpeakPermission(sender, channelName)) {
+            if (channel.getName().equals(config.getGlobalChannel()) && message.length() > 0 && hasSpeakPermission(sender, channelName)) {
                 channel.chat(player, message.toString(), false);
                 return true;
             }
@@ -234,19 +222,18 @@ public class JoinCommand extends SubCommandAbst {
                 channel.addMember(player);
                 sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channelName);
             }
+
             api.setDefaultChannel(player.getName(), channelName);
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
         }
 
         // チャンネル説明文があるなら、説明文を表示する
-        if (!channel.getDescription().trim().equals("")) {
+        if (!channel.getDescription().trim().equals(""))
             sendResourceMessage(sender, PREINFO, "cmdmsgSetTopic", channel.getDescription().trim());
-        }
 
         // 非表示に設定しているなら、注意を流す
-        if (channel.getHided().contains(player)) {
+        if (channel.getHided().contains(player))
             sendResourceMessage(sender, PREINFO, "cmdmsgSetHide");
-        }
 
         return true;
     }

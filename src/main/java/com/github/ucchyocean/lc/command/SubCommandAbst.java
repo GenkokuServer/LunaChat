@@ -5,9 +5,13 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import com.github.ucchyocean.lc.*;
+import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.LunaChatAPI;
+import com.github.ucchyocean.lc.LunaChatConfig;
+import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -21,6 +25,7 @@ public abstract class SubCommandAbst {
     static final String PREERR = Resources.get("errorPrefix");
     final LunaChatAPI api;
     final LunaChatConfig config;
+
     /**
      * コンストラクタ
      */
@@ -36,15 +41,15 @@ public abstract class SubCommandAbst {
      * @param key     リソースキー
      * @param player  キーワード置き換えに使用するプレイヤー
      */
-    void sendResourceMessageWithKeyword(
-            Channel channel, String key, ChannelPlayer player) {
-
+    void sendResourceMessageWithKeyword(Channel channel, String key, ChannelPlayer player) {
         String msg = Resources.get(key);
         if (msg == null || msg.equals("")) {
             return;
         }
+
         msg = msg.replace("%ch", channel.getName());
         msg = msg.replace("%color", channel.getColorCode());
+
         if (player != null) {
             msg = msg.replace("%username", player.getDisplayName());
             msg = msg.replace("%player", player.getName());
@@ -64,16 +69,14 @@ public abstract class SubCommandAbst {
      * @param player  キーワード置き換えに使用するプレイヤー
      * @param minutes キーワード置き換えに使用する数値
      */
-    void sendResourceMessageWithKeyword(
-            Channel channel, String key, ChannelPlayer player, int minutes) {
-
+    void sendResourceMessageWithKeyword(Channel channel, String key, ChannelPlayer player, int minutes) {
         String msg = Resources.get(key);
-        if (msg == null || msg.equals("")) {
-            return;
-        }
+        if (msg == null || msg.equals("")) return;
+
         msg = msg.replace("%ch", channel.getName());
         msg = msg.replace("%color", channel.getColorCode());
         msg = msg.replace("%d", String.valueOf(minutes));
+
         if (player != null) {
             msg = msg.replace("%username", player.getDisplayName());
             msg = msg.replace("%player", player.getName());
@@ -81,6 +84,7 @@ public abstract class SubCommandAbst {
             msg = msg.replace("%username", "");
             msg = msg.replace("%player", "");
         }
+
         msg = ChatColor.translateAlternateColorCodes('&', msg);
         channel.sendMessage(null, msg, null, true, "system", false);
     }
@@ -93,15 +97,10 @@ public abstract class SubCommandAbst {
      * @param key    リソースキー
      * @param args   リソース内の置き換え対象キーワード
      */
-    void sendResourceMessage(
-            CommandSender sender, String pre, String key, Object... args) {
-
+    void sendResourceMessage(CommandSender sender, String pre, String key, Object... args) {
         String org = Resources.get(key);
-        if (org == null || org.equals("")) {
-            return;
-        }
-        String msg = String.format(pre + org, args);
-        sender.sendMessage(msg);
+        if (org == null || org.equals("")) return;
+        sender.sendMessage(String.format(pre + org, args));
     }
 
     /**
@@ -110,15 +109,10 @@ public abstract class SubCommandAbst {
      * @param key  リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    void sendResourceMessage(
-            ChannelPlayer cp, String key, Object... args) {
-
+    void sendResourceMessage(ChannelPlayer cp, String key, Object... args) {
         String org = Resources.get(key);
-        if (org == null || org.equals("")) {
-            return;
-        }
-        String msg = String.format(SubCommandAbst.PREINFO + org, args);
-        cp.sendMessage(msg);
+        if (org == null || org.equals("")) return;
+        cp.sendMessage(String.format(SubCommandAbst.PREINFO + org, args));
     }
 
     /**
@@ -148,8 +142,7 @@ public abstract class SubCommandAbst {
      * @param sender コマンド実行者
      * @param label  実行ラベル
      */
-    protected abstract void sendUsageMessage(
-            CommandSender sender, String label);
+    protected abstract void sendUsageMessage(CommandSender sender, String label);
 
     /**
      * コマンドを実行します。
@@ -159,8 +152,7 @@ public abstract class SubCommandAbst {
      * @param args   実行時の引数
      * @return コマンドが実行されたかどうか
      */
-    public abstract boolean runCommand(
-            CommandSender sender, String label, String[] args);
+    public abstract boolean runCommand(CommandSender sender, String label, String[] args);
 
     /**
      * コマンドの種別

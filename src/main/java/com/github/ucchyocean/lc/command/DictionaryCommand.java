@@ -62,8 +62,7 @@ public class DictionaryCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    protected void sendUsageMessage(
-            CommandSender sender, String label) {
+    protected void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -78,7 +77,6 @@ public class DictionaryCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(CommandSender sender, String label, String[] args) {
-
         // 引数チェック
         // このコマンドは、コンソールでも実行できる
         if (args.length <= 1) {
@@ -87,16 +85,13 @@ public class DictionaryCommand extends SubCommandAbst {
             return true;
         }
 
-        if (!args[1].equalsIgnoreCase("add") &&
-                !args[1].equalsIgnoreCase("remove") &&
-                !args[1].equalsIgnoreCase("view")) {
+        if (!args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("remove") && !args[1].equalsIgnoreCase("view")) {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             sendUsageMessage(sender, label);
             return true;
         }
 
         if (args[1].equalsIgnoreCase("add")) {
-
             // addの場合は、さらに2つ引数が必要
             if (args.length <= 3) {
                 sendResourceMessage(sender, PREERR, "errmsgCommand");
@@ -110,9 +105,7 @@ public class DictionaryCommand extends SubCommandAbst {
 
             sendResourceMessage(sender, PREINFO, "cmdmsgDictionaryAdd", key, value);
             return true;
-
         } else if (args[1].equalsIgnoreCase("remove")) {
-
             // removeの場合は、さらに1つ引数が必要
             if (args.length <= 2) {
                 sendResourceMessage(sender, PREERR, "errmsgCommand");
@@ -125,19 +118,14 @@ public class DictionaryCommand extends SubCommandAbst {
 
             sendResourceMessage(sender, PREINFO, "cmdmsgDictionaryRemove", key);
             return true;
-
         } else if (args[1].equalsIgnoreCase("view")) {
-
             HashMap<String, String> dic = api.getAllDictionary();
             for (String key : dic.keySet()) {
                 String value = dic.get(key);
                 sender.sendMessage(key + ChatColor.GRAY + " -> " + ChatColor.WHITE + value);
             }
             return true;
-
         }
-
         return true;
     }
-
 }

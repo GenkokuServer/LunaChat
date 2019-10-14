@@ -62,8 +62,7 @@ public class PardonCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -77,9 +76,7 @@ public class PardonCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
-    public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
+    public boolean runCommand(CommandSender sender, String label, String[] args) {
         // プレイヤーでなければ終了する
         if (!(sender instanceof Player)) {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
@@ -122,17 +119,13 @@ public class PardonCommand extends SubCommandAbst {
         channel.save();
 
         // senderに通知メッセージを出す
-        sendResourceMessage(sender, PREINFO,
-                "cmdmsgPardon", kickedName, channel.getName());
+        sendResourceMessage(sender, PREINFO, "cmdmsgPardon", kickedName, channel.getName());
 
         // チャンネルに通知メッセージを出す
         sendResourceMessageWithKeyword(channel, "pardonMessage", kicked);
 
         // BANされていた人に通知メッセージを出す
-        if (kicked.isOnline()) {
-            sendResourceMessage(kicked,
-                    "cmdmsgPardoned", channel.getName());
-        }
+        if (kicked.isOnline()) sendResourceMessage(kicked, "cmdmsgPardoned", channel.getName());
 
         return true;
     }

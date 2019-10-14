@@ -63,8 +63,7 @@ public class MuteCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY1, label);
         sendResourceMessage(sender, "", USAGE_KEY2, label);
     }
@@ -79,8 +78,7 @@ public class MuteCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
-    public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
+    public boolean runCommand(CommandSender sender, String label, String[] args) {
 
         // プレイヤーでなければ終了する
         if (!(sender instanceof Player)) {
@@ -147,26 +145,21 @@ public class MuteCommand extends SubCommandAbst {
         channel.save();
 
         // senderに通知メッセージを出す
-        if (expireMinutes != -1) {
-            sendResourceMessage(sender, PREINFO,
-                    "cmdmsgMuteWithExpire", kickedName, channel.getName(), expireMinutes);
-        } else {
-            sendResourceMessage(sender, PREINFO,
-                    "cmdmsgMute", kickedName, channel.getName());
-        }
+        if (expireMinutes != -1)
+            sendResourceMessage(sender, PREINFO, "cmdmsgMuteWithExpire", kickedName, channel.getName(), expireMinutes);
+        else
+            sendResourceMessage(sender, PREINFO, "cmdmsgMute", kickedName, channel.getName());
+
 
         // チャンネルに通知メッセージを出す
-        if (expireMinutes != -1) {
-            sendResourceMessageWithKeyword(channel,
-                    "muteWithExpireMessage", kicked, expireMinutes);
-        } else {
+        if (expireMinutes != -1)
+            sendResourceMessageWithKeyword(channel, "muteWithExpireMessage", kicked, expireMinutes);
+        else
             sendResourceMessageWithKeyword(channel, "muteMessage", kicked);
-        }
+
 
         // BANされた人に通知メッセージを出す
-        sendResourceMessage(kicked,
-                "cmdmsgMuted", channel.getName());
-
+        sendResourceMessage(kicked, "cmdmsgMuted", channel.getName());
         return true;
     }
 }

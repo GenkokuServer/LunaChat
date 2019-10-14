@@ -63,8 +63,7 @@ public class FormatCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -78,9 +77,7 @@ public class FormatCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
-    public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
+    public boolean runCommand(CommandSender sender, String label, String[] args) {
         Player player = null;
         if (sender instanceof Player) {
             player = (Player) sender;
@@ -107,10 +104,12 @@ public class FormatCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             return true;
         }
+
         format = new StringBuffer(format.toString().trim());
 
         // チャンネルが存在するかどうかをチェックする
         Channel channel = api.getChannel(cname);
+
         if (channel == null) {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
@@ -125,6 +124,7 @@ public class FormatCommand extends SubCommandAbst {
         // 制約キーワードを確認する
         List<String> constraints = config.getFormatConstraint();
         String tempFormat = format.toString();
+
         for (int i = 0; i <= 9; i++) {
             String key = "%" + i;
             if (tempFormat.contains(key) && api.getTemplate(i + "") != null) {
@@ -132,13 +132,13 @@ public class FormatCommand extends SubCommandAbst {
                 break;
             }
         }
+
         for (String constraint : constraints) {
             if (!tempFormat.contains(constraint)) {
                 sendResourceMessage(sender, PREERR, "errmsgFormatConstraint", constraint);
                 return true;
             }
         }
-
         // フォーマットの設定
         channel.setFormat(format.toString());
         sendResourceMessage(sender, PREINFO, "cmdmsgFormat", format.toString());

@@ -59,8 +59,7 @@ public class TemplateCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(CommandSender, String)
      */
     @Override
-    public void sendUsageMessage(
-            CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSender sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -74,9 +73,7 @@ public class TemplateCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(CommandSender, String, String[])
      */
     @Override
-    public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
+    public boolean runCommand(CommandSender sender, String label, String[] args) {
         // 引数チェック
         // このコマンドは、コンソールでも実行できる
         if (args.length <= 1) {
@@ -90,27 +87,25 @@ public class TemplateCommand extends SubCommandAbst {
             return true;
         }
 
-        String id = args[1];
         StringBuilder buf = new StringBuilder();
         if (args.length >= 3) {
-            for (int i = 2; i < args.length; i++) {
+            for (int i = 2, l = args.length; i < l; i++) {
                 buf.append(args[i]).append(" ");
             }
         }
+
         String format = buf.toString().trim();
+        String id = args[1];
 
         // 登録を実行
         if (format.equals("")) {
             api.removeTemplate(id);
-            sendResourceMessage(sender, PREINFO,
-                    "cmdmsgTemplateRemove", id);
+            sendResourceMessage(sender, PREINFO, "cmdmsgTemplateRemove", id);
         } else {
             api.setTemplate(id, format);
-            sendResourceMessage(sender, PREINFO,
-                    "cmdmsgTemplate", id, format);
+            sendResourceMessage(sender, PREINFO, "cmdmsgTemplate", id, format);
         }
 
         return true;
-
     }
 }
