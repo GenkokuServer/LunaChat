@@ -16,6 +16,7 @@ import com.github.ucchyocean.lc.command.LunaChatReplyCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +39,6 @@ public class LunaChat extends JavaPlugin {
     private DynmapBridge dynmap;
     private MultiverseCoreBridge multiverse;
 
-    private ExpireCheckTask expireCheckerTask;
     private LunaChatLogger normalChatLogger;
 
     private LunaChatCommand lunachatCommand;
@@ -96,8 +96,7 @@ public class LunaChat extends JavaPlugin {
         lcjapanizeCommand = new LunaChatJapanizeCommand();
 
         // 期限チェッカータスクの起動
-        expireCheckerTask = new ExpireCheckTask();
-        expireCheckerTask.runTaskTimerAsynchronously(this, 100, 1200);
+        new ExpireCheckTask().runTaskTimerAsynchronously(this, 100, 1200);
     }
 
     /**
@@ -107,10 +106,10 @@ public class LunaChat extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        // 期限チェッカータスクの停止
-        if (expireCheckerTask != null) {
-            expireCheckerTask.cancel();
-        }
+        HandlerList.unregisterAll(this);
+        Bukkit.getScheduler().cancelTasks(this);
+        Bukkit.getServer().getMessenger().unregisterIncomingPluginChannel(this);
+        Bukkit.getServer().getMessenger().unregisterOutgoingPluginChannel(this);
     }
 
     /**
