@@ -1,45 +1,46 @@
-name: ${project.name}
+name: Lunachat
 main: com.github.ucchyocean.lc.LunaChat
 version: ${project.version}
 author: ucchy
 description: ${project.description}
-softdepend: [Vault, dynmap, HawkEye, Multiverse-Core, mcMMO, Prism]
+api-version: "1.14"
+softdepend: [Vault, dynmap, Multiverse-Core]
 
 commands:
   lunachat:
     description: lunachatのユーザーコマンド
     aliases: [ch, lc]
     usage: |
-           /<command> join (channel) - チャンネルに参加します。
-           /<command> leave - 参加しているチャンネルから退出します。
-           /<command> list - チャンネルのリストを表示します。
-           /<command> invite (name) [force] - 指定した人をチャンネルチャットに招待します。
-           /<command> accept - 招待を受けてチャンネルチャットに入室します。
-           /<command> deny - 招待を拒否します。
-           /<command> kick (name) - 指定した人をチャンネルチャットからキックします。
-           /<command> ban (name) - 指定した人をチャンネルチャットからBANします。
-           /<command> ban (name) [minutes] - 指定した人を指定した分間、BANします。
-           /<command> pardon (name) - 指定した人のBANを解除します。
-           /<command> mute (name) - 指定した人をチャンネルチャットからMuteします。
-           /<command> mute (name) [minutes] - 指定した人を指定した分間、Muteします。
-           /<command> unmute (name) - 指定した人のMuteを解除します。
-           /<command> hide [channel] - 指定したチャンネルの発言内容を非表示にします。指定を省略すると、現在自分が居るチャンネルが非表示になります。
-           /<command> hide (player) - 指定したプレイヤーの発言内容を非表示にします。
-           /<command> unhide [channel] - 指定したチャンネルの発言内容を非表示から表示に戻します。
-           /<command> unhide (player) - 指定したプレイヤーの発言内容を非表示から表示に戻します。
-           /<command> info [channel] - チャンネルの情報を表示します。
-           /<command> log [channel] [key=value...] - チャンネルのログを表示します。
-           /<command> create (channel) - チャンネルを作成します。
-           /<command> remove [channel] - チャンネルを削除します。
-           /<command> format [channel] (format...) - チャンネルのメッセージフォーマットを設定します。
-           /<command> moderator [channel] (player...) - チャンネルのモデレーターを指定したプレイヤーに設定します。
-           /<command> dictionary (add (word) (value)|remove (word)) - Japanize変換辞書に新しいワードを登録したり、指定したワードを削除したりします。
-           /<command> option (key=value...) - チャンネルのオプションを設定します。
-           /<command> template (number) (template...) - メッセージフォーマットのテンプレートを登録します。
-           /<command> check - モデレータがいないチャンネルを一覧します。
-           /<command> check remove - /<command> check で一覧されたチャンネルを全て削除します。
-           /<command> reload - config.ymlの再読み込みをします。
-           /<command> help [user|mod|admin] [page] - ヘルプを表示します。
+      /<command> join (channel) - チャンネルに参加します。
+      /<command> leave - 参加しているチャンネルから退出します。
+      /<command> list - チャンネルのリストを表示します。
+      /<command> invite (name) [force] - 指定した人をチャンネルチャットに招待します。
+      /<command> accept - 招待を受けてチャンネルチャットに入室します。
+      /<command> deny - 招待を拒否します。
+      /<command> kick (name) - 指定した人をチャンネルチャットからキックします。
+      /<command> ban (name) - 指定した人をチャンネルチャットからBANします。
+      /<command> ban (name) [minutes] - 指定した人を指定した分間、BANします。
+      /<command> pardon (name) - 指定した人のBANを解除します。
+      /<command> mute (name) - 指定した人をチャンネルチャットからMuteします。
+      /<command> mute (name) [minutes] - 指定した人を指定した分間、Muteします。
+      /<command> unmute (name) - 指定した人のMuteを解除します。
+      /<command> hide [channel] - 指定したチャンネルの発言内容を非表示にします。指定を省略すると、現在自分が居るチャンネルが非表示になります。
+      /<command> hide (player) - 指定したプレイヤーの発言内容を非表示にします。
+      /<command> unhide [channel] - 指定したチャンネルの発言内容を非表示から表示に戻します。
+      /<command> unhide (player) - 指定したプレイヤーの発言内容を非表示から表示に戻します。
+      /<command> info [channel] - チャンネルの情報を表示します。
+      /<command> log [channel] [key=value...] - チャンネルのログを表示します。
+      /<command> create (channel) - チャンネルを作成します。
+      /<command> remove [channel] - チャンネルを削除します。
+      /<command> format [channel] (format...) - チャンネルのメッセージフォーマットを設定します。
+      /<command> moderator [channel] (player...) - チャンネルのモデレーターを指定したプレイヤーに設定します。
+      /<command> dictionary (add (word) (value)|remove (word)) - Japanize変換辞書に新しいワードを登録したり、指定したワードを削除したりします。
+      /<command> option (key=value...) - チャンネルのオプションを設定します。
+      /<command> template (number) (template...) - メッセージフォーマットのテンプレートを登録します。
+      /<command> check - モデレータがいないチャンネルを一覧します。
+      /<command> check remove - /<command> check で一覧されたチャンネルを全て削除します。
+      /<command> reload - config.ymlの再読み込みをします。
+      /<command> help [user|mod|admin] [page] - ヘルプを表示します。
   tell:
     description: 1:1チャット送信コマンド
     aliases: [msg, message, m, t, w]
@@ -56,8 +57,8 @@ commands:
     description: lunachatのjapanizeオンオフ設定コマンド
     aliases: [japanize, jp]
     usage: |
-           /<command> on|off - Turn on/off the Japanize conversion of your chat.
-           /<command> (player) (on|off) - Turn on/off the Japanize conversion of other player's chat.
+      /<command> on|off - Turn on/off the Japanize conversion of your chat.
+      /<command> (player) (on|off) - Turn on/off the Japanize conversion of other player's chat.
     permission: lunachat.japanize
     permission-message: You don't have the permission "<permission>".
 
