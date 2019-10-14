@@ -9,7 +9,6 @@ import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.channel.*;
 import com.github.ucchyocean.lc.event.LunaChatPreChatEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -237,7 +236,7 @@ class PlayerListener implements Listener {
 
             // LunaChatPreChatEvent イベントコール
             LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(global.getName(), player, event.getMessage(), event.isAsynchronous());
-            Bukkit.getPluginManager().callEvent(preChatEvent);
+            Utility.callEventSync(preChatEvent);
 
             if (preChatEvent.isCancelled()) {
                 event.setCancelled(true);
@@ -462,7 +461,7 @@ class PlayerListener implements Listener {
         // LunaChatPreChatEvent イベントコール
         LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
                 channel.getName(), player, message, async);
-        Bukkit.getPluginManager().callEvent(preChatEvent);
+        Utility.callEventSync(preChatEvent);
         if (preChatEvent.isCancelled()) return;
 
         Channel alt = preChatEvent.getChannel();

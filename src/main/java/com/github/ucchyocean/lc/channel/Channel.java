@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc.channel;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
+import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 import org.bukkit.Bukkit;
@@ -288,7 +289,7 @@ public abstract class Channel implements ConfigurationSerializable {
         // イベントコール
         LunaChatChannelMemberChangedEvent event =
                 new LunaChatChannelMemberChangedEvent(this.name, this.members, after, false);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        Utility.callEventSync(event);
 
         if (event.isCancelled()) return;
 
@@ -318,7 +319,7 @@ public abstract class Channel implements ConfigurationSerializable {
         // イベントコール
         LunaChatChannelMemberChangedEvent event =
                 new LunaChatChannelMemberChangedEvent(this.name, this.members, after, isAsync);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        Utility.callEventSync(event);
 
         if (event.isCancelled()) return;
 

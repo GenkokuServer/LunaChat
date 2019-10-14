@@ -143,7 +143,7 @@ public class ChannelImpl extends Channel {
         // イベントコール
         LunaChatChannelChatEvent event = new LunaChatChannelChatEvent(getName(), player,
                 message, maskedMessage, msgFormat, isAsync);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        Utility.callEventSync(event);
 
         if (event.isCancelled()) {
             return;
@@ -394,7 +394,7 @@ public class ChannelImpl extends Channel {
         // イベントコール
         LunaChatChannelMessageEvent event = new LunaChatChannelMessageEvent(
                 getName(), player, message, recipients, name, originalMessage, isAsync);
-        Bukkit.getPluginManager().callEvent(event);
+        Utility.callEventSync(event);
         message = event.getMessage();
         recipients = event.getRecipients();
 

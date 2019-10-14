@@ -5,7 +5,9 @@
  */
 package com.github.ucchyocean.lc;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.event.Event;
 
 /**
  * ユーティリティクラス
@@ -68,5 +70,16 @@ public class Utility {
     public static boolean isValidColorCode(String code) {
         if (code == null) return false;
         return code.matches("&[0-9a-f]");
+    }
+
+    /**
+     * イベントを同期処理で呼び出します
+     *
+     * @param event 対象のイベント
+     * @since 2.8.10
+     */
+    public static void callEventSync(Event event) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(LunaChat.getInstance(),
+                () -> Bukkit.getPluginManager().callEvent(event));
     }
 }
