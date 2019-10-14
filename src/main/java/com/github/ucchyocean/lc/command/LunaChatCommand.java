@@ -60,6 +60,7 @@ public class LunaChatCommand implements CommandExecutor {
         commands.add(new OptionCommand());
         commands.add(new TemplateCommand());
         commands.add(new CheckCommand());
+        commands.add(new SetCommand());
         helpCommand = new HelpCommand(commands);
         commands.add(helpCommand);
 
@@ -218,6 +219,28 @@ public class LunaChatCommand implements CommandExecutor {
             for (String name : LunaChat.getInstance().getLunaChatAPI().getAllDictionary().keySet())
                 if (name.toLowerCase().startsWith(args[2].toLowerCase()))
                     items.add(name);
+            return items;
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("set")) {
+            // "default" で補完する
+            String arg = args[1].toLowerCase();
+            ArrayList<String> items = new ArrayList<>();
+            if ("default".startsWith(arg)) items.add("default");
+            return items;
+
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("set") && args[1].equalsIgnoreCase("default")) {
+            // プレイヤー名で補完する
+            String arg = args[2].toLowerCase();
+            ArrayList<String> items = new ArrayList<>();
+            for (Player player : Bukkit.getOnlinePlayers())
+                if (player.getName().toLowerCase().startsWith(arg)) items.add(player.getName());
+            return items;
+
+        } else if (args.length == 4 && args[0].equalsIgnoreCase("set") && args[1].equalsIgnoreCase("default")) {
+            // チャンネル名で補完する
+            String arg = args[3].toLowerCase();
+            ArrayList<String> items = new ArrayList<>();
+            for (String name : getListCanJoin(sender))
+                if (name.toLowerCase().startsWith(arg)) items.add(name);
             return items;
         }
         return null;
