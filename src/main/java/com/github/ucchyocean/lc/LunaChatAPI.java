@@ -192,4 +192,9 @@ public interface LunaChatAPI {
      * LunaChatの全データを再読み込みする
      */
     void reloadAllData();
+
+    /**
+     * デフォルトチャンネル設定を全て削除する
+     */
+    void removeAllDefaultChannels();
 }

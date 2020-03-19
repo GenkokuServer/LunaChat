@@ -33,7 +33,7 @@ public class LunaChat extends JavaPlugin {
     private static LunaChat instance;
 
     private LunaChatConfig config;
-    private ChannelManager manager;
+    private LunaChatAPI manager;
 
     private VaultChatBridge vaultchat;
     private DynmapBridge dynmap;

@@ -188,6 +188,7 @@ public class ChannelManager implements LunaChatAPI {
     /**
      * デフォルトチャンネル設定を全て削除する
      */
+    @Override
     public void removeAllDefaultChannels() {
         defaultChannels.clear();
         saveDefaults();
@@ -448,6 +449,7 @@ public class ChannelManager implements LunaChatAPI {
      *
      * @return 辞書データ
      */
+    @Override
     public HashMap<String, String> getAllDictionary() {
         return dictionary;
     }
@@ -458,6 +460,7 @@ public class ChannelManager implements LunaChatAPI {
      * @param key   キー
      * @param value 値
      */
+    @Override
     public void setDictionary(String key, String value) {
         dictionary.put(key, value);
         saveDictionary();
@@ -468,6 +471,7 @@ public class ChannelManager implements LunaChatAPI {
      *
      * @param key キー
      */
+    @Override
     public void removeDictionary(String key) {
         dictionary.remove(key);
         saveDictionary();
@@ -479,6 +483,7 @@ public class ChannelManager implements LunaChatAPI {
      * @param key プレイヤー
      * @return 指定されたプレイヤーをhideしているプレイヤー(非null)
      */
+    @Override
     public List<ChannelPlayer> getHidelist(ChannelPlayer key) {
         if (key == null) {
             return new ArrayList<>();
@@ -495,6 +500,7 @@ public class ChannelManager implements LunaChatAPI {
      * @param player プレイヤー
      * @return 指定したプレイヤーがhideしているプレイヤーのリスト(非null)
      */
+    @Override
     public ArrayList<ChannelPlayer> getHideinfo(ChannelPlayer player) {
         if (player == null) {
             return new ArrayList<>();
@@ -514,6 +520,7 @@ public class ChannelManager implements LunaChatAPI {
      * @param player hideする側のプレイヤー
      * @param hided  hideされる側のプレイヤー
      */
+    @Override
     public void addHidelist(ChannelPlayer player, ChannelPlayer hided) {
         String hidedId = hided.toString();
         if (!hidelist.containsKey(hidedId)) {
@@ -531,6 +538,7 @@ public class ChannelManager implements LunaChatAPI {
      * @param player hideしていた側のプレイヤー
      * @param hided  hideされていた側のプレイヤー
      */
+    @Override
     public void removeHidelist(ChannelPlayer player, ChannelPlayer hided) {
         String hidedId = hided.toString();
         if (!hidelist.containsKey(hidedId)) {
