@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc3.bridge;
 
+import com.github.ucchyocean.lc3.member.ChannelMember;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -82,8 +83,14 @@ public class DynmapBridge implements Listener {
             channel = api.getChannel(dchannel);
 
         } else {
-            String gchannel = config.getGlobalChannel();
-            if ( !gchannel.equals("") ) {
+            ChannelMember channelMember = ChannelMember.getChannelMember(event.getName());
+			String gchannel;
+			if (channelMember != null) {
+				gchannel = channelMember.getGlobalChannelName();
+			} else {
+                gchannel = config.getGlobalChannel(LunaChatConfig.DEFAULT_SERVER_NAME);
+			}
+            if ( !"".equals(gchannel)) {
                 // dynmapChannelが設定されていなくて、
                 // globalChannelが設定されている場合
                 channel = api.getChannel(gchannel);

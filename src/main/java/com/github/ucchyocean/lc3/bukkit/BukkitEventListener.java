@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.github.ucchyocean.lc3.bridge.BungeeBridge;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -117,17 +118,25 @@ public class BukkitEventListener implements Listener {
 
         LunaChatConfig config = LunaChat.getConfig();
         Player player = event.getPlayer();
+        ChannelMember channelMember = ChannelMember.getChannelMember(player.getName());
+
+        if (config.isBungeeClientServerMode()) {
+            BungeeBridge.sendBungeeOnPlayerJoined(player);
+            return;
+        }
 
         // UUIDをキャッシュ
         LunaChat.getUUIDCacheData().put(player.getUniqueId().toString(), player.getName());
         LunaChat.getUUIDCacheData().save();
 
-        // 強制参加チャンネル設定を確認し、参加させる
-        forceJoinToForceJoinChannels(player);
+        if (channelMember != null){
+            // 強制参加チャンネル設定を確認し、参加させる
+            forceJoinToForceJoinChannels(channelMember);
 
-        // グローバルチャンネル設定がある場合
-        if ( !config.getGlobalChannel().equals("") ) {
-            tryJoinToGlobalChannel(player);
+            // グローバルチャンネル設定がある場合
+            if (!channelMember.getGlobalChannelName().equals("")) {
+                tryJoinToGlobalChannel(channelMember);
+            }
         }
 
         // チャンネルチャット情報を表示する
@@ -145,6 +154,12 @@ public class BukkitEventListener implements Listener {
      */
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
+
+        LunaChatConfig config = LunaChat.getConfig();
+
+        if (config.isBungeeClientServerMode()) {
+            return;
+        }
 
         Player player = event.getPlayer();
         String pname = player.getName();
@@ -181,6 +196,12 @@ public class BukkitEventListener implements Listener {
 
         LunaChatConfig config = LunaChat.getConfig();
         LunaChatAPI api = LunaChat.getAPI();
+
+        if (config.isBungeeClientServerMode()) {
+            BungeeBridge.sendBungeeMessage(event.getPlayer(), event.getMessage());
+            event.setCancelled(true);
+            return;
+        }
 
         // 頭にglobalMarkerが付いている場合は、グローバル発言にする
         if ( config.getGlobalMarker() != null &&
@@ -259,14 +280,15 @@ public class BukkitEventListener implements Listener {
         LunaChatAPI api = LunaChat.getAPI();
         ChannelMember player =
                 ChannelMember.getChannelMember(event.getPlayer());
+        String globalChannelName = player != null ? player.getGlobalChannelName() : config.getGlobalChannel(LunaChatConfig.DEFAULT_SERVER_NAME);
 
-        if ( !config.getGlobalChannel().equals("") ) {
+        if ( !"".equals(globalChannelName) ) {
             // グローバルチャンネル設定がある場合
 
             // グローバルチャンネルの取得、無ければ作成
-            Channel global = api.getChannel(config.getGlobalChannel());
+            Channel global = api.getChannel(globalChannelName);
             if ( global == null ) {
-                global = api.createChannel(config.getGlobalChannel());
+                global = api.createChannel(globalChannelName);
             }
 
             // LunaChatPreChatEvent イベントコール
@@ -393,12 +415,10 @@ public class BukkitEventListener implements Listener {
      * @param player プレイヤー
      * @return 参加できたかどうか
      */
-    private boolean tryJoinToGlobalChannel(Player player) {
+    private boolean tryJoinToGlobalChannel(ChannelMember channelMember) {
 
-        LunaChatConfig config = LunaChat.getConfig();
         LunaChatAPI api = LunaChat.getAPI();
-
-        String gcName = config.getGlobalChannel();
+        String gcName = channelMember.getGlobalChannelName();
 
         // チャンネルが存在しない場合は作成する
         Channel global = api.getChannel(gcName);
@@ -406,10 +426,15 @@ public class BukkitEventListener implements Listener {
             global = api.createChannel(gcName);
         }
 
+        // チャンネルのメンバーでないなら、参加する
+        if ( !global.getMembers().contains(channelMember) ) {
+            global.addMemberFromForceJoin(channelMember);
+        }
+
         // デフォルト発言先が無いなら、グローバルチャンネルに設定する
-        Channel dchannel = api.getDefaultChannel(player.getName());
+        Channel dchannel = api.getDefaultChannel(channelMember.getName());
         if ( dchannel == null ) {
-            api.setDefaultChannel(player.getName(), gcName);
+            api.setDefaultChannel(channelMember.getName(), gcName);
         }
 
         return true;
@@ -417,14 +442,13 @@ public class BukkitEventListener implements Listener {
 
     /**
      * 強制参加チャンネルへ参加させる
-     * @param player プレイヤー
+     * @param channelMember プレイヤー
      */
-    private void forceJoinToForceJoinChannels(Player player) {
+    private void forceJoinToForceJoinChannels(ChannelMember channelMember) {
 
-        LunaChatConfig config = LunaChat.getConfig();
         LunaChatAPI api = LunaChat.getAPI();
 
-        List<String> forceJoinChannels = config.getForceJoinChannels();
+        List<String> forceJoinChannels = channelMember.getForceJoinChannels();
 
         for ( String cname : forceJoinChannels ) {
 
@@ -435,15 +459,9 @@ public class BukkitEventListener implements Listener {
             }
 
             // チャンネルのメンバーでないなら、参加する
-            ChannelMember cp = ChannelMember.getChannelMember(player);
+            ChannelMember cp = ChannelMember.getChannelMember(channelMember);
             if ( !channel.getMembers().contains(cp) ) {
-                channel.addMember(cp);
-            }
-
-            // デフォルト発言先が無いなら、グローバルチャンネルに設定する
-            Channel dchannel = api.getDefaultChannel(player.getName());
-            if ( dchannel == null ) {
-                api.setDefaultChannel(player.getName(), cname);
+                channel.addMemberFromForceJoin(cp);
             }
         }
     }
@@ -529,7 +547,7 @@ public class BukkitEventListener implements Listener {
 
             // 参加していないチャンネルは、グローバルチャンネルを除き表示しない
             if ( !channel.getMembers().contains(cp) &&
-                    !channel.isGlobalChannel() ) {
+                    !channel.isGlobalChannel(cp) ) {
                 continue;
             }
 

@@ -172,7 +172,7 @@ public class ListCommand extends LunaChatSubCommand {
             }
 
             if ( !channel.getMembers().contains(player) &&
-                    !channel.isGlobalChannel() ) {
+                    !channel.isGlobalChannel(player) ) {
 
                 // 未参加で visible=false のチャンネルは表示しない
                 if ( !channel.isVisible() ) {

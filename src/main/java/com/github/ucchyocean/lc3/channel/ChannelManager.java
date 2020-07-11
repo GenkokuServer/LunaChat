@@ -136,6 +136,7 @@ public class ChannelManager implements LunaChatAPI {
 
         // チャンネル設定のロード
         channels = Channel.loadAllChannels();
+
     }
 
     /**
@@ -305,7 +306,7 @@ public class ChannelManager implements LunaChatAPI {
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
             if ( channel.getMembers().contains(cp) ||
-                    channel.isGlobalChannel() ) {
+                    channel.isGlobalChannel(cp) ) {
                 result.add(channel);
             }
         }
@@ -322,10 +323,19 @@ public class ChannelManager implements LunaChatAPI {
     public Channel getDefaultChannel(String playerName) {
 
         String cname = defaultChannels.get(playerName);
+        ChannelMember channelMember = ChannelMember.getChannelMember(playerName);
 
-        if ( cname == null || !isExistChannel(cname) ) {
-            return null;
+        if (cname == null || !isExistChannel(cname)) {
+            cname = getChannelsByPlayer(playerName).stream()
+                    .filter(channel -> channel.isGlobalChannel(channelMember))
+                    .findFirst()
+                    .map(Channel::getName)
+                    .orElse("");
+            if ("".equals(cname)) {
+                return null;
+            }
         }
+
         return channels.get(cname);
     }
 
@@ -352,9 +362,15 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public void removeDefaultChannel(String playerName) {
+
         if ( defaultChannels.containsKey(playerName) ) {
             defaultChannels.remove(playerName);
         }
+        Channel dChannel = getDefaultChannel(playerName);
+        if (dChannel != null){
+            defaultChannels.put(playerName,dChannel.getName());
+        }
+
         saveDefaults();
     }
 

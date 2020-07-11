@@ -8,6 +8,8 @@ package com.github.ucchyocean.lc3.member;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatMode;
 
+import java.util.List;
+
 /**
  * チャンネルメンバーの抽象クラス
  * @author ucchy
@@ -82,6 +84,18 @@ public abstract class ChannelMember implements Comparable<ChannelMember> {
      * @param message メッセージ
      */
     public abstract void chat(String message);
+
+    /**
+     * プレイヤーのグローバルチャンネル名を取得する
+     * @return グローバルチャンネル名
+     */
+    public abstract String getGlobalChannelName();
+
+    /**
+     * プレイヤーの強制参加チャンネル名を取得する
+     * @return 強制参加チャンネル名リスト
+     */
+    public abstract List<String> getForceJoinChannels();
 
     /**
      * 同一のオブジェクトかどうかを返す

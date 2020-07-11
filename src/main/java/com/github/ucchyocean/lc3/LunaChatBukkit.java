@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 
+import com.github.ucchyocean.lc3.bridge.*;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -20,10 +21,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.github.ucchyocean.lc3.bridge.DynmapBridge;
-import com.github.ucchyocean.lc3.bridge.McMMOBridge;
-import com.github.ucchyocean.lc3.bridge.MultiverseCoreBridge;
-import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc3.bukkit.BukkitEventListener;
 import com.github.ucchyocean.lc3.bukkit.BukkitEventSender;
 import com.github.ucchyocean.lc3.channel.ChannelManager;
@@ -80,6 +77,10 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
         // チャンネルチャット無効なら、デフォルト発言先をクリアする(see issue #59)
         if ( !config.isEnableChannelChat() ) {
             manager.removeAllDefaultChannels();
+        }
+
+        if (config.isBungeeClientServerMode()){
+            getServer().getMessenger().registerOutgoingPluginChannel( this, BungeeBridge.BUKKIT_CHANNEL);
         }
 
         // Vault のロード

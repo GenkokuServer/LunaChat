@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 
+import com.github.ucchyocean.lc3.bridge.BungeeBridge;
 import org.bstats.bungeecord.Metrics;
 
 import com.github.ucchyocean.lc3.bridge.BungeePermsBridge;
@@ -69,6 +70,10 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
         // チャンネルチャット無効なら、デフォルト発言先をクリアする
         if ( !config.isEnableChannelChat() ) {
             manager.removeAllDefaultChannels();
+        }
+
+        if (config.isBungeeClientServerMode()){
+            getProxy().registerChannel(BungeeBridge.BUKKIT_CHANNEL);
         }
 
         // BungeePermsのロード

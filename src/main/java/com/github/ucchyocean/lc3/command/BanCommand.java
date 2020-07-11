@@ -102,7 +102,7 @@ public class BanCommand extends LunaChatSubCommand {
             return true;
         }
 
-        // グローバルチャンネルならBANできない
+        // グローバルチャンネルなら参加しているサーバに限らずBANできない
         if ( channel.isGlobalChannel() ) {
             sender.sendMessage(Messages.errmsgCannotBANGlobal(channel.getName()));
             return true;

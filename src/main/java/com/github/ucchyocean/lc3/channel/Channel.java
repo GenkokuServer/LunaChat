@@ -9,10 +9,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +26,7 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.util.ChatColor;
 import com.github.ucchyocean.lc3.util.Utility;
 import com.github.ucchyocean.lc3.util.YamlConfig;
+
 
 /**
  * チャンネル
@@ -59,6 +57,7 @@ public abstract class Channel {
     private static final String KEY_MUTE_EXPIRES = "mute_expires";
     private static final String KEY_ALLOWCC = "allowcc";
     private static final String KEY_JAPANIZE = "japanize";
+    private static final String KEY_FORCED_JOIN_MEMBER = "forced_join_member";
 
     /** 参加者 */
     private List<ChannelMember> members;
@@ -128,6 +127,9 @@ public abstract class Channel {
     /** チャンネルごとのjapanize変換設定 */
     private JapanizeType japanizeType;
 
+    /** ログイン時に強制加入されたメンバー */
+    private List<ChannelMember> forcedJoinedMembers;
+
 
     protected LunaChatLogger logger;
 
@@ -155,6 +157,7 @@ public abstract class Channel {
         this.muteExpires = new HashMap<ChannelMember, Long>();
         this.privateMessageTo = null;
         this.allowcc = true;
+        this.forcedJoinedMembers = new ArrayList<>();
 
         LunaChatConfig config = LunaChat.getConfig();
         if ( isPersonalChat() ) {
@@ -180,7 +183,7 @@ public abstract class Channel {
      * @return ブロードキャストチャンネルかどうか
      */
     public boolean isBroadcastChannel() {
-        return (isGlobalChannel() || broadcastChannel);
+        return broadcastChannel;
     }
 
     /**
@@ -189,16 +192,39 @@ public abstract class Channel {
      */
     public boolean isGlobalChannel() {
         LunaChatConfig config = LunaChat.getConfig();
-        return getName().equals(config.getGlobalChannel());
+        return config.isGlobalChannel(getName());
+    }
+
+    /**
+     * グローバルチャンネルかどうか
+     * channelMemberがnullの場合はデフォルトのグローバルチャンネルかどうかを返却する
+     * @return グローバルチャンネルかどうか
+     */
+    public boolean isGlobalChannel(ChannelMember channelMember) {
+        LunaChatConfig config = LunaChat.getConfig();
+        if (channelMember != null){
+            return getName().equals(channelMember.getGlobalChannelName());
+        } else {
+            return getName().equals(config.getGlobalChannel(LunaChatConfig.DEFAULT_SERVER_NAME));
+        }
+    }
+
+    /**
+     * 強制参加チャンネルかどうか
+     * @return 強制参加チャンネルかどうか
+     * @deprecated
+     */
+    public boolean isForceJoinChannel() {
+        LunaChatConfig config = LunaChat.getConfig();
+        return config.getForceJoinChannels(null).contains(getName());
     }
 
     /**
      * 強制参加チャンネルかどうか
      * @return 強制参加チャンネルかどうか
      */
-    public boolean isForceJoinChannel() {
-        LunaChatConfig config = LunaChat.getConfig();
-        return config.getForceJoinChannels().contains(getName());
+    public boolean isForceJoinChannel(ChannelMember channelMember) {
+        return channelMember.getForceJoinChannels().contains(getName());
     }
 
     /**
@@ -323,6 +349,7 @@ public abstract class Channel {
             if ( config.getNgwordAction() == NGWordAction.BAN ) {
                 // BANする
 
+                // メンバーにいる場所に限らずグローバルチャット時はBANできない
                 if ( !isGlobalChannel() ) {
                     getBanned().add(player);
                     removeMember(player);
@@ -336,6 +363,7 @@ public abstract class Channel {
             } else if ( config.getNgwordAction() == NGWordAction.KICK ) {
                 // キックする
 
+                // メンバーにいる場所に限らずグローバルチャット時はキックできない
                 if ( !isGlobalChannel() ) {
                     removeMember(player);
                     if ( !Messages.kickNGWordMessage("", "", "").isEmpty() ) {
@@ -414,7 +442,7 @@ public abstract class Channel {
 
     /**
      * メンバーを追加する
-     * @param name 追加するプレイヤー
+     * @param player 追加するプレイヤー
      */
     public void addMember(ChannelMember player) {
 
@@ -446,9 +474,27 @@ public abstract class Channel {
         save();
     }
 
+    public void addMemberFromForceJoin(ChannelMember player){
+
+        // 既に参加しているなら、何もしない
+        if ( members.contains(player) ) {
+            return;
+        }
+
+        addMember(player);
+        // 変更後のメンバーリストを作成
+        ArrayList<ChannelMember> after = new ArrayList<ChannelMember>(forcedJoinedMembers);
+        after.add(player);
+
+        // メンバー更新
+        forcedJoinedMembers = after;
+
+        save();
+    }
+
     /**
      * メンバーを削除する
-     * @param name 削除するプレイヤー
+     * @param player 削除するプレイヤー
      */
     public void removeMember(ChannelMember player) {
 
@@ -484,7 +530,7 @@ public abstract class Channel {
 
         // 0人で削除する設定がオンで、0人になったなら、チャンネルを削除する
         LunaChatConfig config = LunaChat.getConfig();
-        if ( config.isZeroMemberRemove() && members.size() <= 0 ) {
+        if ( config.isZeroMemberRemove() && members.size() <= 0 && !config.isGlobalChannel(getName())) {
             api.removeChannel(this.name);
             return;
         }
@@ -498,6 +544,8 @@ public abstract class Channel {
         if ( moderator.contains(player) ) {
             moderator.remove(player);
         }
+
+        forcedJoinedMembers.remove(player);
 
         save();
     }
@@ -570,7 +618,7 @@ public abstract class Channel {
      * @param forModerator モデレータ向けの情報を含めるかどうか
      * @return チャンネル情報
      */
-    public List<String> getInfo(boolean forModerator) {
+    public List<String> getInfo(ChannelMember channelMember, boolean forModerator) {
 
         ArrayList<String> info = new ArrayList<String>();
         info.add(Messages.channelInfoFirstLine());
@@ -585,7 +633,7 @@ public abstract class Channel {
         }
 
         // 参加メンバー一覧
-        if ( isGlobalChannel() ) {
+        if ( isGlobalChannel(channelMember) ) {
             info.add(Messages.channelInfoGlobal());
         } else if ( isBroadcastChannel() ) {
             info.add(Messages.channelInfoBroadcast());
@@ -812,6 +860,7 @@ public abstract class Channel {
         map.put(KEY_MUTE_EXPIRES, getStringLongMap(muteExpires));
         map.put(KEY_ALLOWCC, allowcc);
         map.put(KEY_JAPANIZE, japanizeType == null ? null : japanizeType.toString());
+        map.put(KEY_FORCED_JOIN_MEMBER, getStringList(forcedJoinedMembers));
         return map;
     }
 
@@ -854,6 +903,7 @@ public abstract class Channel {
         channel.muteExpires = castToChannelMemberLongMap(data.get(KEY_MUTE_EXPIRES));
         channel.allowcc = castWithDefault(data.get(KEY_ALLOWCC), true);
         channel.japanizeType = JapanizeType.fromID(data.get(KEY_JAPANIZE) + "", null);
+        channel.forcedJoinedMembers = castToChannelMemberList(data.get(KEY_FORCED_JOIN_MEMBER));
         return channel;
     }
 
@@ -1051,7 +1101,7 @@ public abstract class Channel {
 
     /**
      * 1:1チャットのときに、会話の相手先を設定する
-     * @param name 会話の相手のプレイヤー名
+     * @param to 会話の相手のプレイヤー名
      */
     public void setPrivateMessageTo(ChannelMember to) {
         this.privateMessageTo = to;
@@ -1103,6 +1153,14 @@ public abstract class Channel {
      */
     public void setJapanizeType(JapanizeType japanize) {
         this.japanizeType = japanize;
+    }
+
+    /**
+     * 参加時に強制参加されたメンバーの一覧を返す
+     * @return forcedJoinedMember
+     */
+    public List<ChannelMember> getForcedJoinedMembers() {
+        return forcedJoinedMembers;
     }
 
     /**

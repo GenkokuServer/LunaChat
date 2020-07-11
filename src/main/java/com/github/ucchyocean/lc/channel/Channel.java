@@ -186,7 +186,7 @@ public class Channel {
      * @deprecated Legacy Version
      */
     public ArrayList<String> getInfo(boolean forModerator) {
-        return new ArrayList<String>(channel.getInfo(forModerator));
+        return new ArrayList<String>(channel.getInfo(null, forModerator));
     }
 
     /**

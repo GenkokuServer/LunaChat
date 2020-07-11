@@ -5,12 +5,16 @@
  */
 package com.github.ucchyocean.lc3.member;
 
+import com.github.ucchyocean.lc3.LunaChatBukkit;
+import com.github.ucchyocean.lc3.LunaChatConfig;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 /**
  * チャンネルメンバーのBukkit抽象クラス
@@ -35,6 +39,26 @@ public abstract class ChannelMemberBukkit extends ChannelMember {
      * @return 発言者の位置
      */
     public abstract World getWorld();
+
+    /**
+     * プレイヤーのグローバルチャンネルを取得する(Bukkitはサーバ名が取得できないため固定)
+     * @return デフォルトのグローバルチャンネル名
+     */
+    @Override
+    public String getGlobalChannelName() {
+        LunaChatConfig config = LunaChatBukkit.getInstance().getLunaChatConfig();
+        return config.getGlobalChannel(LunaChatConfig.DEFAULT_SERVER_NAME);
+    }
+
+    /**
+     * プレイヤーのグローバルチャンネルを取得する(Bukkitはサーバ名が取得できないため固定)
+     * @return デフォルトの強制参加チャンネル名リスト
+     */
+    @Override
+    public List<String> getForceJoinChannels() {
+        LunaChatConfig config = LunaChatBukkit.getInstance().getLunaChatConfig();
+        return config.getForceJoinChannels(LunaChatConfig.DEFAULT_SERVER_NAME);
+    }
 
     /**
      * CommandSenderから、ChannelMemberを作成して返す

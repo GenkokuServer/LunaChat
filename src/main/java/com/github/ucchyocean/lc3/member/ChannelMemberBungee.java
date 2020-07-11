@@ -5,9 +5,13 @@
  */
 package com.github.ucchyocean.lc3.member;
 
+import com.github.ucchyocean.lc3.LunaChatBungee;
+import com.github.ucchyocean.lc3.LunaChatConfig;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
+
+import java.util.List;
 
 /**
  * チャンネルメンバーのBungee抽象クラス
@@ -26,6 +30,39 @@ public abstract class ChannelMemberBungee extends ChannelMember {
      * @return サーバー
      */
     public abstract Server getServer();
+
+
+    /**
+     * プレイヤーが参加しているサーバのグローバルチャンネル名を返す
+     * @return グローバルチャンネル名
+     */
+    @Override
+    public String getGlobalChannelName() {
+        LunaChatConfig config = LunaChatBungee.getInstance().getConfig();
+        String serverName = null;
+
+        Server server = this.getServer();
+        if (server != null) {
+            serverName = server.getInfo().getName();
+        }
+        return config.getGlobalChannel(serverName);
+    }
+
+    /**
+     * プレイヤーの強制参加チャンネル名を取得する
+     * @return 強制参加チャンネル名リスト
+     */
+    @Override
+    public List<String> getForceJoinChannels() {
+        LunaChatConfig config = LunaChatBungee.getInstance().getConfig();
+        String serverName = null;
+
+        Server server = this.getServer();
+        if (server != null) {
+            serverName = server.getInfo().getName();
+        }
+        return config.getForceJoinChannels(serverName);
+    }
 
     /**
      * CommandSenderから、ChannelMemberを作成して返す

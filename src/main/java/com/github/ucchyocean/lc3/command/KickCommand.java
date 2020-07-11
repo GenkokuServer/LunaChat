@@ -100,7 +100,7 @@ public class KickCommand extends LunaChatSubCommand {
         }
 
         // グローバルチャンネルならキックできない
-        if ( channel.isGlobalChannel() ) {
+        if ( channel.isGlobalChannel(sender) ) {
             sender.sendMessage(Messages.errmsgCannotKickGlobal(channel.getName()));
             return true;
         }

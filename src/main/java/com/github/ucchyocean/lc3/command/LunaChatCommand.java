@@ -327,7 +327,7 @@ public class LunaChatCommand {
 
             // 未参加で visible=false のチャンネルは対象外
             if ( !channel.getMembers().contains(sender) &&
-                    !channel.isGlobalChannel() && !channel.isVisible() ) {
+                    !channel.isGlobalChannel(sender) && !channel.isVisible() ) {
                 continue;
             }
 
@@ -358,7 +358,7 @@ public class LunaChatCommand {
                 continue;
             }
 
-            // グローバルチャンネルは対象外
+            // グローバルチャンネルは参加しているサーバに限らず対象外
             if ( channel.isGlobalChannel() ) {
                 continue;
             }

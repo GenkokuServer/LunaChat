@@ -25,17 +25,19 @@ import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.Japanizer;
 import com.github.ucchyocean.lc3.member.ChannelMember;
+import com.github.ucchyocean.lc3.util.BungeeMessagingSubChannel;
 import com.github.ucchyocean.lc3.util.ChatColor;
 import com.github.ucchyocean.lc3.util.KeywordReplacer;
 import com.github.ucchyocean.lc3.util.Utility;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteStreams;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.ChatEvent;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
@@ -73,7 +75,7 @@ public class BungeeEventListener implements Listener {
      */
     @EventHandler(priority=EventPriority.LOWEST)
     public void onAsyncPlayerChatLowest(ChatEvent event) {
-        if ( matchesEventPriority(EventPriority.LOWEST) ) {
+        if ( matchesEventPriority(EventPriority.LOWEST)  && !config.isBungeeClientServerMode() ) {
             processChatEvent(event);
         }
     }
@@ -84,7 +86,7 @@ public class BungeeEventListener implements Listener {
      */
     @EventHandler(priority=EventPriority.LOW)
     public void onAsyncPlayerChatLow(ChatEvent event) {
-        if ( matchesEventPriority(EventPriority.LOW) ) {
+        if ( matchesEventPriority(EventPriority.LOW) && !config.isBungeeClientServerMode() ) {
             processChatEvent(event);
         }
     }
@@ -95,7 +97,7 @@ public class BungeeEventListener implements Listener {
      */
     @EventHandler(priority=EventPriority.NORMAL)
     public void onAsyncPlayerChatNormal(ChatEvent event) {
-        if ( matchesEventPriority(EventPriority.NORMAL) ) {
+        if ( matchesEventPriority(EventPriority.NORMAL) && !config.isBungeeClientServerMode() ) {
             processChatEvent(event);
         }
     }
@@ -106,7 +108,7 @@ public class BungeeEventListener implements Listener {
      */
     @EventHandler(priority=EventPriority.HIGH)
     public void onAsyncPlayerChatHigh(ChatEvent event) {
-        if ( matchesEventPriority(EventPriority.HIGH) ) {
+        if ( matchesEventPriority(EventPriority.HIGH) && !config.isBungeeClientServerMode() ) {
             processChatEvent(event);
         }
     }
@@ -117,8 +119,60 @@ public class BungeeEventListener implements Listener {
      */
     @EventHandler(priority=EventPriority.HIGHEST)
     public void onAsyncPlayerChatHighest(ChatEvent event) {
-        if ( matchesEventPriority(EventPriority.HIGHEST) ) {
+        if ( matchesEventPriority(EventPriority.HIGHEST) && !config.isBungeeClientServerMode() ) {
             processChatEvent(event);
+        }
+    }
+
+    @EventHandler
+    public void onPluginMessageReceived(PluginMessageEvent event) {
+        if (!event.getTag().equalsIgnoreCase("lunachat:bukkit")) {
+            return;
+        }
+        ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
+        String subChannel = in.readUTF();
+        if (subChannel.equalsIgnoreCase(BungeeMessagingSubChannel.CHAT.name())) {
+            String playerName = in.readUTF();
+            String message = in.readUTF();
+
+            ProxiedPlayer player = ProxyServer.getInstance().getPlayer(playerName);
+            if (player != null){
+                processChatEvent(new ChatEvent(player,player.getServer(),message));
+            }
+        }
+        if (subChannel.equalsIgnoreCase(BungeeMessagingSubChannel.SPIGOT_JOINED.name())){
+            String playerName = in.readUTF();
+            ProxiedPlayer player = ProxyServer.getInstance().getPlayer(playerName);
+            ChannelMember channelMember = ChannelMember.getChannelMember(player.getName());
+
+
+
+            List<Channel> leaveList = new ArrayList<>();
+
+            for ( Channel channel : LunaChat.getAPI().getChannels() ) {
+                if (channel.getForcedJoinedMembers().contains(channelMember)){
+                    leaveList.add(channel);
+                }
+            }
+
+            leaveList.forEach(channel -> channel.removeMember(channelMember));
+
+            // 強制参加チャンネル設定を確認し、参加させる
+            forceJoinToForceJoinChannels(player);
+
+			// グローバルチャンネル設定がある場合
+			if (!"".equals(channelMember.getGlobalChannelName())) {
+				tryJoinToGlobalChannel(channelMember);
+			}
+			
+
+            // チャンネルチャット情報を表示する
+            if ( config.isShowListOnJoin() ) {
+                ArrayList<String> list = getListForMotd(player);
+                for ( String msg : list ) {
+                    player.sendMessage(TextComponent.fromLegacyText(msg));
+                }
+            }
         }
     }
 
@@ -131,6 +185,7 @@ public class BungeeEventListener implements Listener {
 
         LunaChatConfig config = LunaChat.getConfig();
         ProxiedPlayer player = event.getPlayer();
+        ChannelMember channelMember = ChannelMember.getChannelMember(player.getName());
 
         // UUIDをキャッシュ
         LunaChat.getUUIDCacheData().put(player.getUniqueId().toString(), player.getName());
@@ -139,13 +194,15 @@ public class BungeeEventListener implements Listener {
         // 強制参加チャンネル設定を確認し、参加させる
         forceJoinToForceJoinChannels(player);
 
-        // グローバルチャンネル設定がある場合
-        if ( !config.getGlobalChannel().equals("") ) {
-            tryJoinToGlobalChannel(player);
+        if (channelMember != null){
+            // グローバルチャンネル設定がある場合
+            if ( !channelMember.getGlobalChannelName().equals("") ) {
+                tryJoinToGlobalChannel(channelMember);
+            }
         }
 
         // チャンネルチャット情報を表示する
-        if ( config.isShowListOnJoin() ) {
+        if ( config.isShowListOnJoin() && config.isBungeeClientServerMode()) {
             ArrayList<String> list = getListForMotd(player);
             for ( String msg : list ) {
                 player.sendMessage(TextComponent.fromLegacyText(msg));
@@ -493,29 +550,23 @@ public class BungeeEventListener implements Listener {
      */
     private void forceJoinToForceJoinChannels(ProxiedPlayer player) {
 
-        LunaChatConfig config = LunaChat.getConfig();
         LunaChatAPI api = LunaChat.getAPI();
+        ChannelMember channelMember = ChannelMember.getChannelMember(player);
+        if (channelMember != null) {
+            List<String> forceJoinChannels = channelMember.getForceJoinChannels();
 
-        List<String> forceJoinChannels = config.getForceJoinChannels();
+            for ( String cname : forceJoinChannels ) {
+                // チャンネルが存在しない場合は作成する
+                Channel channel = api.getChannel(cname);
+                if ( channel == null ) {
+                    channel = api.createChannel(cname);
+                }
 
-        for ( String cname : forceJoinChannels ) {
-
-            // チャンネルが存在しない場合は作成する
-            Channel channel = api.getChannel(cname);
-            if ( channel == null ) {
-                channel = api.createChannel(cname);
-            }
-
-            // チャンネルのメンバーでないなら、参加する
-            ChannelMember cp = ChannelMember.getChannelMember(player);
-            if ( !channel.getMembers().contains(cp) ) {
-                channel.addMember(cp);
-            }
-
-            // デフォルト発言先が無いなら、グローバルチャンネルに設定する
-            Channel dchannel = api.getDefaultChannel(player.getName());
-            if ( dchannel == null ) {
-                api.setDefaultChannel(player.getName(), cname);
+                // チャンネルのメンバーでないなら、参加する
+                ChannelMember cp = ChannelMember.getChannelMember(player);
+                if ( !channel.getMembers().contains(cp) ) {
+                    channel.addMemberFromForceJoin(cp);
+                }
             }
         }
     }
@@ -525,27 +576,31 @@ public class BungeeEventListener implements Listener {
      * @param player プレイヤー
      * @return 参加できたかどうか
      */
-    private boolean tryJoinToGlobalChannel(ProxiedPlayer player) {
+	private boolean tryJoinToGlobalChannel(ChannelMember cp) {
 
-        LunaChatConfig config = LunaChat.getConfig();
-        LunaChatAPI api = LunaChat.getAPI();
+		LunaChatConfig config = LunaChat.getConfig();
+		LunaChatAPI api = LunaChat.getAPI();
+		String gcName = cp.getGlobalChannelName();
 
-        String gcName = config.getGlobalChannel();
+		// チャンネルが存在しない場合は作成する
+		Channel global = api.getChannel(gcName);
+		if (global == null) {
+			global = api.createChannel(gcName);
+		}
 
-        // チャンネルが存在しない場合は作成する
-        Channel global = api.getChannel(gcName);
-        if ( global == null ) {
-            global = api.createChannel(gcName);
-        }
+		// チャンネルのメンバーでないなら、参加する
+		if (!global.getMembers().contains(cp)) {
+			global.addMemberFromForceJoin(cp);
+		}
 
-        // デフォルト発言先が無いなら、グローバルチャンネルに設定する
-        Channel dchannel = api.getDefaultChannel(player.getName());
-        if ( dchannel == null ) {
-            api.setDefaultChannel(player.getName(), gcName);
-        }
+		// デフォルト発言先が無いなら、グローバルチャンネルに設定する
+		Channel dchannel = api.getDefaultChannel(cp.getName());
+		if (dchannel == null || config.isGlobalChannel(dchannel.getName())) {
+			api.setDefaultChannel(cp.getName(), gcName);
+		}
+		return true;
 
-        return true;
-    }
+	}
 
     /**
      * プレイヤーのサーバー参加時用の参加チャンネルリストを返す
@@ -578,7 +633,7 @@ public class BungeeEventListener implements Listener {
 
             // 参加していないチャンネルは、グローバルチャンネルを除き表示しない
             if ( !channel.getMembers().contains(cp) &&
-                    !channel.isGlobalChannel() ) {
+                    !channel.isGlobalChannel(cp) ) {
                 continue;
             }
 
