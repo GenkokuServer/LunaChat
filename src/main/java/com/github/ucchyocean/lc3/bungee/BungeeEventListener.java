@@ -162,9 +162,8 @@ public class BungeeEventListener implements Listener {
 
             // チャンネルチャット情報を表示する
             if ( config.isShowListOnJoin() ) {
-                ArrayList<String> list = getListForMotd(player);
-                for ( String msg : list ) {
-                    player.sendMessage(TextComponent.fromLegacyText(msg));
+                for ( BaseComponent[] msg : getListForMotd(player) ) {
+                    player.sendMessage(msg);
                 }
             }
         }

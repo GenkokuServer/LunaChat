@@ -2,6 +2,9 @@ package com.github.ucchyocean.lc3.member;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ChannelMemberSystem extends ChannelMember {
 
     private static final String NAME = "system";
@@ -70,6 +73,16 @@ public class ChannelMemberSystem extends ChannelMember {
     @Override
     public void chat(String message) {
         // do nothing.
+    }
+
+    @Override
+    public String getGlobalChannelName() {
+        return "";
+    }
+
+    @Override
+    public List<String> getForceJoinChannels() {
+        return new ArrayList<>();
     }
 
     public static ChannelMember getInstance() {

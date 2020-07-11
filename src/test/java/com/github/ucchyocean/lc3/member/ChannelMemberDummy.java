@@ -7,6 +7,9 @@ package com.github.ucchyocean.lc3.member;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * テスト用のダミーメンバー
  * @author ucchy
@@ -133,6 +136,16 @@ public class ChannelMemberDummy extends ChannelMember {
     @Override
     public void chat(String message) {
         // do nothing.
+    }
+
+    @Override
+    public String getGlobalChannelName() {
+        return "";
+    }
+
+    @Override
+    public List<String> getForceJoinChannels() {
+        return new ArrayList<>();
     }
 
 }
