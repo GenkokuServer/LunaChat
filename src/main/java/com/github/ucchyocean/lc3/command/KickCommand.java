@@ -99,14 +99,14 @@ public class KickCommand extends LunaChatSubCommand {
             return true;
         }
 
-        // グローバルチャンネルならキックできない
-        if ( channel.isGlobalChannel(sender) ) {
+        ChannelMember kicked = ChannelMember.getChannelMember(kickedName);
+        // キックされるプレイヤーのグローバルチャンネルならキックできない
+        if ( channel.isGlobalChannel(kicked) ) {
             sender.sendMessage(Messages.errmsgCannotKickGlobal(channel.getName()));
             return true;
         }
 
         // キックされるプレイヤーがメンバーかどうかチェックする
-        ChannelMember kicked = ChannelMember.getChannelMember(kickedName);
         if (!channel.getMembers().contains(kicked)) {
             sender.sendMessage(Messages.errmsgNomemberOther());
             return true;

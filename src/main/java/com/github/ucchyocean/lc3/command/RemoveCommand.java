@@ -101,7 +101,7 @@ public class RemoveCommand extends LunaChatSubCommand {
         }
 
         // グローバルチャンネルなら削除できない
-        if ( channel.isGlobalChannel(sender) ) {
+        if ( channel.isGlobalChannel() ) {
             sender.sendMessage(Messages.errmsgCannotRemoveGlobal(channel.getName()));
             return true;
         }
