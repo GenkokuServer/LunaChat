@@ -149,6 +149,12 @@ public class LunaChatConfig {
      */
     private boolean bungeeClientServerMode;
 
+    private boolean enableDiscordLink;
+
+    private String discordBotToken;
+
+    private String discordDefaultSendLunaChatChannel;
+
     // === 以下、BungeeCord用設定 ===
 
     /**
@@ -281,6 +287,19 @@ public class LunaChatConfig {
             LunaChat.getPlugin().log(Level.WARNING, Messages.errmsgCannotUseForGlobal(globalChannel));
             globalChannel = new HashMap<String,String>(){{put(DEFAULT_SERVER_NAME, "");}};
         }
+
+        enableDiscordLink = config.getBoolean("enableDiscordLink", false);
+
+        if (enableDiscordLink){
+            discordBotToken = config.getString("discordBotToken");
+            discordDefaultSendLunaChatChannel = config.getString("discordDefaultSendLunaChatChannel");
+
+            if (discordBotToken == null || "".equals(discordBotToken)){
+                LunaChat.getPlugin().log(Level.WARNING, "DiscordTokenを入力してください");
+                enableDiscordLink = false;
+            }
+        }
+
     }
 
     /**
@@ -612,12 +631,16 @@ public class LunaChatConfig {
         return bungeeClientServerMode;
     }
 
-    /**
-     * bungeeClientMode
-     * @param bungeeClientServerMode bungeeClientMode
-     */
-    public void setBungeeClientServerMode(boolean bungeeClientServerMode) {
-        this.bungeeClientServerMode = bungeeClientServerMode;
+    public boolean isEnableDiscordLink() {
+        return enableDiscordLink;
+    }
+
+    public String getDiscordBotToken() {
+        return discordBotToken;
+    }
+
+    public String getDiscordDefaultSendLunaChatChannel() {
+        return discordDefaultSendLunaChatChannel;
     }
 
     /**

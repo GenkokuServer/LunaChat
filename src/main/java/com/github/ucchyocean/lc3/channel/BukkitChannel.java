@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc3.channel;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.ucchyocean.lc3.bridge.DiscordBridge;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -175,11 +176,20 @@ public class BukkitChannel extends Channel {
         // 送信する
         if ( format != null ) {
             format.replace("%msg", message);
+            if (config.isEnableDiscordLink() && "".equals(getDiscordChannelId())){
+                DiscordBridge discord = LunaChat.getPlugin().getDiscord();
+                discord.chat(format.toLegacyText(), getDiscordChannelId());
+            }
+
             BaseComponent[] comps = format.makeTextComponent();
             for ( ChannelMember p : recipients ) {
                 p.sendMessage(comps);
             }
         } else {
+            if (config.isEnableDiscordLink() && "".equals(getDiscordChannelId())){
+                DiscordBridge discord = LunaChat.getPlugin().getDiscord();
+                discord.chat(message, getDiscordChannelId());
+            }
             for ( ChannelMember p : recipients ) {
                 p.sendMessage(message);
             }

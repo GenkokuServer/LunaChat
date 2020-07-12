@@ -5,7 +5,7 @@
  */
 package com.github.ucchyocean.lc3.member;
 
-import com.github.ucchyocean.lc3.LunaChatBukkit;
+import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -54,7 +54,7 @@ public abstract class ChannelMemberBukkit extends ChannelMember {
      */
     @Override
     public String getGlobalChannelName() {
-        LunaChatConfig config = LunaChatBukkit.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getConfig();
         return config.getGlobalChannel(LunaChatConfig.DEFAULT_SERVER_NAME);
     }
 
@@ -64,7 +64,7 @@ public abstract class ChannelMemberBukkit extends ChannelMember {
      */
     @Override
     public List<String> getForceJoinChannels() {
-        LunaChatConfig config = LunaChatBukkit.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getConfig();
         return config.getForceJoinChannels(LunaChatConfig.DEFAULT_SERVER_NAME);
     }
 

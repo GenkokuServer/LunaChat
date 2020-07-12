@@ -14,6 +14,7 @@ import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
 import com.github.ucchyocean.lc3.bridge.BungeeBridge;
+import com.github.ucchyocean.lc3.bridge.DiscordBridge;
 import org.bstats.bungeecord.Metrics;
 
 import com.github.ucchyocean.lc3.bridge.BungeePermsBridge;
@@ -46,6 +47,8 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
 
     private BungeePermsBridge bungeeperms;
     private LuckPermsBridge luckperms;
+
+    private DiscordBridge discord;
 
     /**
      * プラグインが有効化されたときに呼び出されるメソッド
@@ -98,6 +101,10 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
         temp = getProxy().getPluginManager().getPlugin("LuckPerms");
         if ( temp != null ) {
             luckperms = LuckPermsBridge.load(temp);
+        }
+
+        if (config.isEnableDiscordLink()){
+            discord = DiscordBridge.load(config.getDiscordBotToken());
         }
 
         // コマンド登録
@@ -250,5 +257,10 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
      */
     public LuckPermsBridge getLuckPerms() {
         return luckperms;
+    }
+
+    @Override
+    public DiscordBridge getDiscord() {
+        return discord;
     }
 }

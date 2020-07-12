@@ -215,6 +215,14 @@ japanizeIgnorePlayerName: true
 # これが発言の頭に入っている場合は、一時的にJapanize変換を実行しない。
 noneJapanizeMarker: '$'
 
+# -------------------- bungeecord連携設定 --------------------
+
 # bungeeクライアントサーバモード
 # BukkitからBungeecordにチャット内容を送信しチャンネルチャットの管理をBungeecordで処理します
 bungeeClientServerMode: false
+
+
+# -------------------- discord連携設定 --------------------
+enableDiscordLink: false
+discordBotToken: ""
+discordDefaultSendLunaChatChannel: "discord"

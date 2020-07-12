@@ -205,4 +205,11 @@ japanizeIgnorePlayerName: true
 # If this is at the beginning of your remark, do not temporarily perform Japanize conversion.
 noneJapanizeMarker: '$'
 
+# -------------------- bungeecord link settings --------------------
 bungeeClientServerMode: false
+
+
+# -------------------- discord link settings --------------------
+enableDiscordLink: false
+discordBotToken: ""
+discordDefaultSendLunaChatChannel: "discord"

@@ -48,6 +48,7 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
     private VaultChatBridge vaultchat;
     private DynmapBridge dynmap;
     private MultiverseCoreBridge multiverse;
+    private DiscordBridge discord;
 
     private BukkitTask expireCheckerTask;
     private LunaChatLogger normalChatLogger;
@@ -120,6 +121,10 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
         // mcMMOのロード
         if ( getServer().getPluginManager().isPluginEnabled("mcMMO") ) {
             getServer().getPluginManager().registerEvents(new McMMOBridge(), this);
+        }
+
+        if (config.isEnableDiscordLink()){
+            discord = DiscordBridge.load(config.getDiscordBotToken());
         }
 
         // リスナーの登録
@@ -248,6 +253,11 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
      */
     public MultiverseCoreBridge getMultiverseCore() {
         return multiverse;
+    }
+
+    @Override
+    public DiscordBridge getDiscord() {
+        return discord;
     }
 
     /**

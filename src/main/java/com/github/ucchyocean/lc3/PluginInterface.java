@@ -5,6 +5,8 @@
  */
 package com.github.ucchyocean.lc3;
 
+import com.github.ucchyocean.lc3.bridge.DiscordBridge;
+
 import java.io.File;
 import java.util.Set;
 import java.util.logging.Level;
@@ -69,4 +71,11 @@ public interface PluginInterface {
      * @param task タスク
      */
     public void runAsyncTask(Runnable task);
+
+    /**
+     * Discord連携用インスタンスを取得する
+     *
+     * @return DiscordBridge
+     */
+    public DiscordBridge getDiscord();
 }

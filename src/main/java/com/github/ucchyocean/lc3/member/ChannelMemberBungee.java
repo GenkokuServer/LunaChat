@@ -5,7 +5,7 @@
  */
 package com.github.ucchyocean.lc3.member;
 
-import com.github.ucchyocean.lc3.LunaChatBungee;
+import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -38,7 +38,7 @@ public abstract class ChannelMemberBungee extends ChannelMember {
      */
     @Override
     public String getGlobalChannelName() {
-        LunaChatConfig config = LunaChatBungee.getInstance().getConfig();
+        LunaChatConfig config = LunaChat.getConfig();
         String serverName = null;
 
         Server server = this.getServer();
@@ -54,7 +54,7 @@ public abstract class ChannelMemberBungee extends ChannelMember {
      */
     @Override
     public List<String> getForceJoinChannels() {
-        LunaChatConfig config = LunaChatBungee.getInstance().getConfig();
+        LunaChatConfig config = LunaChat.getConfig();
         String serverName = null;
 
         Server server = this.getServer();

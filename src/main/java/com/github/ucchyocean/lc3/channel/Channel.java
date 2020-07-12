@@ -68,6 +68,8 @@ public abstract class Channel {
     private static final String KEY_ALLOWCC = "allowcc";
     private static final String KEY_JAPANIZE = "japanize";
     private static final String KEY_FORCED_JOIN_MEMBER = "forced_join_member";
+    private static final String KEY_DISCORD_CHANNEL_ID = "discord_channel_id";
+    private static final String KEY_RELAY_DISCORD_CHAT_DEFAULT_CHANNEL = "relay_discord_chat_default_channel";
 
     /** 参加者 */
     private List<ChannelMember> members;
@@ -140,6 +142,12 @@ public abstract class Channel {
     /** ログイン時に強制加入されたメンバー */
     private List<ChannelMember> forcedJoinedMembers;
 
+    /** discordのチャンネルID */
+    private String discordChannelId;
+
+    /** discordで受信したチャットをデフォルトのチャンネルに中継するか */
+    private boolean relayDiscordChatDefaultChannel;
+
 
     protected LunaChatLogger logger;
 
@@ -168,6 +176,8 @@ public abstract class Channel {
         this.privateMessageTo = null;
         this.allowcc = true;
         this.forcedJoinedMembers = new ArrayList<>();
+        this.discordChannelId = "";
+        this.relayDiscordChatDefaultChannel = false;
 
         LunaChatConfig config = LunaChat.getConfig();
         if ( isPersonalChat() ) {
@@ -933,6 +943,8 @@ public abstract class Channel {
         map.put(KEY_ALLOWCC, allowcc);
         map.put(KEY_JAPANIZE, japanizeType == null ? null : japanizeType.toString());
         map.put(KEY_FORCED_JOIN_MEMBER, getStringList(forcedJoinedMembers));
+        map.put(KEY_DISCORD_CHANNEL_ID, discordChannelId);
+        map.put(KEY_RELAY_DISCORD_CHAT_DEFAULT_CHANNEL, relayDiscordChatDefaultChannel);
         return map;
     }
 
@@ -976,6 +988,8 @@ public abstract class Channel {
         channel.allowcc = castWithDefault(data.get(KEY_ALLOWCC), true);
         channel.japanizeType = JapanizeType.fromID(data.get(KEY_JAPANIZE) + "", null);
         channel.forcedJoinedMembers = castToChannelMemberList(data.get(KEY_FORCED_JOIN_MEMBER));
+        channel.discordChannelId = castWithDefault(data.get(KEY_DISCORD_CHANNEL_ID), "");
+        channel.relayDiscordChatDefaultChannel = castWithDefault(data.get(KEY_RELAY_DISCORD_CHAT_DEFAULT_CHANNEL), false);
         return channel;
     }
 
@@ -1233,6 +1247,22 @@ public abstract class Channel {
      */
     public List<ChannelMember> getForcedJoinedMembers() {
         return forcedJoinedMembers;
+    }
+
+    public String getDiscordChannelId() {
+        return discordChannelId;
+    }
+
+    public void setDiscordChannelId(String discordChannelId) {
+        this.discordChannelId = discordChannelId;
+    }
+
+    public boolean isRelayDiscordChatDefaultChannel() {
+        return relayDiscordChatDefaultChannel;
+    }
+
+    public void setRelayDiscordChatDefaultChannel(boolean relayDiscordChatDefaultChannel) {
+        this.relayDiscordChatDefaultChannel = relayDiscordChatDefaultChannel;
     }
 
     /**
