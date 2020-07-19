@@ -210,3 +210,15 @@ japanizeIgnorePlayerName: true
 # Non-Japanese marker.
 # If this is at the beginning of your remark, do not temporarily perform Japanize conversion.
 noneJapanizeMarker: '$'
+
+# -------------------- discord link settings --------------------
+# Whether or not to send the content of the channel chat to Discord.
+# This setting is ignored (handled as false) if discordBotToken is not configured.
+sendChannelChatToDiscord: false
+
+# set your Discord's Bot token.
+discordBotToken: ''
+
+# Channel chat will show chats from Discord on this channel if it is set in the Channel Chat options.
+# This channel is usually used when multiple channels are set up as a single Discord channel.
+discordForcedSendChannel: 'discord'

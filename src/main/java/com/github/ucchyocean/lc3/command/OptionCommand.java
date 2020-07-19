@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.Messages;
+import com.github.ucchyocean.lc3.bridge.DiscordBridge;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
@@ -321,6 +322,26 @@ public class OptionCommand extends LunaChatSubCommand {
                         sender.sendMessage(Messages.cmdmsgOption("japanize", type.toString()));
                         setOption = true;
                     }
+                }
+            }
+        }
+
+        if (options.containsKey("discordChannelId")) {
+            String pnode = PERMISSION_NODE + ".discord.channelid";
+            if ( !sender.hasPermission(pnode) ) {
+                sender.sendMessage(Messages.errmsgNotPermission(pnode));
+            } else {
+                if (config.isSendChannelChatToDiscord()){
+                    String channelId = options.get("discordChannelId");
+                    DiscordBridge discordBridge = LunaChat.getPlugin().getDiscord();
+                    if (discordBridge.isExistTextChannel(channelId)){
+                        channel.setDiscordChannelId(channelId);
+                        setOption = true;
+                    }else{
+                        sender.sendMessage("Discordのテキストチャンネルが存在しません");
+                    }
+                } else {
+                    sender.sendMessage("discord連携機能は無効になっています");
                 }
             }
         }

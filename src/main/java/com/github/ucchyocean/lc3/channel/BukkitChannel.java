@@ -8,6 +8,8 @@ package com.github.ucchyocean.lc3.channel;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.ucchyocean.lc3.bridge.DiscordBridge;
+import com.github.ucchyocean.lc3.member.ChannelMemberOther;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -172,6 +174,7 @@ public class BukkitChannel extends Channel {
             }
         }
 
+        String messageResult;
         // 送信する
         if ( format != null ) {
             format.replace("%msg", message);
@@ -179,15 +182,29 @@ public class BukkitChannel extends Channel {
             for ( ChannelMember p : recipients ) {
                 p.sendMessage(comps);
             }
+            messageResult = format.toLegacyText();
         } else {
             for ( ChannelMember p : recipients ) {
                 p.sendMessage(message);
+            }
+            messageResult = message;
+        }
+
+        if (config.isSendChannelChatToDiscord() && !"".equals(getDiscordChannelId())){
+            boolean sendDiscord = true;
+            if (player instanceof ChannelMemberOther){
+                // Discordからのチャットは再度連携しない
+                sendDiscord = ((ChannelMemberOther) player).getChatSource() != ChatSource.DISCORD;
+            }
+            if (sendDiscord){
+                DiscordBridge discord = LunaChat.getPlugin().getDiscord();
+                discord.chat(messageResult, getDiscordChannelId());
             }
         }
 
         // 設定に応じて、コンソールに出力する
         if ( config.isDisplayChatOnConsole() ) {
-            Bukkit.getLogger().info(ChatColor.stripColor(message));
+            Bukkit.getLogger().info(ChatColor.stripColor(messageResult));
         }
 
         // 受信者が自分以外いない場合は、メッセージを表示する

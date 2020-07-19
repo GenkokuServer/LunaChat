@@ -221,4 +221,14 @@ japanizeIgnorePlayerName: true
 # これが発言の頭に入っている場合は、一時的にJapanize変換を実行しない。
 noneJapanizeMarker: '$'
 
+# -------------------- discord連携設定 --------------------
+# チャンネルチャットの内容をDiscordに送信するかどうかを設定する。
+# ddiscordBotTokenが設定されていない場合は、この設定は無視される（false扱い）。
+sendChannelChatToDiscord: false
 
+# Discordのボットトークンを設定します。
+discordBotToken: ''
+
+# チャンネルチャットは、チャンネルチャットオプションで設定されている場合、このチャンネルにDiscordからのチャットを表示します。
+# このチャンネルは通常、複数のチャンネルを一つのDiscordチャンネルとして設定する場合に使用します。
+discordForcedSendChannel: 'discord'

@@ -1,20 +1,36 @@
 package com.github.ucchyocean.lc3.member;
 
+import com.github.ucchyocean.lc3.channel.ChatSource;
 import net.md_5.bungee.api.chat.BaseComponent;
 
 public class ChannelMemberOther extends ChannelMember {
 
     private String name;
     private String displayName;
+    private ChatSource chatSource;
 
     public ChannelMemberOther(String name) {
         this.name = name;
         this.displayName = name;
+        this.chatSource = ChatSource.OTHER;
+    }
+
+    public ChannelMemberOther(String name, ChatSource chatSource) {
+        this.name = name;
+        this.displayName = name;
+        this.chatSource = chatSource;
     }
 
     public ChannelMemberOther(String name, String displayName) {
         this.name = name;
         this.displayName = displayName;
+        this.chatSource = ChatSource.OTHER;
+    }
+
+    public ChannelMemberOther(String name, String displayName, ChatSource chatSource) {
+        this.name = name;
+        this.displayName = displayName;
+        this.chatSource = chatSource;
     }
 
     @Override
@@ -81,6 +97,10 @@ public class ChannelMemberOther extends ChannelMember {
     @Override
     public void chat(String message) {
         // do nothing.
+    }
+
+    public ChatSource getChatSource() {
+        return chatSource;
     }
 
 }

@@ -146,6 +146,12 @@ public class LunaChatConfig {
      *  隠し設定。 */
     private int japanizeWait;
 
+    private boolean sendChannelChatToDiscord;
+
+    private String discordBotToken;
+
+    private String discordForcedSendChannel;
+
     // === 以下、BungeeCord用設定 ===
 
     /**
@@ -265,6 +271,17 @@ public class LunaChatConfig {
             // コンソールに警告を表示する
             LunaChat.getPlugin().log(Level.WARNING, Messages.errmsgCannotUseForGlobal(globalChannel));
             globalChannel = "";
+        }
+        sendChannelChatToDiscord = config.getBoolean("sendChannelChatToDiscord", false);
+
+        if (sendChannelChatToDiscord){
+            discordBotToken = config.getString("discordBotToken");
+            discordForcedSendChannel = config.getString("discordDefaultSendLunaChatChannel");
+
+            if (discordBotToken == null || "".equals(discordBotToken)){
+                LunaChat.getPlugin().log(Level.WARNING, "DiscordBotTokenを入力してください");
+                sendChannelChatToDiscord = false;
+            }
         }
     }
 
@@ -600,5 +617,17 @@ public class LunaChatConfig {
         }
 
         return def;
+    }
+
+    public boolean isSendChannelChatToDiscord() {
+        return sendChannelChatToDiscord;
+    }
+
+    public String getDiscordBotToken() {
+        return discordBotToken;
+    }
+
+    public String getDiscordForcedSendChannel() {
+        return discordForcedSendChannel;
     }
 }

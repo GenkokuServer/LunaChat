@@ -69,6 +69,8 @@ public abstract class Channel {
     private static final String KEY_MUTE_EXPIRES = "mute_expires";
     private static final String KEY_ALLOWCC = "allowcc";
     private static final String KEY_JAPANIZE = "japanize";
+    private static final String KEY_DISCORD_CHANNEL_ID = "discord_channel_id";
+    private static final String KEY_DISCORD_RELAY_FORCED_CHANNEL = "discord_relay_forced_channel";
 
     /** 参加者 */
     private List<ChannelMember> members;
@@ -138,6 +140,11 @@ public abstract class Channel {
     /** チャンネルごとのjapanize変換設定 */
     private JapanizeType japanizeType;
 
+    /** discordのチャンネルID */
+    private String discordChannelId;
+
+    /** discordで受信したチャットをDiscord用のチャンネルに中継するか */
+    private boolean discordRelayForcedChannel;
 
     protected LunaChatLogger logger;
 
@@ -165,6 +172,8 @@ public abstract class Channel {
         this.muteExpires = new HashMap<ChannelMember, Long>();
         this.privateMessageTo = null;
         this.allowcc = true;
+        this.discordChannelId = "";
+        this.discordRelayForcedChannel = false;
 
         LunaChatConfig config = LunaChat.getConfig();
         if ( isPersonalChat() ) {
@@ -407,7 +416,7 @@ public abstract class Channel {
 
         // メッセージの送信
         boolean sendDynmap = source == null || !source.equals("web");
-        sendMessage(new ChannelMemberOther(name), maskedMessage, msgFormat, sendDynmap);
+        sendMessage(new ChannelMemberOther(name, ChatSource.getByString(source)), maskedMessage, msgFormat, sendDynmap);
     }
 
     /**
@@ -885,6 +894,8 @@ public abstract class Channel {
         map.put(KEY_MUTE_EXPIRES, getStringLongMap(muteExpires));
         map.put(KEY_ALLOWCC, allowcc);
         map.put(KEY_JAPANIZE, japanizeType == null ? null : japanizeType.toString());
+        map.put(KEY_DISCORD_CHANNEL_ID, discordChannelId);
+        map.put(KEY_DISCORD_RELAY_FORCED_CHANNEL, discordRelayForcedChannel);
         return map;
     }
 
@@ -927,6 +938,8 @@ public abstract class Channel {
         channel.muteExpires = castToChannelMemberLongMap(data.get(KEY_MUTE_EXPIRES));
         channel.allowcc = castWithDefault(data.get(KEY_ALLOWCC), true);
         channel.japanizeType = JapanizeType.fromID(data.get(KEY_JAPANIZE) + "", null);
+        channel.discordChannelId = castWithDefault(data.get(KEY_DISCORD_CHANNEL_ID), "");
+        channel.discordRelayForcedChannel = castWithDefault(data.get(KEY_DISCORD_RELAY_FORCED_CHANNEL), false);
         return channel;
     }
 
@@ -1176,6 +1189,38 @@ public abstract class Channel {
      */
     public void setJapanizeType(JapanizeType japanize) {
         this.japanizeType = japanize;
+    }
+
+    /**
+     * DiscordのチャンネルIDを取得する
+     * @return DiscordのチャンネルID
+     */
+    public String getDiscordChannelId() {
+        return discordChannelId;
+    }
+
+    /**
+     * DiscordのチャンネルIDを設定する
+     * @param discordChannelId DiscordのチャンネルID
+     */
+    public void setDiscordChannelId(String discordChannelId) {
+        this.discordChannelId = discordChannelId;
+    }
+
+    /**
+     * Discordで受信したチャットをDiscord用チャンネルに中継するかどうか
+     * @return Discord用チャンネル中継可否
+     */
+    public boolean isDiscordRelayForcedChannel() {
+        return discordRelayForcedChannel;
+    }
+
+    /**
+     * Discord用チャンネル中継可否を設定する
+     * @param discordRelayForcedChannel Discord用チャンネル中継可否
+     */
+    public void setDiscordRelayForcedChannel(boolean discordRelayForcedChannel) {
+        this.discordRelayForcedChannel = discordRelayForcedChannel;
     }
 
     /**

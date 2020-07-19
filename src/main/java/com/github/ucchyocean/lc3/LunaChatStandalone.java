@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.util.Set;
 import java.util.logging.Level;
 
+import com.github.ucchyocean.lc3.bridge.DiscordBridge;
 import com.github.ucchyocean.lc3.channel.ChannelManager;
 
 /**
@@ -22,6 +23,7 @@ public class LunaChatStandalone implements PluginInterface {
     private ChannelManager manager;
     private UUIDCacheData uuidCacheData;
     private File dataFolder;
+    private DiscordBridge discord;
 
     public LunaChatStandalone(File dataFolder) {
         this.dataFolder = dataFolder;
@@ -40,6 +42,11 @@ public class LunaChatStandalone implements PluginInterface {
 
         // UUIDキャッシュデータ
         uuidCacheData = new UUIDCacheData(getDataFolder());
+
+        if (config.isSendChannelChatToDiscord()){
+            discord = DiscordBridge.load(config.getDiscordBotToken());
+        }
+
     }
 
     @Override
@@ -105,5 +112,15 @@ public class LunaChatStandalone implements PluginInterface {
     @Override
     public void runAsyncTask(Runnable task) {
         new Thread(task).start();
+    }
+
+    /**
+     * Discord連携用インスタンスを取得する
+     *
+     * @return DiscordBridge
+     */
+    @Override
+    public DiscordBridge getDiscord() {
+        return discord;
     }
 }

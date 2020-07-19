@@ -14,6 +14,7 @@ import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
+import com.github.ucchyocean.lc3.bridge.*;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -23,10 +24,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.github.ucchyocean.lc3.bridge.DynmapBridge;
-import com.github.ucchyocean.lc3.bridge.McMMOBridge;
-import com.github.ucchyocean.lc3.bridge.MultiverseCoreBridge;
-import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc3.bukkit.BukkitEventListener;
 import com.github.ucchyocean.lc3.bukkit.BukkitEventSender;
 import com.github.ucchyocean.lc3.channel.ChannelManager;
@@ -51,6 +48,7 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
     private VaultChatBridge vaultchat;
     private DynmapBridge dynmap;
     private MultiverseCoreBridge multiverse;
+    private DiscordBridge discord;
 
     private BukkitTask expireCheckerTask;
     private LunaChatLogger normalChatLogger;
@@ -119,6 +117,10 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
         // mcMMOのロード
         if ( getServer().getPluginManager().isPluginEnabled("mcMMO") ) {
             getServer().getPluginManager().registerEvents(new McMMOBridge(), this);
+        }
+
+        if (config.isSendChannelChatToDiscord()){
+            discord = DiscordBridge.load(config.getDiscordBotToken());
         }
 
         // リスナーの登録
@@ -247,6 +249,15 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
      */
     public MultiverseCoreBridge getMultiverseCore() {
         return multiverse;
+    }
+
+    /**
+     * Discord連携用インスタンスを取得する
+     * @return DiscordBridge
+     */
+    @Override
+    public DiscordBridge getDiscord() {
+        return discord;
     }
 
     /**

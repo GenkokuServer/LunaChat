@@ -8,6 +8,8 @@ package com.github.ucchyocean.lc3.channel;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.ucchyocean.lc3.bridge.DiscordBridge;
+import com.github.ucchyocean.lc3.member.ChannelMemberOther;
 import org.jetbrains.annotations.Nullable;
 
 import com.github.ucchyocean.lc3.LunaChat;
@@ -107,6 +109,7 @@ public class BungeeChannel extends Channel {
         message = result.getMessage();
         recipients = result.getRecipients();
 
+        String messageResult;
         // 送信する
         if ( format != null ) {
             format.replace("%msg", message);
@@ -114,15 +117,29 @@ public class BungeeChannel extends Channel {
             for ( ChannelMember p : recipients ) {
                 p.sendMessage(comps);
             }
+            messageResult = format.toLegacyText();
         } else {
             for ( ChannelMember p : recipients ) {
                 p.sendMessage(message);
+            }
+            messageResult = message;
+        }
+
+        if (config.isSendChannelChatToDiscord() && !"".equals(getDiscordChannelId())){
+            boolean sendDiscord = true;
+            if (player instanceof ChannelMemberOther){
+                // Discordからのチャットは再度連携しない
+                sendDiscord = ((ChannelMemberOther) player).getChatSource() != ChatSource.DISCORD;
+            }
+            if (sendDiscord){
+                DiscordBridge discord = LunaChat.getPlugin().getDiscord();
+                discord.chat(messageResult, getDiscordChannelId());
             }
         }
 
         // 設定に応じて、コンソールに出力する
         if ( config.isDisplayChatOnConsole() ) {
-            LunaChatBungee.getInstance().getLogger().info(message);
+            LunaChatBungee.getInstance().getLogger().info(messageResult);
         }
 
         // ロギング
