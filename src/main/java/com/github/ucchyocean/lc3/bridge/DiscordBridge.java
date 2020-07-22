@@ -30,10 +30,14 @@ import java.util.regex.Pattern;
 public class DiscordBridge extends ListenerAdapter {
 	private JDA jda;
 	private static final Pattern stripPattern = Pattern.compile("(?<!@)[&§](?i)[0-9a-fklmnorx]");
-	private static final String SOURCE_NAME = "Discord";
 
 	private DiscordBridge(){}
 
+    /**
+     * DiscordBridgeをロードする
+     * @param token DiscordのBotトークン
+     * @return DiscordBridgeインスタンス
+     */
 	public static DiscordBridge load(String token) {
 		try {
 			JDABuilder builder = JDABuilder.createDefault(token);
@@ -47,6 +51,10 @@ public class DiscordBridge extends ListenerAdapter {
 		return null;
 	}
 
+	/**
+	 * Discordのメッセージを受信したときに発火
+	 * @param event GuildMessageReceivedEvent
+	 */
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 
@@ -111,17 +119,31 @@ public class DiscordBridge extends ListenerAdapter {
 		}
 	}
 
+    /**
+     * チャンネルIDに該当するDiscordのテキストチャンネルの有無を取得する
+     * @param channelId DiscordのテキストチャンネルID
+     * @return Discordのテキストチャンネルの有無
+     */
 	public boolean isExistTextChannel(String channelId){
 		 TextChannel channel = jda.getTextChannelById(channelId);
 		return channel != null;
 	}
 
+    /**
+     * テキストの絵文字文字列をDiscordの絵文字に変換する
+     * @param messageToTranslate メッセージ
+     * @param emotes 絵文字リスト
+     * @return 変換後メッセージ
+     */
 	public String translateEmotes(String messageToTranslate, List<Emote> emotes) {
 		for (Emote emote : emotes)
 			messageToTranslate = messageToTranslate.replace(":" + emote.getName() + ":", emote.getAsMention());
 		return messageToTranslate;
 	}
 
+    /**
+     * JDAをシャットダウンする
+     */
 	public void shutdown(){
 		try{
 			if (jda !=null){
