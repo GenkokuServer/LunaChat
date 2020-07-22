@@ -58,13 +58,14 @@ public class DiscordBridge extends ListenerAdapter {
 		LunaChatConfig config = LunaChat.getConfig();
 		Collection<Channel> channels = api.getChannels();
 		StringBuilder message = new StringBuilder(event.getMessage().getContentStripped());
+		final boolean hasAttachments = !event.getMessage().getAttachments().isEmpty();
+		if (StringUtils.isBlank(message.toString()) && !hasAttachments) return;
 
-		if (StringUtils.isBlank(message.toString()) && event.getMessage().getAttachments().size() == 0) return;
-
-		if (!event.getMessage().getAttachments().isEmpty()) {
-			for (Message.Attachment attachment : event.getMessage().getAttachments().subList(0, Math.min(event.getMessage().getAttachments().size(), 3))) {
-				message.append(attachment.getUrl());
-			}
+		if (hasAttachments) {
+			event.getMessage().getAttachments().stream()
+					.limit(Math.min(event.getMessage().getAttachments().size(), 3))
+					.map(Message.Attachment::getUrl)
+					.forEach(message::append);
 		}
 
 		boolean isRelayDefaultChannel = channels.stream()
