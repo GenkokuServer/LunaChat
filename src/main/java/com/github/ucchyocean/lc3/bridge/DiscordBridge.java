@@ -10,14 +10,20 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -113,5 +119,29 @@ public class DiscordBridge extends ListenerAdapter {
 		for (Emote emote : emotes)
 			messageToTranslate = messageToTranslate.replace(":" + emote.getName() + ":", emote.getAsMention());
 		return messageToTranslate;
+	}
+
+	public void shutdown(){
+		try{
+			if (jda !=null){
+				jda.getEventManager().getRegisteredListeners().forEach(listener -> jda.getEventManager().unregister(listener));
+				CompletableFuture<Void> shutdownTask = new CompletableFuture<>();
+				jda.addEventListener(new ListenerAdapter() {
+					@Override
+					public void onShutdown(@NotNull ShutdownEvent event) {
+						shutdownTask.complete(null);
+					}
+				});
+				jda.shutdownNow();
+				jda = null;
+				try {
+					shutdownTask.get(5, TimeUnit.SECONDS);
+				} catch (TimeoutException e) {
+					LunaChat.getPlugin().log(Level.WARNING, "JDAの終了に時間がかかっているためスキップします");
+				}
+			}
+		}catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
 	}
 }

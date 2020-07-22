@@ -151,6 +151,8 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
         if ( expireCheckerTask != null ) {
             expireCheckerTask.cancel();
         }
+
+        discord.shutdown();
     }
 
     /**

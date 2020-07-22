@@ -119,6 +119,15 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
     }
 
     /**
+     * プラグインが無効化されたときに呼び出されるメソッド
+     * @see net.md_5.bungee.api.plugin.Plugin#onDisable()
+     */
+    @Override
+    public void onDisable() {
+        discord.shutdown();
+    }
+
+    /**
      * LunaChatのインスタンスを返す
      * @return LunaChat
      */
