@@ -305,7 +305,7 @@ public class ChannelManager implements LunaChatAPI {
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
             if ( channel.getMembers().contains(cp) ||
-                    channel.isGlobalChannel() ) {
+                    channel.isGlobalChannel(cp) ) {
                 result.add(channel);
             }
         }

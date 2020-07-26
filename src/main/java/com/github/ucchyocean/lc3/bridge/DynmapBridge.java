@@ -82,7 +82,7 @@ public class DynmapBridge implements Listener {
             channel = api.getChannel(dchannel);
 
         } else {
-            String gchannel = config.getGlobalChannel();
+            String gchannel = config.getGlobalChannel(LunaChatConfig.DEFAULT_SERVER_NAME);
             if ( !gchannel.equals("") ) {
                 // dynmapChannelが設定されていなくて、
                 // globalChannelが設定されている場合

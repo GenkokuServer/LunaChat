@@ -34,10 +34,8 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.ChatEvent;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.PluginMessageEvent;
-import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.connection.Server;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
@@ -125,19 +123,28 @@ public class BungeeEventListener implements Listener {
      */
     @EventHandler
     public void onJoin(PostLoginEvent event) {
-
-        LunaChatConfig config = LunaChat.getConfig();
         ProxiedPlayer player = event.getPlayer();
 
         // UUIDをキャッシュ
         LunaChat.getUUIDCacheData().put(player.getUniqueId().toString(), player.getName());
         LunaChat.getUUIDCacheData().save();
 
+    }
+
+    /**
+     * プレイヤーがサーバに接続したときに呼び出されるメソッド
+     * @param event サーバスイッチイベント
+     */
+    @EventHandler
+    public void onServerSwitch(ServerSwitchEvent event) {
+        LunaChatConfig config = LunaChat.getConfig();
+        ProxiedPlayer player = event.getPlayer();
+
         // 強制参加チャンネル設定を確認し、参加させる
         forceJoinToForceJoinChannels(player);
 
         // グローバルチャンネル設定がある場合
-        if ( !config.getGlobalChannel().equals("") ) {
+        if ( !config.getGlobalChannel(player.getServer().getInfo().getName()).equals("") ) {
             tryJoinToGlobalChannel(player);
         }
 
@@ -313,13 +320,13 @@ public class BungeeEventListener implements Listener {
 
         LunaChatConfig config = LunaChat.getConfig();
 
-        if ( !config.getGlobalChannel().equals("") ) {
+        if ( !config.getGlobalChannel(member.getServerName()).equals("") ) {
             // グローバルチャンネル設定がある場合
 
             // グローバルチャンネルの取得、無ければ作成
-            Channel global = api.getChannel(config.getGlobalChannel());
+            Channel global = api.getChannel(config.getGlobalChannel(member.getServerName()));
             if ( global == null ) {
-                global = api.createChannel(config.getGlobalChannel());
+                global = api.createChannel(config.getGlobalChannel(member.getServerName()));
             }
 
             // デフォルト発言先が無いなら、グローバルチャンネルに設定する
@@ -461,7 +468,7 @@ public class BungeeEventListener implements Listener {
         LunaChatConfig config = LunaChat.getConfig();
         LunaChatAPI api = LunaChat.getAPI();
 
-        List<String> forceJoinChannels = config.getForceJoinChannels();
+        List<String> forceJoinChannels = config.getForceJoinChannels(player.getServer().getInfo().getName());
 
         for ( String cname : forceJoinChannels ) {
 
@@ -494,8 +501,9 @@ public class BungeeEventListener implements Listener {
 
         LunaChatConfig config = LunaChat.getConfig();
         LunaChatAPI api = LunaChat.getAPI();
+        ChannelMember channelMember = ChannelMember.getChannelMember(player.getUniqueId());
 
-        String gcName = config.getGlobalChannel();
+        String gcName = config.getGlobalChannel(player.getServer().getInfo().getName());
 
         // チャンネルが存在しない場合は作成する
         Channel global = api.getChannel(gcName);
@@ -505,7 +513,7 @@ public class BungeeEventListener implements Listener {
 
         // デフォルト発言先が無いなら、グローバルチャンネルに設定する
         Channel dchannel = api.getDefaultChannel(player.getName());
-        if ( dchannel == null ) {
+        if ( dchannel == null || (dchannel.isGlobalChannel() && !dchannel.isMember(channelMember))) {
             api.setDefaultChannel(player.getName(), gcName);
         }
 
@@ -553,7 +561,7 @@ public class BungeeEventListener implements Listener {
 
             // 参加していないチャンネルは、グローバルチャンネルを除き表示しない
             if ( !channel.getMembers().contains(cp) &&
-                    !channel.isGlobalChannel() ) {
+                    !channel.isGlobalChannel(cp) ) {
                 continue;
             }
 

@@ -226,7 +226,7 @@ public class OptionCommand extends LunaChatSubCommand {
                 String value = options.get("broadcast");
 
                 if ( value.equals("") || value.equalsIgnoreCase("false") ) {
-                    if ( channel.isGlobalChannel() ) {
+                    if ( channel.isDefaultGlobalChat() ) {
                         sender.sendMessage(Messages.errmsgCannotOffGlobalBroadcast());
                     } else {
                         channel.setBroadcast(false);

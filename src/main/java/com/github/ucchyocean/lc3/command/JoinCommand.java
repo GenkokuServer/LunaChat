@@ -100,7 +100,7 @@ public class JoinCommand extends LunaChatSubCommand {
 
         // チャンネルが存在するかどうかをチェックする
         if ( channel == null ) {
-            if ( config.getGlobalChannel().equals("") &&
+            if ( config.getGlobalChannel(sender.getServerName()).equals("") &&
                     channelName.equals(config.getGlobalMarker()) ) {
                 // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
                 // 発言先を削除して、グローバルチャンネルにする
@@ -195,7 +195,7 @@ public class JoinCommand extends LunaChatSubCommand {
         } else {
 
             // グローバルチャンネルで、何かメッセージがあるなら、そのままチャット送信する
-            if (channel.getName().equals(config.getGlobalChannel()) &&
+            if (channel.getName().equals(config.getGlobalChannel(sender.getServerName())) &&
                     message.length() > 0 && hasSpeakPermission(sender, channelName)) {
                 channel.chat(sender, message.toString());
                 return true;
@@ -219,7 +219,7 @@ public class JoinCommand extends LunaChatSubCommand {
             }
 
             // チャンネルに参加し、デフォルトの発言先に設定する
-            if ( !channel.getName().equals(config.getGlobalChannel()) ) {
+            if ( !channel.getName().equals(config.getGlobalChannel(sender.getServerName())) ) {
                 channel.addMember(sender);
                 sender.sendMessage(Messages.cmdmsgJoin(channelName));
             }

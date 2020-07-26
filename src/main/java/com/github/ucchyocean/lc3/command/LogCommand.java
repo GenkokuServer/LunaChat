@@ -118,7 +118,8 @@ public class LogCommand extends LunaChatSubCommand {
         // ログの取得
         ArrayList<String> logs;
 
-        if ( config.getGlobalChannel().equals("") &&
+        // TODO プレイヤー指定が必要か挙動確認
+        if ( config.getGlobalChannel(sender.getServerName()).equals("") &&
                 (cname == null || cname.equals(config.getGlobalMarker())) ) {
 
             // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、

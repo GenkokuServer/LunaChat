@@ -101,13 +101,13 @@ public class LeaveCommand extends LunaChatSubCommand {
         }
 
         // グローバルチャンネルなら退出できない
-        if ( channel.isGlobalChannel() ) {
+        if ( channel.isGlobalChannel(sender) ) {
             sender.sendMessage(Messages.errmsgCannotLeaveGlobal(channelName));
             return true;
         }
 
         // 強制参加チャンネルなら退出できない
-        if ( channel.isForceJoinChannel() ) {
+        if ( channel.isForceJoinChannel(sender) ) {
             sender.sendMessage(Messages.errmsgCannotLeaveForceJoin(channelName));
             return true;
         }

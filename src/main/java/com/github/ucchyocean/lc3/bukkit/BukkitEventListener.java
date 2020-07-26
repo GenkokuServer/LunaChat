@@ -122,7 +122,7 @@ public class BukkitEventListener implements Listener {
         forceJoinToForceJoinChannels(player);
 
         // グローバルチャンネル設定がある場合
-        if ( !config.getGlobalChannel().equals("") ) {
+        if ( !config.getGlobalChannel(LunaChatConfig.DEFAULT_SERVER_NAME).equals("") ) {
             tryJoinToGlobalChannel(player);
         }
 
@@ -267,13 +267,13 @@ public class BukkitEventListener implements Listener {
         ChannelMember player =
                 ChannelMember.getChannelMember(event.getPlayer());
 
-        if ( !config.getGlobalChannel().equals("") ) {
+        if ( !config.getGlobalChannel(LunaChatConfig.DEFAULT_SERVER_NAME).equals("") ) {
             // グローバルチャンネル設定がある場合
 
             // グローバルチャンネルの取得、無ければ作成
-            Channel global = api.getChannel(config.getGlobalChannel());
+            Channel global = api.getChannel(config.getGlobalChannel(LunaChatConfig.DEFAULT_SERVER_NAME));
             if ( global == null ) {
-                global = api.createChannel(config.getGlobalChannel());
+                global = api.createChannel(config.getGlobalChannel(LunaChatConfig.DEFAULT_SERVER_NAME));
             }
 
             String message = event.getMessage();
@@ -427,7 +427,7 @@ public class BukkitEventListener implements Listener {
         LunaChatConfig config = LunaChat.getConfig();
         LunaChatAPI api = LunaChat.getAPI();
 
-        String gcName = config.getGlobalChannel();
+        String gcName = config.getGlobalChannel(LunaChatConfig.DEFAULT_SERVER_NAME);
 
         // チャンネルが存在しない場合は作成する
         Channel global = api.getChannel(gcName);
@@ -453,7 +453,7 @@ public class BukkitEventListener implements Listener {
         LunaChatConfig config = LunaChat.getConfig();
         LunaChatAPI api = LunaChat.getAPI();
 
-        List<String> forceJoinChannels = config.getForceJoinChannels();
+        List<String> forceJoinChannels = config.getForceJoinChannels(LunaChatConfig.DEFAULT_SERVER_NAME);
 
         for ( String cname : forceJoinChannels ) {
 
@@ -518,7 +518,7 @@ public class BukkitEventListener implements Listener {
 
             // 参加していないチャンネルは、グローバルチャンネルを除き表示しない
             if ( !channel.getMembers().contains(cp) &&
-                    !channel.isGlobalChannel() ) {
+                    !channel.isGlobalChannel(cp) ) {
                 continue;
             }
 

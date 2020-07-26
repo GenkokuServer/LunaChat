@@ -69,8 +69,8 @@ public class Channel {
      * @return 強制参加チャンネルかどうか
      * @deprecated Legacy Version
      */
-    public boolean isForceJoinChannel() {
-        return channel.isForceJoinChannel();
+    public boolean isForceJoinChannel(ChannelMember channelMember) {
+        return channel.isForceJoinChannel(channelMember);
     }
 
     /**

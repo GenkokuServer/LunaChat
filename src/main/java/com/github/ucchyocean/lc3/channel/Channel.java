@@ -9,10 +9,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -190,7 +187,7 @@ public abstract class Channel {
      * @return ブロードキャストチャンネルかどうか
      */
     public boolean isBroadcastChannel() {
-        return (isGlobalChannel() || broadcastChannel);
+        return (isDefaultGlobalChat() || broadcastChannel);
     }
 
     /**
@@ -199,16 +196,31 @@ public abstract class Channel {
      */
     public boolean isGlobalChannel() {
         LunaChatConfig config = LunaChat.getConfig();
-        return getName().equals(config.getGlobalChannel());
+        return config.isGlobalChannel(getName());
+    }
+
+    /**
+     * グローバルチャンネルかどうか
+     * @return グローバルチャンネルかどうか
+     */
+    public boolean isGlobalChannel(ChannelMember channelMember) {
+        LunaChatConfig config = LunaChat.getConfig();
+        return getName().equals(config.getGlobalChannel(channelMember.getServerName()));
+    }
+
+
+    public boolean isDefaultGlobalChat(){
+        LunaChatConfig config = LunaChat.getConfig();
+        return getName().equals(config.getGlobalChannel(LunaChatConfig.DEFAULT_SERVER_NAME));
     }
 
     /**
      * 強制参加チャンネルかどうか
      * @return 強制参加チャンネルかどうか
      */
-    public boolean isForceJoinChannel() {
+    public boolean isForceJoinChannel(ChannelMember channelMember) {
         LunaChatConfig config = LunaChat.getConfig();
-        return config.getForceJoinChannels().contains(getName());
+        return config.getForceJoinChannels(channelMember.getServerName()).contains(getName());
     }
 
     /**
@@ -333,6 +345,7 @@ public abstract class Channel {
             if ( config.getNgwordAction() == NGWordAction.BAN ) {
                 // BANする
 
+                // 接続サーバ外のGlobalChannel全てで除外する
                 if ( !isGlobalChannel() ) {
                     getBanned().add(player);
                     removeMember(player);
@@ -346,6 +359,7 @@ public abstract class Channel {
             } else if ( config.getNgwordAction() == NGWordAction.KICK ) {
                 // キックする
 
+                // 接続サーバ外のGlobalChannel全てで除外する
                 if ( !isGlobalChannel() ) {
                     removeMember(player);
                     if ( Messages.kickNGWordMessage("", "", "").length > 0 ) {
@@ -1176,6 +1190,15 @@ public abstract class Channel {
      */
     public void setJapanizeType(JapanizeType japanize) {
         this.japanizeType = japanize;
+    }
+
+    /**
+     * メンバーがチャンネルに属しているかどうかを返却する
+     * @param channelMember チャンネルメンバー
+     * @return メンバーの所属有無
+     */
+    public boolean isMember(ChannelMember channelMember) {
+        return getMembers().stream().anyMatch(member -> Objects.equals(member.getName() , member.getName()));
     }
 
     /**

@@ -6,10 +6,11 @@
 package com.github.ucchyocean.lc3;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.util.EventPriority;
@@ -21,6 +22,8 @@ import com.github.ucchyocean.lc3.util.YamlConfig;
  * @author ucchy
  */
 public class LunaChatConfig {
+
+    public static final String DEFAULT_SERVER_NAME = "$default";
 
     /** メッセージの言語 */
     private String lang;
@@ -55,11 +58,11 @@ public class LunaChatConfig {
 
     /** サーバーに初参加したユーザーを参加させる、既定のチャンネル。<br/>
      *  参加させない場合は、から文字列 "" を指定すること。 */
-    private String globalChannel;
+    private Map<String, String> globalChannel;
 
     /** サーバーに参加したユーザーに必ず参加させるチャンネル。<br/>
      *  グローバルチャンネルとは別で指定できる。 */
-    private List<String> forceJoinChannels;
+    private Map<String, List<String>> forceJoinChannels;
 
     /** formatコマンド実行時に、必ず含まれる必要があるキーワード。 */
     private List<String> formatConstraint;
@@ -194,16 +197,26 @@ public class LunaChatConfig {
         // チャンネルチャット有効のときだけ、globalChannel設定を読み込む
         // (see issue #58)
         if ( enableChannelChat ) {
-            globalChannel = config.getString("globalChannel", "");
+            String globalChannelString = config.getString("globalChannel", null);
+            if (globalChannelString != null && globalChannelString.isEmpty()){
+                globalChannel = new HashMap<String,String>(){{put(DEFAULT_SERVER_NAME, globalChannelString);}};
+            }else {
+                globalChannel = config.getMap("globalChannel", new HashMap<String,String>(){{put(DEFAULT_SERVER_NAME, "");}});
+            }
         } else {
-            globalChannel = "";
+            globalChannel = new HashMap<String,String>(){{put(DEFAULT_SERVER_NAME, "");}};
         }
         // チャンネルチャット有効のときだけ、forceJoinChannels設定を読み込む
         // (see issue #58)
         if ( enableChannelChat ) {
-            forceJoinChannels = config.getStringList("forceJoinChannels");
+            List<String> forceJoinChannelsList = config.getStringList("forceJoinChannels", null);
+            if (forceJoinChannelsList != null && !forceJoinChannelsList.isEmpty()){
+                forceJoinChannels = new HashMap<String, List<String>>(){{put(DEFAULT_SERVER_NAME, forceJoinChannelsList);}};
+            } else {
+                forceJoinChannels = config.getMap("forceJoinChannels", new HashMap<String, List<String>>(){{put(DEFAULT_SERVER_NAME, new ArrayList<>());}});
+            }
         } else {
-            forceJoinChannels = new ArrayList<String>();
+            forceJoinChannels = new HashMap<String, List<String>>(){{put(DEFAULT_SERVER_NAME, new ArrayList<>());}};
         }
 
         if ( config.contains("formatConstraint") ) {
@@ -264,12 +277,14 @@ public class LunaChatConfig {
         bungeePassThroughMode = config.getBoolean("bungeePassThroughMode", false);
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
-        if ( globalChannel != null && !globalChannel.equals("") &&
-                !globalChannel.matches("[0-9a-zA-Z\\-_]{1,20}") ) {
+        if (globalChannel != null &&
+                !"".equals(globalChannel.get(DEFAULT_SERVER_NAME))&&
+                globalChannel.values().stream().anyMatch(s -> !s.matches("[0-9a-zA-Z\\-_]{1,20}"))
+        ) {
 
             // コンソールに警告を表示する
             LunaChat.getPlugin().log(Level.WARNING, Messages.errmsgCannotUseForGlobal(globalChannel));
-            globalChannel = "";
+            globalChannel = new HashMap<String,String>(){{put(DEFAULT_SERVER_NAME, "");}};
         }
     }
 
@@ -358,8 +373,27 @@ public class LunaChatConfig {
      * 参加させない場合は、から文字列 "" を指定すること。
      * @return globalChannelを返す
      */
-    public String getGlobalChannel() {
-        return globalChannel;
+    public String getGlobalChannel(String serverName) {
+        if(serverName == null || "".equals(serverName)){
+            serverName = DEFAULT_SERVER_NAME;
+        }
+
+        String channelName = globalChannel.get(serverName);
+        if (channelName == null){
+            channelName = globalChannel.get(DEFAULT_SERVER_NAME);
+        }
+        return channelName == null ? "" : channelName;
+    }
+
+    public boolean isGlobalChannel(String channelName){
+        return globalChannel.containsValue(channelName);
+    }
+
+    public List<String> getServerNameByGlobalChannelName(String channelName){
+        return globalChannel.entrySet().stream()
+                .filter(entry -> Objects.equals(entry.getValue(),channelName))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -367,8 +401,16 @@ public class LunaChatConfig {
      * グローバルチャンネルとは別で指定できる。
      * @return globalChannelを返す
      */
-    public List<String> getForceJoinChannels() {
-        return forceJoinChannels;
+    public List<String> getForceJoinChannels(String serverName) {
+        if(serverName == null || "".equals(serverName)){
+            serverName = DEFAULT_SERVER_NAME;
+        }
+
+        List<String>  forceJoinChannels = this.forceJoinChannels.get(serverName);
+        if (forceJoinChannels == null){
+            forceJoinChannels = this.forceJoinChannels.get(DEFAULT_SERVER_NAME);
+        }
+        return forceJoinChannels == null ? new ArrayList<>() : forceJoinChannels;
     }
 
     /**

@@ -136,13 +136,7 @@ public class BungeeChannel extends Channel {
      */
     @Override
     public int getOnlineNum() {
-
-        // ブロードキャストチャンネルならサーバー接続人数を返す
-        if ( isBroadcastChannel() ) {
-            return ProxyServer.getInstance().getOnlineCount();
-        }
-
-        return super.getOnlineNum();
+       return Math.toIntExact(getMembers().stream().filter(ChannelMember::isOnline).count());
     }
 
     /**
@@ -152,13 +146,7 @@ public class BungeeChannel extends Channel {
      */
     @Override
     public int getTotalNum() {
-
-        // ブロードキャストチャンネルならサーバー接続人数を返す
-        if ( isBroadcastChannel() ) {
-            return ProxyServer.getInstance().getOnlineCount();
-        }
-
-        return super.getTotalNum();
+        return getMembers().size();
     }
 
     /**
@@ -175,6 +163,18 @@ public class BungeeChannel extends Channel {
             List<ChannelMember> mem = new ArrayList<ChannelMember>();
             for ( ProxiedPlayer p : ProxyServer.getInstance().getPlayers() ) {
                 mem.add(ChannelMember.getChannelMember(p));
+            }
+            return mem;
+        }
+
+        if (isGlobalChannel()){
+            List<ChannelMember> mem = new ArrayList<>(super.getMembers());
+            for ( ProxiedPlayer p : ProxyServer.getInstance().getPlayers() ) {
+                List<String> serverList = getServerNameList();
+                ChannelMember cm = ChannelMember.getChannelMember(p);
+                if (!mem.contains(cm) && serverList.contains(cm.getServerName())){
+                    mem.add(cm);
+                }
             }
             return mem;
         }
@@ -197,5 +197,11 @@ public class BungeeChannel extends Channel {
         }
 
         // TODO ログ記録プラグイン連携を検討する
+    }
+
+
+    private List<String> getServerNameList(){
+        LunaChatConfig config = LunaChat.getConfig();
+        return config.getServerNameByGlobalChannelName(getName());
     }
 }

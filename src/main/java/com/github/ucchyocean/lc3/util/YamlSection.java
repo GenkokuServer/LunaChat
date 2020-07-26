@@ -181,7 +181,7 @@ public class YamlSection {
      * @param key
      * @return keyに対応する値（値が無いかMap&lt;String, Object&gt;に変換できない場合はnullが返される）
      */
-    public @Nullable Map<String, Object> getMap(String key) {
+    public @Nullable <K, V> Map<K, V> getMap(String key) {
         return getMap(key, null);
     }
 
@@ -192,9 +192,9 @@ public class YamlSection {
      * @return keyに対応する値（値が無いかMap&lt;String, Object&gt;に変換できない場合はdefaultValueが返される）
      */
     @SuppressWarnings("unchecked")
-    public Map<String, Object> getMap(String key, Map<String, Object> defaultValue) {
+    public <K, V> Map<K, V> getMap(String key, Map<K, V> defaultValue) {
         Object val = get(key, defaults.get(key));
-        return ( val != null && val instanceof Map<?, ?> ) ? (Map<String, Object>)val : defaultValue;
+        return (val instanceof Map<?, ?>) ? (Map<K, V>)val : defaultValue;
     }
 
     /**
