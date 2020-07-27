@@ -1197,8 +1197,11 @@ public abstract class Channel {
      * @param channelMember チャンネルメンバー
      * @return メンバーの所属有無
      */
-    public boolean isMember(ChannelMember channelMember) {
-        return getMembers().stream().anyMatch(member -> Objects.equals(member.getName() , member.getName()));
+    public boolean isMember(@Nullable ChannelMember channelMember) {
+        if (channelMember == null) {
+            return false;
+        }
+        return getMembers().stream().anyMatch(member -> Objects.equals(member.getName() , channelMember.getName()));
     }
 
     /**

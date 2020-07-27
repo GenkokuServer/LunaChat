@@ -10,6 +10,8 @@ import com.github.ucchyocean.lc3.LunaChatMode;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 
+import java.util.UUID;
+
 /**
  * チャンネルメンバーの抽象クラス
  * @author ucchy
@@ -132,6 +134,21 @@ public abstract class ChannelMember implements Comparable<ChannelMember> {
             return ChannelMemberPlayer.getChannelMember(nameOrUuid);
         } else if ( LunaChat.getMode() == LunaChatMode.BUNGEE ) {
             return ChannelMemberProxiedPlayer.getChannelMember(nameOrUuid);
+        }
+        return null; // TODO standalone用のChannelMemberを返す
+    }
+
+    /**
+     * UUIDから、ChannelMemberを作成して返す
+     * @param uuid UUID
+     * @return ChannelMember
+     */
+    public static ChannelMember getChannelMember(UUID uuid) {
+        String $uuid = "$" + uuid;
+        if ( LunaChat.getMode() == LunaChatMode.BUKKIT ) {
+            return ChannelMemberPlayer.getChannelMember($uuid);
+        } else if ( LunaChat.getMode() == LunaChatMode.BUNGEE ) {
+            return ChannelMemberProxiedPlayer.getChannelMember($uuid);
         }
         return null; // TODO standalone用のChannelMemberを返す
     }
