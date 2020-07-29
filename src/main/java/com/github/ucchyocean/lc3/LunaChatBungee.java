@@ -124,7 +124,9 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
      */
     @Override
     public void onDisable() {
-        discord.shutdown();
+        if (config.isSendChannelChatToDiscord()){
+            discord.shutdown();
+        }
     }
 
     /**
